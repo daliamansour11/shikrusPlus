@@ -1,0 +1,115 @@
+// To parse this JSON data, do
+//
+import 'package:json_annotation/json_annotation.dart';
+part'Projectmodel.g.dart';
+@JsonSerializable()
+
+class Projectmodel {
+  /////
+  bool status;
+  String errNum;
+  String msg;
+  List<Datum> data;
+
+  Projectmodel({
+    required this.status,
+    required this.errNum,
+    required this.msg,
+    required this.data,
+  });
+
+  factory Projectmodel.fromJson(Map<String, dynamic> json) => Projectmodel(
+    status: json["status"],
+    errNum: json["errNum"],
+    msg: json["msg"],
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "errNum": errNum,
+    "msg": msg,
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
+  };
+}
+
+class Datum {
+  int id;
+  String? name;
+  String ?subject;
+  String ?notes;
+  String ?status;
+  DateTime? startingDate;
+  DateTime ?expectedExpiryDate;
+  dynamic ?actualEndDate;
+  String ?type;
+  dynamic timeFrom;
+  dynamic timeTo;
+
+  Datum({
+    required this.id,
+    this.name,
+    this.subject,
+    this.notes,
+    this.status,
+    this.startingDate,
+    this.expectedExpiryDate,
+    this.actualEndDate,
+    this.type,
+    this.timeFrom,
+    this.timeTo
+  });
+
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+    id: json["id"],
+    name: json["name"],
+    subject: json["subject"],
+    notes: json["notes"],
+    status: json["status"],
+    startingDate: DateTime.parse(json["starting_date"]),
+    expectedExpiryDate: DateTime.parse(json["expected_expiry_date"]),
+    actualEndDate: json["actual_end_date"],
+    type: json["type"],
+    timeFrom: json["time_from"],
+    timeTo: json["time_to"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "subject": subject,
+    "notes": notes,
+    "status": status,
+    "starting_date": "${startingDate?.year.toString().padLeft(4, '0')}-${startingDate?.month.toString().padLeft(2, '0')}-${startingDate?.day.toString().padLeft(2, '0')}",
+    "expected_expiry_date": "${expectedExpiryDate?.year.toString().padLeft(4, '0')}-${expectedExpiryDate?.month.toString().padLeft(2, '0')}-${expectedExpiryDate?.day.toString().padLeft(2, '0')}",
+    "actual_end_date": actualEndDate,
+    "type": type,
+    "time_from":timeFrom,
+    "time_to":timeTo,
+
+  };
+}
+
+class Category {
+  int id;
+  String nameAr;
+  String nameEn;
+
+  Category({
+    required this.id,
+    required this.nameAr,
+    required this.nameEn,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    id: json["id"],
+    nameAr: json["name_ar"],
+    nameEn: json["name_en"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name_ar": nameAr,
+    "name_en": nameEn,
+  };
+}

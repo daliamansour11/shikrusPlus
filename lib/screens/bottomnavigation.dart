@@ -2,7 +2,7 @@
 import 'package:taskmanger/AddNewTask/view/Addtask.dart';
 import 'package:taskmanger/home/view/homescreen.dart';
 import 'package:taskmanger/reports/view/projects_reports_screen.dart';
-import '../chat/chats/HomeChat.dart';
+import '../chat/chats/view/HomeChat.dart';
 import '../../clender/view/ClenderScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';

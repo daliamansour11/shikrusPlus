@@ -8,11 +8,11 @@ class Messages {
     required this.fromId,
   });
   late final String msg;
-  late final String toId;
+  late final String? toId;
   late final String read;
   late final Type type;
   late final String send;
-  late final String fromId;
+  late final String? fromId;
   
   Messages.fromJson(Map<String, dynamic> json){
     msg = json['msg'].toString();

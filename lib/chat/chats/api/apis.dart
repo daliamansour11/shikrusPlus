@@ -10,12 +10,14 @@ import 'package:http/http.dart';
 
 import '../model/chat_msg.dart';
 import '../model/chat_user.dart';
+import '../model/group_model.dart';
 
 class Apis{
   static FirebaseAuth auth=FirebaseAuth.instance;
   static FirebaseFirestore firestore=FirebaseFirestore.instance;
   static FirebaseStorage storage=FirebaseStorage.instance;
-  static String? user = auth.currentUser?.uid;
+  static  String? user =FirebaseAuth.instance .currentUser?.uid;
+  static String? groupId = auth.currentUser?.uid;
   static String? email = FirebaseAuth.instance.currentUser?.email;
   static String? displayName = FirebaseAuth.instance.currentUser?.displayName;
   static String? photoURL = FirebaseAuth.instance.currentUser?.photoURL;
@@ -50,6 +52,30 @@ class Apis{
     try {
       final body = {
         "to": chatuser.pushToken,
+        "notification": {
+          "title": me.name, //our name should be send
+          "body": msg,
+          "android_channel_id": "chats"
+        },
+      };
+      var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader:
+            'key=AAAA0SN85Fw:APA91bEPau7CCeJvIPJZf7c9EGdbA3NWEzdUUzy5vNTiT-i27Cea3SGgyTxnVg5wo8bmHnd2Y7-JL5XJ73RRFmhoB0ME96rAfi2WVDTBnQPJL0_4ICKdRN1iMLEY_X3bT9YI7pZJfqRp',
+          },
+          body: jsonEncode(body));
+      print('Response status: ${res.statusCode}');
+      print('Response body: ${res.body}');
+    } catch (e) {
+      print('\nsendPushNotificationE: $e');
+    }
+  }
+
+  static Future<void> sendgroupPushNotification(GroupModel groupModel , String msg) async {
+    try {
+      final body = {
+        "to": groupModel.pushToken,
         "notification": {
           "title": me.name, //our name should be send
           "body": msg,
@@ -154,8 +180,9 @@ class Apis{
   }
   //                      chat msgs
   // for getting a conversaton id
-  static String getConversionId(String id)=>
+  static String getConversionId(String? id)=>
       user.hashCode <= id.hashCode? '${user}_$id':'${id}_${user}';
+
 
   // to get all msgs from firestore database for a particular conversionId
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(ChatUser user){
@@ -163,7 +190,7 @@ class Apis{
         .orderBy('send',descending: true)
         .snapshots();
   }
-// for sending msgs
+// for sending msgs//
   static Future<void> sendMessage(ChatUser chatuser,String msg,Type type)async {
     final time=DateTime.now().millisecondsSinceEpoch.toString();
     final Messages message=Messages(
@@ -184,7 +211,19 @@ class Apis{
         .orderBy('send',descending: true)
         .limit(1).snapshots();
   }
-  // images store in database
+
+  static Future<void> sendFirstMessage(
+      ChatUser chatuser, String msg, Type type) async {
+    await firestore
+        .collection('users')
+        .doc(chatuser.id)
+        .collection('my_users')
+        .doc(user!)
+        .set({}).then((value) => sendMessage(chatuser, msg, type));
+  }
+
+
+  //////////////chat images store in database/////////////
   static Future<void> sendChatImage(ChatUser chatUser,File file)async {
     final ext=file.path.split('.').last;
     final ref=storage.ref().child
@@ -195,19 +234,84 @@ class Apis{
     final imageUrl=await ref.getDownloadURL();
     await sendMessage(chatUser, imageUrl, Type.image);
   }
-// for adding an user to my user when first message is send
-  static Future<void> sendFirstMessage(
-      ChatUser chatuser, String msg, Type type) async {
-    await firestore
-        .collection('users')
-        .doc(chatuser.id)
-        .collection('my_users')
-        .doc(user!)
-        .set({}).then((value) => sendMessage(chatuser, msg, type));
+  ///////////////////////////////////group//////////////////////////////////////////
+
+
+
+  //  group images store in database
+  static Future<void> sendGroupChatImage(GroupModel groupModel,File file)async {
+    final ext=file.path.split('.').last;
+    final ref=storage.ref().child
+      ('images/${getGroupChatId(groupModel.groupId)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    await ref.putFile(file,SettableMetadata(contentType: 'image/$ext')).then((p0) {
+      print('data transferred: ${p0.bytesTransferred/1000} kb');
+    });
+    final imageUrl=await ref.getDownloadURL();
+    await sendGroupMessage(groupModel, imageUrl, Type.image);
   }
+
+  // for getting a groupconversaton id
+  static String getGroupChatId(String id)=>
+      groupId.hashCode <= id.hashCode? '${groupId}_$id':'${id}_${groupId}';
+
+
+  // to get all msgs from firestore database for a particular conversionId
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getGroupAllMessages(GroupModel group){
+    return firestore.collection('groups/${getGroupChatId(group.groupId)}/messages')
+        .orderBy('send',descending: true)
+        .snapshots();
+  }
+// for sending msgs
+  static Future<void> sendGroupMessage(GroupModel groupModel,String msg,Type type)async {
+    final time=DateTime.now().millisecondsSinceEpoch.toString();
+    final Messages message=Messages(
+        msg: msg, toId: groupModel.groupId, read: '',
+        type: type, send: time, fromId: user!);
+    final ref=firestore.collection('groups/${getGroupChatId(groupModel.groupId)}/messages');
+    await ref.doc(time).set(message.toJson()).then((value) => sendgroupPushNotification(groupModel,type==Type.text?msg:'Image'));
+  }
+// updating status of msg read/unread
+  static Future<void> updateGroupMessageReadstatus(Messages messages)async {
+    firestore.collection('groups/${getConversionId(messages.fromId)}/messages').doc(messages.send)
+        .update({'read':DateTime.now().millisecondsSinceEpoch.toString()});
+
+  }
+// to get the last msg
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getGroupLastMessage(GroupModel group){
+    return firestore.collection('groups/${getGroupChatId(group.groupId??"")}/messages')
+        .orderBy('send',descending: true)
+        .limit(1).snapshots();
+  }
+
+// for adding an user to my user when first message is send
+  static Future<void> sendFirstGroupMessage(
+      GroupModel groupModel, String msg, Type type) async {
+    await firestore
+        .collection('groups')
+        .doc(groupModel.groupId)
+        .collection('messages')
+        .doc(user!)
+        .set({}).then((value) => sendGroupMessage(groupModel, msg, type));
+  }
+
+
+
+  // images store in database
+  static Future<void> sendGroupImage(GroupModel gruopModel,File file)async {
+    final ext=file.path.split('.').last;
+    final ref=storage.ref().child
+      ('images/${getGroupChatId(gruopModel.groupId)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    await ref.putFile(file,SettableMetadata(contentType: 'image/$ext')).then((p0) {
+      print('data transferred: ${p0.bytesTransferred/1000} kb');
+    });
+    final imageUrl=await ref.getDownloadURL();
+    await sendGroupMessage(gruopModel, imageUrl, Type.image);
+  }
+// for adding an user to my user when first message is send
+
 // getting specific user info
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(ChatUser chatUser){
-    return firestore.collection('users').where('id',isEqualTo: chatUser.id).snapshots();
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getGoupInfo(GroupModel groupModel){
+    return firestore.collection('groups').where('id',isEqualTo: groupModel.groupId).snapshots();
   }
   //delete message
   static Future<void> deleteMessage(Messages message) async {

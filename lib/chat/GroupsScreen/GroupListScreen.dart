@@ -1,10 +1,10 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../Authentication/login/model/Users.dart';
-import '../chats/ChatBoxScreen.dart';
+import '../chats/model/group_model.dart';
+import '../chats/view/ChatBoxScreen.dart';
 import 'CreateNewGroup.dart';
 
 class GroupListScreen extends StatefulWidget{
@@ -72,11 +72,11 @@ class _GroupListScreenState extends State<GroupListScreen> {
                                           Navigator.push(context,
                                               MaterialPageRoute(builder:
                                                   (context) =>
-                                                  ChatBoxScreen(groupName: '${data['groupName']}'
+                                                  ChatBoxScreen(groupModel: GroupModel(groupName: '${data['groupName']}'
                                                     , groupId: '${data['groupId']}', UserName: '${users_model.name}'
-                                                    , groupImage: '${data['groupImage']}',),
+                                                    , groupImage: '${data['groupImage']}', pushToken: '', email: '',),
                                                     // friendUid: '', friendName: '',
-                                                  )
+                                                  )),
                                               );
                                         },
                                         leading: CircleAvatar(
@@ -136,7 +136,6 @@ class _GroupTileState extends State<GroupTile> {
   Widget build(BuildContext context) {
 return Container(
   color: Colors.grey,
-
 
 );
 

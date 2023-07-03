@@ -9,11 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../main.dart';
-import '../view/MessageCard.dart';
-import 'api/apis.dart';
-import 'model/chat_msg.dart';
-import 'model/chat_user.dart';
+import '../../../main.dart';
+import '../../view/MessageCard.dart';
+import '../api/apis.dart';
+import '../model/chat_msg.dart';
+import '../model/chat_user.dart';
 
 
 
@@ -78,8 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           _list=data?.map((e) => Messages.fromJson(e.data())).toList()?? [];
                           // print('${jsonEncode(data![0].data())}');
                           //   _list.clear();
-                          //   _list.add(Messages(msg: "hii!!", toId: "abcd", read: '', type: Type.text, send: '10:00 am', fromId: Apis.user.uid));
-                          // _list.add(Messages(msg: "Fine", toId: Apis.user.uid, read: '', type: Type.text, send: '10:10 am', fromId: "abcd"));
+                          //   _list.add(Messages(msg: "hii!!", toId: "abcd", read: '', type: Type.text, send: '10:00 am', fromId: Apis.user!));
+                          // _list.add(Messages(msg: "Fine", toId: Apis.user!, read: '', type: Type.text, send: '10:10 am', fromId: "abcd"));
                           if(_list.isNotEmpty){
                             return ListView.builder(
                               // last msg to show 1st

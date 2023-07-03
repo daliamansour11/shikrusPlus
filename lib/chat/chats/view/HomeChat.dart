@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:taskmanger/chat/chats/model/chat_user.dart';
 import 'package:taskmanger/chat/view/ListViewCard.dart';
 
-import '../../../../TextFiledContainerWidget.dart';
-import '../../Authentication/login/model/Users.dart';
-import '../../main.dart';
-import '../../profile/profile.dart';
-import '../GroupsScreen/GroupListScreen.dart';
+import '../../../../../TextFiledContainerWidget.dart';
+import '../../../Authentication/login/model/Users.dart';
+import '../../../main.dart';
+import '../../../profile/profile.dart';
+import '../../GroupsScreen/GroupListScreen.dart';
 import 'ChatsBox.dart';
-import 'api/apis.dart';
-
+import '../api/apis.dart';
 class HomeChat extends StatefulWidget{
   @override
   State<HomeChat> createState() => _HomeChatState();
@@ -144,7 +143,7 @@ class _HomeChatState extends State<HomeChat> {
                           case ConnectionState.done:
                             return StreamBuilder(
                               stream: Apis.getAllUsers(
-                                  snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                                  snapshot.data?.docs.map((e) => e.id).toList().cast<String>() ?? []),
 
                               //get only those user, who's ids are provided
                               builder: (context,AsyncSnapshot snapshot) {
@@ -161,7 +160,7 @@ class _HomeChatState extends State<HomeChat> {
                                     final data = snapshot.data?.docs;
                                     _list = data
                                         ?.map((e) => ChatUser.fromJson(e.data()))
-                                        .toList() ??
+                                        .toList().cast<ChatUser>() ??
                                         [];
 
                                     if (_list.isNotEmpty) {

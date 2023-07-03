@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../main.dart';
-import '../chats/ChatScreen.dart';
+import '../chats/view/ChatScreen.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';

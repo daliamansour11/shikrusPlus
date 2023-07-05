@@ -11,6 +11,7 @@ class SharedPreferencesInfo{
   static String deviceTokenKey = "DEVICETOKENKEY";
   static String userEmailKey = "USEREMAILKEY";
   static String stringValue = "ABCD";
+  static String userNameKey = "USERNAMEKEY";
 
   static  addToSP(TasksModel data,int index) async {
     Map<String, dynamic> map = {
@@ -32,7 +33,10 @@ class SharedPreferencesInfo{
   //   }).toList();
   // }
 
-
+  static Future<String?> getUserNameFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userNameKey);
+  }
 
  static Future<int?>getSP() async {
     int index= 0;

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:taskmanger/chat/chats/model/chat_user.dart';
 import 'package:taskmanger/chat/view/ListViewCard.dart';
 
-import '../../../../../TextFiledContainerWidget.dart';
-import '../../../Authentication/login/model/Users.dart';
-import '../../../main.dart';
-import '../../../profile/profile.dart';
-import '../../GroupsScreen/GroupListScreen.dart';
+import '../../../../TextFiledContainerWidget.dart';
+import '../../Authentication/login/model/Users.dart';
+import '../../main.dart';
+import '../../profile/profile.dart';
+import '../GroupsScreen/GroupListScreen.dart';
 import 'ChatsBox.dart';
-import '../api/apis.dart';
+import 'api/apis.dart';
+
 class HomeChat extends StatefulWidget{
   @override
   State<HomeChat> createState() => _HomeChatState();
@@ -18,7 +19,11 @@ class HomeChat extends StatefulWidget{
 class _HomeChatState extends State<HomeChat> {
   TextEditingController searchTextController = TextEditingController();
   bool _isSearch =false;
+  String? AuthEmail = FirebaseAuth.instance.currentUser?.email;
+
   List<ChatUser> _list=[];
+
+  List <ChatUser> adminList= [];
   final List<ChatUser> _searchList=[];
   void iconClickEvent(){
     setState(() {
@@ -128,7 +133,8 @@ class _HomeChatState extends State<HomeChat> {
               Center(
                 child:  Container(
                     child:  StreamBuilder(
-                      stream: Apis.getMyUsersId(),
+                      stream:AuthEmail=="mohmed112@gmail.com"?
+                      Apis.getAdminUsers():Apis.getMyUsersId(),
 
                       //get id of only known users
                       builder: (context,AsyncSnapshot snapshot) {
@@ -143,7 +149,7 @@ class _HomeChatState extends State<HomeChat> {
                           case ConnectionState.done:
                             return StreamBuilder(
                               stream: Apis.getAllUsers(
-                                  snapshot.data?.docs.map((e) => e.id).toList().cast<String>() ?? []),
+                                  snapshot.data?.docs.map((e) => e.id).toList().cast<String>()?? []),
 
                               //get only those user, who's ids are provided
                               builder: (context,AsyncSnapshot snapshot) {
@@ -164,6 +170,7 @@ class _HomeChatState extends State<HomeChat> {
                                         [];
 
                                     if (_list.isNotEmpty) {
+
                                       return ListView.builder(
                                           itemCount: _isSearch
                                               ? _searchList.length
@@ -176,6 +183,12 @@ class _HomeChatState extends State<HomeChat> {
                                                     ? _searchList[index]
                                                     : _list[index]);
                                           });
+       // return Padding(
+      //   padding: const EdgeInsets.only(bottom: 490),
+      //   child: ListViewCard(
+      //       user:_list[0]
+      //   ),
+      // );
                                     } else {
                                       return const Center(
                                         child: Text('No Connections Found!',

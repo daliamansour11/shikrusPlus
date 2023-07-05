@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../main.dart';
-import '../chats/view/ChatScreen.dart';
+import '../chats/ChatScreen.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';
@@ -27,7 +27,7 @@ class _ListViewCardState extends State<ListViewCard> {
   Widget build(BuildContext context) {
     return Card(
         margin: EdgeInsets.symmetric(horizontal: mq.width *.03,vertical: 5),
-        color: Colors.tealAccent,
+        color: Colors.grey[300],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         elevation: 2,
         child: InkWell(
@@ -39,7 +39,7 @@ class _ListViewCardState extends State<ListViewCard> {
               stream: Apis.getLastMessage(widget.user),
               builder: (context,AsyncSnapshot  snapshot){
                 // final data=snapshot.data?.docs;
-                final list=snapshot.data?.docs.map((e) => Messages.fromJson(e.data())).toList()?? [];
+                final list=snapshot.data?.docs.map((e) => Messages.fromJson(e.data())).toList().cast<String>()?? [];
 
                 if(list.isNotEmpty){
                   _messages=list[0];

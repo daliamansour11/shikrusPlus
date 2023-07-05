@@ -9,11 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../main.dart';
-import '../../view/MessageCard.dart';
-import '../api/apis.dart';
-import '../model/chat_msg.dart';
-import '../model/chat_user.dart';
+import '../../main.dart';
+import '../view/MessageCard.dart';
+import 'api/apis.dart';
+import 'model/chat_msg.dart';
+import 'model/chat_user.dart';
 
 
 
@@ -57,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
             backgroundColor: Colors.teal[50],
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              flexibleSpace: Text("chat"),
+              flexibleSpace: Center(child: Text("chat")),
             ),
             body: Column(
               children: [
@@ -67,22 +67,22 @@ class _ChatScreenState extends State<ChatScreen> {
                     builder:(context, AsyncSnapshot snapshot){
                       switch (snapshot.connectionState) {
                       // if data is loading
-                        case ConnectionState.waiting:
-                        case ConnectionState.none:
+                        case  ConnectionState.waiting:
+                        case  ConnectionState.none:
                           return SizedBox();
                       // if some/all data is loaded then show it
                         case  ConnectionState.active:
-                        case ConnectionState.done:
+                        case  ConnectionState.done:
 
                           final data=snapshot.data?.docs;
-                          _list=data?.map((e) => Messages.fromJson(e.data())).toList()?? [];
+                          _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
                           // print('${jsonEncode(data![0].data())}');
                           //   _list.clear();
-                          //   _list.add(Messages(msg: "hii!!", toId: "abcd", read: '', type: Type.text, send: '10:00 am', fromId: Apis.user!));
-                          // _list.add(Messages(msg: "Fine", toId: Apis.user!, read: '', type: Type.text, send: '10:10 am', fromId: "abcd"));
+                          //   _list.add(Messages(msg: "hii!!", toId: "abcd", read: '', type: Type.text, send: '10:00 am', fromId: Apis.user.uid));
+                          // _list.add(Messages(msg: "Fine", toId: Apis.user.uid, read: '', type: Type.text, send: '10:10 am', fromId: "abcd"));
                           if(_list.isNotEmpty){
                             return ListView.builder(
-                              // last msg to show 1st
+                                // last msg to show 1st
                                 reverse: true,
                                 physics: BouncingScrollPhysics(),
                                 padding: EdgeInsets.only(top: mq.height *.01),

@@ -40,16 +40,18 @@ class _MessageCardState extends State<MessageCard> {
       Apis.updateMessageReadstatus(widget.messages);
       // print('msg updated');
     }
-
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //
+      // mainAxisAlignment: MainAxisAlignment.end,
+      // crossAxisAlignment: CrossAxisAlignment
+      // .start,
       children: [
         Flexible(
           child: Container(
-            padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .03: mq.width * .05),
-            margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
-            decoration: BoxDecoration(color: Colors.teal[200],
-                border: Border.all(color: Colors.redAccent),
+            padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .05: mq.width * .03),
+            margin: EdgeInsets.symmetric(vertical: mq.height * .01,horizontal: mq.width *.03),
+            decoration: BoxDecoration(color: Colors.grey[200],
+                border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),bottomRight: Radius.circular(30))),
             child:
@@ -69,7 +71,7 @@ class _MessageCardState extends State<MessageCard> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: mq.width * .04),
+          padding: EdgeInsets.only(right: mq.width * .099999999991,top: 60,left: .09),
 
           child: Text(
             // formatted send time

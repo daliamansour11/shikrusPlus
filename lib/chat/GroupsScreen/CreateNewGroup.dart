@@ -4,12 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:taskmanger/chat/chats/HomeChat.dart';
 import 'package:taskmanger/home/view/homescreen.dart';
 
 
 import '../../Authentication/login/model/Users.dart';
+import '../../core/SharedPreferenceInfo.dart';
 import '../../core/TextFiledContainerWidget.dart';
+import '../helper_function.dart';
+import '../services/database_service.dart';
 import 'ChatGroupData.dart';
+import 'GroupListScreen.dart';
 
 class CreateNewGroup extends StatefulWidget {
   @override
@@ -22,10 +27,34 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
   TextEditingController _groupnameController = TextEditingController();
   String? Auth = FirebaseAuth.instance.currentUser?.uid;
   String groupName = '';
+  bool _isLoading=false;
+  String userName = "";
+  int id = 0;
+
   Users_model users_model = Users_model("", "email", "phone", "password", "", true, "image", "status",[]);
   @override
   void dispose() {
     _groupnameController.dispose();
+  }
+
+  @override
+  void initState() {
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserNameFromSF().then((value){
+      setState(() {
+        userName = value!;
+        print("nameeeeeeeeeeeeee$userName");
+      });
+    });await SharedPreferencesInfo.getUserIdFromSF().then((value){
+      setState(() {
+        id = value!;
+        print("nameeeeeeeeeeeeee$userName");
+      });
+    });
+
   }
   @override
   Widget build(BuildContext context) {
@@ -107,22 +136,25 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
               ),
               onPressed: ()async {
                 groupName= _groupnameController.text;
-                if (groupName != null&& groupName.isNotEmpty) {
-                  createNewGroup("${ChatGroupData.userNameKey}", '${users_model.uId}', _groupnameController.text);
-                  _groupnameController.clear();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>HomeScreen()));
+                if(groupName != ""){
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  DataBaseService(uid: FirebaseAuth.instance.currentUser?.uid)
+                      .createGroup(userName,
+                      id.toString() , groupName)
+                      .whenComplete(() {
+                    setState(() {
+                      print("uiddddddddddddddd${FirebaseAuth.instance.currentUser?.uid}");
+                      _isLoading = false;
+                    });
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (_) => HomeChat()));
+                    // showSnakbar(context, Colors.green, "Group created successfully.😍");
+                  });
                 }
-                else{
-                  print(" enter groupName");
-                  Fluttertoast.showToast(
-                    msg: "Enter GroupName", // message
-                    toastLength: Toast.LENGTH_LONG, // length
-                    gravity: ToastGravity.CENTER, // locationbackgroundColor: Colors.black,
-                    timeInSecForIosWeb: 2,
-                  );
-                }//
-              },
+                   },
               child: Text("Create New group",
                   style: TextStyle(color: Colors.white, fontSize: 18)),
             ),
@@ -151,26 +183,6 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
     );
 
   }
-  Future createNewGroup(String UserName ,String id,String groupName) async {
-    DocumentReference newGroupDoc = await groupCollection.add({
-      "groupName":groupName,
-      "groupImage":"",
-      'admin':"${Auth}_$UserName",
-      'member':[],
-      'groupId':"",
-      'recentMessage':"",
-      'recentMessageSender':"",
-    });
-    await newGroupDoc.update({
-      "member":FieldValue.arrayUnion(["${Auth}_${UserName}"]),
-      "groupId":newGroupDoc.id,
-    }) ;
-    DocumentReference userDocumentReference = await userCollection.doc(FirebaseAuth.instance.currentUser?.uid);
-    return userDocumentReference.set({
-       "UserGroups":FieldValue.arrayUnion(["${newGroupDoc.id}_$groupName"])
-    }
-    );
 
-  }
 
 }

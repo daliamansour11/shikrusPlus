@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class MyDate {
   // for getting formatted send & receive time of msgs
   static String getFormattedtime({required BuildContext context,required String time}){
-    final date=DateTime.fromMillisecondsSinceEpoch(int .parse(time));
+    final date=DateTime.fromMicrosecondsSinceEpoch(int.parse(time !=null?time:""));
+    print(time);
     return TimeOfDay.fromDateTime(date).format(context);
+
+
   }
+
 
   // to get last msg send time
   static String getLastMsgTime({required BuildContext context,required String time,bool showyear=false}){

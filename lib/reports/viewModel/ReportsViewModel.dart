@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:taskmanger/reports/Repository/ReportsRepo.dart';
 import 'package:taskmanger/reports/model/reportsresponse.dart';
 
@@ -24,8 +25,8 @@ class NewReportNotifier extends ChangeNotifier{
   NewReportNotifier(this.ref);
 
   Future<ReportResponse?> AddNewReport(String report, String reason,
-      File image, int project_id)async{
-    var ReportRepo=await ref.read(reportRepo).addNewReport(report, reason, image, project_id);
+      PickedFile image, int project_id)async{
+    var ReportRepo=await ref.read(reportRepo).addNewReport(report, reason,image, project_id);
     debugPrint("repooooooooooooooooooproviderrrrrrrrrrrrrrrrrrrrrrrr");
     return ReportRepo;
   }

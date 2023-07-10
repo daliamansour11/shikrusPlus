@@ -25,15 +25,12 @@ class TextFieldContainerWidget extends StatelessWidget{
 
 
 
-
-
     @override
     Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
 margin: EdgeInsets.all(10),
-          height: 50,
+          height: 55,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -52,8 +49,6 @@ margin: EdgeInsets.all(10),
                 border: InputBorder.none,
                 prefixIcon: InkWell(child: Icon(prefixIcon),onTap: iconClickEvent,),
                 hintText: hintText,
-
-
                 hintStyle: TextStyle(color: Colors.grey),
               ))
       ),

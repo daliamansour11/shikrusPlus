@@ -5,19 +5,16 @@ import 'package:taskmanger/reports/view/projects_reports_screen.dart';
 import '../../clender/view/ClenderScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import '../chat/chats/view/HomeChat.dart';
 
-import '../chat/chats/HomeChat.dart';
-import '../clender/model/TasksModel.dart';
 
 class Bottomnavigation extends StatefulWidget  {
-
   @override
   State<Bottomnavigation> createState() => _BottomnavigationState();
 }
 class _BottomnavigationState extends State<Bottomnavigation> {
   String? tittle;
   int _curvedIndex = 0;
-
   List<Widget>bottomnavScreen = <Widget>[
     HomeScreen(),
     Calendarpage(),

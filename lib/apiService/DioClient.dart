@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskmanger/apiService/DioClient.dart';
 import 'package:taskmanger/apiService/DioClient.dart';
@@ -14,6 +15,7 @@ import 'package:taskmanger/home/model/Projectmodel.dart';
 import 'package:taskmanger/home/model/statisticsmodel.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 
+import '../chat/chats/model/UsersModel.dart';
 import '../clender/Provider/SubTaskProvider.dart';
 import '../reports/model/reportsresponse.dart';
 part'DioClient.g.dart';
@@ -325,6 +327,33 @@ class DioClient {
       }
     }
   }
+  ////////////////////////////getAll Users////////////
+  Future<UsersModel> getAllUsers() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+
+    var response = await Dio().get(
+        _baseUrl+"users",
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    UsersModel usersModel = UsersModel.fromJson(response.data);
+    if (response.statusCode == 200) {
+      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(response.data);
+    return usersModel;
+  }
 
   /////////////////////////////getProjects./////////////////////////////////////
   Future<Projectmodel> getAllProjects() async {
@@ -391,23 +420,26 @@ class DioClient {
       }
     }
   }
+
+
+
   //////////UploadReport////////////////////////////////
 
   Future<ReportResponse?> addNewReport(String report, String reason,
-  File  image, int project_id) async {
+  PickedFile  image, int project_id) async {
     ReportResponse? response;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
+      // type: FileType.custom,
       allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
     );
+
+
     if (result != null) {
-      PlatformFile file = result.files.first;
-      print(file.name);
-      print(file.bytes);
-      print(file.size);
-      print(file.extension);
+      File file = File(result.files.single.path?? "");
+      String fileName= file.path.split('/').last;
+
       print(file.path);
-      var multipartFile = await MultipartFile.fromFile(file.path ?? '',
+      var multipartFile = await MultipartFile.fromFile(file.path ?? '',filename: fileName
       );
       final data = FormData.fromMap({
         "report": report,
@@ -422,13 +454,16 @@ class DioClient {
         var response = await _dio.post(
           _baseUrl+ "auth/report/${project_id}",
             data: data,
+            onSendProgress: (int sent,int total){
+            print("$sent,$total");
+            },
             options: Options(
               headers: {
                 "Content-Type": ACCEPT,
                 "lang": 'ar',
                 'Authorization': 'Bearer $token'},));
-        print('task Info: ${response.statusCode}');
-        print('task Info: ${response.data.toString()}');
+        print('report Info: ${response.statusCode}');
+        print('report Info: ${response.data.toString()}');
       } on DioError catch (e) {
         if (e.response != null) {
           print('Dio error!');
@@ -441,9 +476,18 @@ class DioClient {
           print(e.message);
         }
       }
-    }
-    return response;
+
+    return response;}
   }
+
+
+
+
+
+
+
+
+
 
    UploadAttachment(multiformData) async {
      FilePickerResult? result = await FilePicker.platform.pickFiles(

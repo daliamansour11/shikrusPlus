@@ -194,7 +194,6 @@ class GroupInfo extends StatefulWidget {
 class _GroupInfoState extends State<GroupInfo> {
   AuthService authService = AuthService();
   Stream? member;
-
   @override
   void initState() {
     super.initState();

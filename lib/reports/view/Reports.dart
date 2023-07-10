@@ -41,7 +41,7 @@ class _ReportsState extends ConsumerState<Reports> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context)=>AddNewReportsScreen(progect_id: widget.id,)));
+              MaterialPageRoute(builder: (context)=>AddNewReportsScreen(project_id: widget.id,)));
         },
         backgroundColor: Color(0xFF005373),
         child: Icon(Icons.add),

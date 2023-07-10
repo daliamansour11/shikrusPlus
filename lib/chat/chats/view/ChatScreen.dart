@@ -9,18 +9,25 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../main.dart';
-import '../view/MessageCard.dart';
-import 'api/apis.dart';
-import 'model/chat_msg.dart';
-import 'model/chat_user.dart';
+import '../../../main.dart';
+import '../../view/MessageCard.dart';
+import '../api/apis.dart';
+import '../model/chat_msg.dart';
+import '../model/chat_user.dart';
 
 
 
 
 class ChatScreen extends StatefulWidget {
+  final String UserName;
+  final String userId;
+  final String userImage;
   final ChatUser user;
-  const ChatScreen({super.key, required this.user});
+  const ChatScreen({super.key, required this.user,
+    required this.userId,
+    required this.userImage,
+    required this.UserName,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -54,11 +61,41 @@ class _ChatScreenState extends State<ChatScreen> {
           },
 
           child: Scaffold(
-            backgroundColor: Colors.teal[50],
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: Center(child: Text("chat")),
+            backgroundColor: Colors.teal[50],  appBar: AppBar(
+            backgroundColor: Colors.grey[300],
+            title: Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[400],
+                    radius: 21.0,
+                    backgroundImage: NetworkImage('${widget.userImage}'),
+                  ),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Column(
+                    children: [
+                      Text("  ${widget.UserName}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,)),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text("  ${widget.userId}",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ],
+              ),
             ),
+          ),
             body: Column(
               children: [
                 Expanded(
@@ -73,7 +110,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       // if some/all data is loaded then show it
                         case  ConnectionState.active:
                         case  ConnectionState.done:
-
                           final data=snapshot.data?.docs;
                           _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
                           // print('${jsonEncode(data![0].data())}');

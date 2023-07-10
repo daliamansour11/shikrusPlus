@@ -72,7 +72,6 @@ class _MessageCardState extends State<MessageCard> {
         ),
         Padding(
           padding: EdgeInsets.only(right: mq.width * .099999999991,top: 60,left: .09),
-
           child: Text(
             // formatted send time
             MyDate.getFormattedtime(context: context, time: widget.messages.send),

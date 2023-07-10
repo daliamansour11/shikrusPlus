@@ -1,16 +1,21 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:taskmanger/Authentication/login/model/Users.dart';
 
+import '../../Authentication/login/model/Users.dart';
 import '../../main.dart';
 import '../GroupsScreen/GroupInfo.dart';
+import '../chats/api/MyDate.dart';
+import '../chats/api/apis.dart';
+import '../chats/model/GroupModel.dart';
+import '../chats/model/chat_msg.dart';
 import '../services/database_service.dart';
-import 'api/apis.dart';
 
 TextEditingController _messageController = TextEditingController();
 
@@ -127,7 +132,28 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
       body: Column(
         children: [
           Expanded(child: _listMessagesWidget()),
+          if(_isUploading)
+            Align(alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:15.0,vertical: 5),
+                  child: CircularProgressIndicator(strokeWidth: 2,),
+                )),
+          // _chatInput(),
           _inputMessagesTextField(),
+          // emoji select window
+          if(_showEmoji)
+
+            SizedBox(
+              height: mq.height *.35,
+              child: EmojiPicker(
+                textEditingController: _messageController,
+                config: Config(
+                  columns: 8,
+                  emojiSizeMax: 32 * (Platform.isIOS?1.3:1.0),
+                ),
+              ),
+            )
+
         ],
       ),
     );
@@ -151,14 +177,14 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
               return MessageTile(
                   message: snapshot.data.docs[index]['message'],
                   sender: snapshot.data.docs[index]['sender'],
-                  sendByMe: users_model.name ==
-                      snapshot.data.docs[index]['sender']);
+                  sendByMe: widget.UserName ==
+                      snapshot.data.docs[index]['sender'], time:snapshot.data.docs[index]['time'].toDate(), senderImage: '' ,);
             },
           )
               : Container(
-            child: Text("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh"),
+          child: Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),
 
-          );
+          ));
           return CircularProgressIndicator();
         });
   }
@@ -306,17 +332,21 @@ class MessageTile extends StatefulWidget {
   final String message;
 
   final String sender;
+  final String senderImage;
+  final DateTime time;
+
 
   final bool sendByMe;
 
   MessageTile(
-      {required this.message, required this.sender, required this.sendByMe});
+      {required this.message, required this.sender, required this.sendByMe, required this.time, required this.senderImage});
 
   @override
   State<MessageTile> createState() => _MessageTileState();
 }
 
 class _MessageTileState extends State<MessageTile> {
+  Messages? _messages;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -324,6 +354,8 @@ class _MessageTileState extends State<MessageTile> {
           top: 4,
           bottom: 4,
           left: widget.sendByMe ? 0 : 24,
+
+
           right: widget.sendByMe ? 24 : 0),
       alignment: widget.sendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -347,26 +379,35 @@ class _MessageTileState extends State<MessageTile> {
             bottomRight: Radius.circular(20),
           ),
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            widget.sender.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: -0.5),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(" ${ widget.message}"
-            ,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          // Spacer(),
-        ]),
+        child:
+
+
+
+
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                widget.sender.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: -0.5),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(" ${ widget.message}"
+                ,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              // Spacer(),
+              Text(MyDate.getLastMsgTime(context: context, time:widget.time.millisecondsSinceEpoch.toString()),style: TextStyle(color: Colors.black54),),
+]  )
+
+
+
       ),
     );
   }

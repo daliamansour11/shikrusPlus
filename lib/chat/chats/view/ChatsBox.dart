@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../Authentication/login/model/Users.dart';
-import 'model/Messages.dart';
+import '../../../Authentication/login/model/Users.dart';
+import '../model/Messages.dart';
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -23,7 +23,7 @@ class ChatBox extends StatefulWidget {
     // required this.messages,
   });
   @override
-  State<ChatBox> createState() => _ChatBoxState(messages: messages_model( text: messageTextController.text,  ));
+  State<ChatBox> createState() => _ChatBoxState(messages: messages_model( msg: messageTextController.text,  ));
 }
 
 class _ChatBoxState extends State<ChatBox> {
@@ -50,7 +50,7 @@ class _ChatBoxState extends State<ChatBox> {
 
   }){
    messages_model message_model = messages_model
-   (senderId:firebaseAuth,text :text,
+   (senderId:firebaseAuth,msg :text,
    reciverId:reciverId,time:dateTime
 
    );
@@ -122,7 +122,7 @@ class _ChatBoxState extends State<ChatBox> {
 
   }){
     messages_model message_model = messages_model
-      (senderId:firebaseAuth,text :text,
+      (senderId:firebaseAuth,msg :text,
         reciverId:reciverId,time:dateTime
     );
     //userChat
@@ -246,7 +246,7 @@ class _ChatBoxState extends State<ChatBox> {
                       vertical: 5.0,
                       horizontal: 10.0),
 
-                  child: Text("${messages.text}",style: TextStyle(fontSize: 14),)
+                  child: Text("${messages.msg}",style: TextStyle(fontSize: 14),)
 
               ),
             ),
@@ -264,7 +264,7 @@ class _ChatBoxState extends State<ChatBox> {
                       vertical: 5.0,
                       horizontal: 10.0),
 
-                  child: Text("${messages.text}",style: TextStyle(fontSize: 14),)
+                  child: Text("${messages.msg}",style: TextStyle(fontSize: 14),)
 
               ),
             ),

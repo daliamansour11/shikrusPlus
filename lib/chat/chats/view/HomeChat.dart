@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmanger/chat/chats/model/UsersModel.dart';
 import 'package:taskmanger/chat/chats/model/chat_user.dart';
 import 'package:taskmanger/chat/view/ListViewCard.dart';
 
-import '../../../../TextFiledContainerWidget.dart';
-import '../../Authentication/login/model/Users.dart';
-import '../../main.dart';
-import '../../profile/profile.dart';
-import '../GroupsScreen/GroupListScreen.dart';
-import 'ChatsBox.dart';
-import 'api/apis.dart';
+import '../../../Authentication/login/model/Users.dart';
+import '../../../TextFiledContainerWidget.dart';
+import '../../../main.dart';
+import '../../../profile/profile.dart';
+import '../../GroupsScreen/GroupListScreen.dart';
+import '../api/apis.dart';
+
+
 
 class HomeChat extends StatefulWidget{
   @override
@@ -20,10 +22,10 @@ class _HomeChatState extends State<HomeChat> {
   TextEditingController searchTextController = TextEditingController();
   bool _isSearch =false;
   String? AuthEmail = FirebaseAuth.instance.currentUser?.email;
-
+  DateTime time =DateTime.now();
   List<ChatUser> _list=[];
 
-  List <ChatUser> adminList= [];
+  // List <ChatUser> adminList= [];
   final List<ChatUser> _searchList=[];
   void iconClickEvent(){
     setState(() {
@@ -31,11 +33,10 @@ class _HomeChatState extends State<HomeChat> {
       print("search");
     });
   }
-  List<Users_model> allUsers =  [];
+  List<UsersModel> allUsers =  [];
   String? Auth = FirebaseAuth.instance.currentUser?.email;
   CollectionReference groupCollection =   FirebaseFirestore.instance.collection('groups ');
   String groupName = '';
-  Users_model users_model = Users_model("", "email", "phone", "password", "", true, "image", "status",[]);
 
   getUserGroups()async{
     {
@@ -206,6 +207,7 @@ class _HomeChatState extends State<HomeChat> {
 
 
               Center(child:GroupListScreen(
+                time: time,
               )),
             ],
             )

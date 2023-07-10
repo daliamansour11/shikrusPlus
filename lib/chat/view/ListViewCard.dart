@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../main.dart';
-import '../chats/ChatScreen.dart';
+import '../chats/view/ChatScreen.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';
@@ -32,7 +32,7 @@ class _ListViewCardState extends State<ListViewCard> {
         elevation: 2,
         child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_)=> ChatScreen(user: widget.user,)));
+            Navigator.push(context, MaterialPageRoute(builder: (_)=> ChatScreen( userId: '${widget.user.id}', userImage: '${widget.user.image}', UserName: '${widget.user.name}', user: widget.user,)));
           },
           // profile pic + list of chat users
           child: StreamBuilder<QuerySnapshot>(
@@ -40,10 +40,9 @@ class _ListViewCardState extends State<ListViewCard> {
               builder: (context,AsyncSnapshot  snapshot){
                 // final data=snapshot.data?.docs;
                 final list=snapshot.data?.docs.map((e) => Messages.fromJson(e.data())).toList().cast<String>()?? [];
-
-                if(list.isNotEmpty){
-                  _messages=list[0];
-                }
+                // if(list.isNotEmpty){
+                //   _messages=list[0];
+                // }
                 return  ListTile(
                   // user profile pic
                     leading: InkWell(
@@ -67,7 +66,7 @@ class _ListViewCardState extends State<ListViewCard> {
                     _messages!.msg:
                     widget.user.about,maxLines: 1,),
 
-                    // trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
+                  //  trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
                     // last msg time
                     trailing: _messages==null?
                     // show green dot for unread msg of sender

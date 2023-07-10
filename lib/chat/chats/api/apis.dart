@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 
+import '../model/GroupModel.dart';
 import '../model/chat_msg.dart';
 import '../model/chat_user.dart';
 
@@ -350,7 +351,7 @@ class Apis {
         read: '',
         type: type,
         send: time,
-        fromId: user!);
+        fromId: groupModel.groupId!);
     final ref = firestore.collection(
         'groups/${getGroupChatId(groupModel.groupId)}/messages');
     // await ref.doc(time).set(message.toJson()).then((value) => sendgroupPushNotification(groupModel,type==Type.text?msg:'Image'));
@@ -358,24 +359,4 @@ class Apis {
 
 
 }
-class GroupModel{
 
-
-
-  String groupName;
-  // String UserName;
-  String groupId;
-  String groupImage;
-  // String pushToken;
-  // String email;
-
-  GroupModel({
-    required this.groupName,
-    // required this.UserName,
-    required this.groupId,
-    required this.groupImage,
-    // required this.pushToken,
-    // required this.email,
-  });
-
-}

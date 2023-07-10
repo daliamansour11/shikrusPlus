@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../apiService/DioClient.dart';
 import '../model/reportsresponse.dart';
@@ -22,7 +23,7 @@ class ReportsRepo {
     return response;
   }
   Future<ReportResponse?> addNewReport(String report, String reason,
-  File  image, int project_id
+      PickedFile  image, int project_id
 
       ) async {
     var response =  await dioClient.addNewReport(report, reason, image, project_id);

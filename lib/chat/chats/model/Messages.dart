@@ -1,24 +1,35 @@
 
 class messages_model{
    String? senderId;
-  String? text;
+   String? sender;
+  String? msg;
   String? reciverId;
   String? time;
+  String? type;
+       String? read;
+
+
 
 
   // , key;
 
   messages_model( {
     this.senderId,
-     this.text,
+    this.sender,
+     this.msg,
      this.time,
+    this.type,
+    this.read,
      this.reciverId,
   });
   messages_model.fromJson(Map<String, dynamic>json)
   {
      senderId = json["senderId"];
-    text  = json["text"];
+     sender = json["sender"];
+     msg  = json["msg"];
     time = json["time"];
+    type = json["type"];
+     read = json["read"];
     reciverId = json["reciverId"];
 
 
@@ -28,8 +39,11 @@ class messages_model{
   {
   return{
    'senderId':senderId,
-  "text":text,
+   'sender':sender,
+  "msg":msg,
   "time":time,
+    "type": type,
+    "read": read,
 
   };
 

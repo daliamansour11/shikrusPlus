@@ -10,87 +10,88 @@ import '../provider/AddNewTaskProvider.dart';
 class AddTaskScreen extends ConsumerStatefulWidget{
   int project_id;
   AddTaskScreen({required this.project_id,} );
-
   @override
   ConsumerState<AddTaskScreen> createState() => _AddTaskScreenState();
 }
-
 class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
 
   var _formKey = GlobalKey<FormState>();
   var isLoading = false;
   bool showSpinner =false;
   var SelectedType ;
-
   void _submit() {
-  final isValid = _formKey.currentState!.validate();
-  if (!isValid) {
-  return;
-  }
-  _formKey.currentState!.save();
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState!.save();
   }
   DateTime? _selectedDate;
-   TextEditingController startDateController = TextEditingController();
-   TextEditingController endDateController   =  TextEditingController();
-   TextEditingController startTimeController =  TextEditingController();
-   TextEditingController endTimeController =  TextEditingController();
-    TextEditingController mainNameController =  TextEditingController();
-   TextEditingController subNameController =  TextEditingController();
-   TextEditingController noteController =  TextEditingController();
-   TextEditingController subjectController =  TextEditingController();
-
-
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController   =  TextEditingController();
+  TextEditingController startTimeController =  TextEditingController();
+  TextEditingController endTimeController =  TextEditingController();
+  TextEditingController mainNameController =  TextEditingController();
+  TextEditingController subNameController =  TextEditingController();
+  TextEditingController noteController =  TextEditingController();
+  TextEditingController subjectController =  TextEditingController();
+  String project = ' ';
+  // List of items in our dropdown menu
+  var items = [
+    'Item 1',
+    'Item 2',
+    'Item 3',
+    'Item 4',
+    'Item 5',
+  ];
   @override
   void initState() {
     Future.delayed(
         Duration(seconds: 3));
   }
-
   @override
   Widget build(BuildContext context) {
-
-
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-          backgroundColor: Color(0xFF005373),
-          title: Text(
-            "AddNewTask",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          automaticallyImplyLeading: true,
-          actions: [
-            IconButton(onPressed: (){
-            }, icon:Container(
-              height: 180,
-              child: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Profilescreen()));
-                },
-                child: ClipRRect(
-
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image(image:AssetImage(
-                      "assets/personn.jpg"),
-
-                    width:50,height: 150 , fit: BoxFit.cover, ),
-                ),
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+            backgroundColor: Color(0xFF005373),
+            title: Text(
+              "AddNewTask",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: true,
+            actions: [
+              IconButton(onPressed: (){
+              }, icon:Container(
+                height: 180,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Profilescreen()));
+                  },
+                  child: ClipRRect(
 
-            ),color: Colors.black,),
-            SizedBox(width: 20,height: 10,)]),
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image(image:AssetImage(
+                        "assets/personn.jpg"),
 
-      body: Container(
+                      width:50,height: 150 , fit: BoxFit.cover, ),
+                  ),
+                ),
+
+              ),color: Colors.black,),
+              SizedBox(width: 20,height: 10,)]),
+
+        body: Container(
 
           height: double.infinity,
           width: double.infinity,
           decoration: BoxDecoration(
-               color: Colors.white,
+            color: Colors.white,
 
           ),
 
@@ -99,10 +100,51 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: size.width* 0.02,),
-
-
-
+                  // SizedBox(height: size.width* 0.02,),
+                  // Container(
+                  //   alignment: Alignment.topLeft,
+                  //   margin: EdgeInsets.only(left: 12,bottom: 2),
+                  //   child: Text("projects"
+                  //     ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 2),
+                  // Container(
+                  //     alignment: Alignment.center,
+                  //     margin:EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 5) ,
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.grey[300],
+                  //       borderRadius: BorderRadius.all(Radius.circular(10)),),
+                  //     child: DropdownButtonHideUnderline(
+                  //       child: DropdownButton (
+                  //         value: project,
+                  //           hint:Padding(
+                  //             padding: const EdgeInsets.all(8.0),
+                  //             child: Text('choose project to add task'),
+                  //           ),
+                  //           // Down Arrow Icon
+                  //           icon: const Icon(Icons.keyboard_arrow_down),
+                  //           isExpanded: true,
+                  //           // Array list of items
+                  //        // value: project,
+                  //           items: items.map((String value) {
+                  //             return new DropdownMenuItem<String>(
+                  //               value: value,
+                  //               child:  Padding(
+                  //                 padding: const EdgeInsets.all(8.0),
+                  //                 child: Text(value),
+                  //               ),
+                  //             );
+                  //           }).toList(),
+                  //           onChanged: (value) {
+                  //             setState(() {
+                  //               project = value!;
+                  //             });    project = value!;
+                  //           }),
+                  //     )
+                  // ),
+                  //
+                  // SizedBox(height: 7,),
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 12,bottom: 2),
@@ -333,12 +375,12 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                       ),
                                       child: child!,);
                                   }
-                                  );
+                              );
                               if (newSelectedDate != null) {
                                 _selectedDate = newSelectedDate;
-                                 startDateController
+                                startDateController
 
-                              ..text = DateFormat("yyyy-MM-dd").format(_selectedDate!)
+                                  ..text = DateFormat("yyyy-MM-dd").format(_selectedDate!)
                                   ..selection = TextSelection.fromPosition(TextPosition(
                                       offset: startDateController.text.length,
                                       affinity: TextAffinity.upstream));
@@ -505,14 +547,14 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                   ); //end of showTimePicker
                                   startTimeController.text = time!.format(context); // to h{
 
-                                  },
+                                },
                                 validator:(value){
                                   if (value!.isEmpty  ||value == null)
                                   {
                                     return "please enter  your starttime";
 
-                                  // else if(!value .contains("@") ||!value .contains(".") ){
-                                  //   return " please enter valide starttime ";
+                                    // else if(!value .contains("@") ||!value .contains(".") ){
+                                    //   return " please enter valide starttime ";
 
                                   }
                                   return null;
@@ -525,80 +567,80 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                         ),
                         SizedBox(width: size.width* 0.03,),
                         Expanded(
-                            flex: 2,
-                            child: Container(
+                          flex: 2,
+                          child: Container(
 
 
                               child: TextFormField(
-                                controller:endTimeController ,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                                  enabledBorder:OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.grey,
-                                      width: 1,
+                                  controller:endTimeController ,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                                    enabledBorder:OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey,
+                                        width: 1,
+
+                                      ),
+
+                                      borderRadius: BorderRadius.all(Radius.circular(20)
+                                      ),
 
                                     ),
 
-                                    borderRadius: BorderRadius.all(Radius.circular(20)
-                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.blue,
+                                        width: 2,
 
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(20)
+
+                                      ),
+                                    ),
+                                    hintStyle: TextStyle(color: Colors.black45),
+                                    errorStyle: TextStyle(color: Colors.redAccent),
+
+                                    suffixIcon: Icon(Icons.event_note),
+                                    labelText: 'endTime',
                                   ),
-
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.blue,
-                                      width: 2,
-
-                                    ),
-                                    borderRadius: BorderRadius.all(Radius.circular(20)
-
-                                    ),
-                                  ),
-                                  hintStyle: TextStyle(color: Colors.black45),
-                                  errorStyle: TextStyle(color: Colors.redAccent),
-
-                                  suffixIcon: Icon(Icons.event_note),
-                                  labelText: 'endTime',
-                                ),
-                                onTap: () async {
-                                  var time = await showTimePicker(
-                                    builder: (context, child) {
-                                      return Theme(
-                                        data: ThemeData.light().copyWith(
-                                          colorScheme: ColorScheme.dark(
-                                            primary: const Color(0xffE5E0A1),
-                                            onPrimary: Colors.black,
-                                            surface: Colors.white,
-                                            onSurface: Colors.black,
+                                  onTap: () async {
+                                    var time = await showTimePicker(
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: ThemeData.light().copyWith(
+                                            colorScheme: ColorScheme.dark(
+                                              primary: const Color(0xffE5E0A1),
+                                              onPrimary: Colors.black,
+                                              surface: Colors.white,
+                                              onSurface: Colors.black,
+                                            ),
+                                            dialogBackgroundColor: Colors.white,
                                           ),
-                                          dialogBackgroundColor: Colors.white,
-                                        ),
-                                        child: child!,
-                                      );
-                                    },
-                                    context: context,
-                                    initialTime: TimeOfDay.now(),
-                                    //timeController.text = time.format(context) from here
-                                  ); //end of showTimePicker
-                                  endTimeController.text =
-                                      time!.format(context); // to h
-                                },
+                                          child: child!,
+                                        );
+                                      },
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      //timeController.text = time.format(context) from here
+                                    ); //end of showTimePicker
+                                    endTimeController.text =
+                                        time!.format(context); // to h
+                                  },
                                   validator:(value){
-                            if (value!.isEmpty ||value ==null) {
+                                    if (value!.isEmpty ||value ==null) {
                                       return "please enter  your endtime";
                                       return null;
 
-    }}
+                                    }}
                               )
-                            ),
+                          ),
                         )
                       ],),
                   ),
 
                   Container(
-                    margin: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 10),
-                    height: 63,
+                    margin: EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 10),
+                    height: 62,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(160),
@@ -624,32 +666,32 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                         if( mainNameController.text.isEmpty ||
                             startDateController .text .isEmpty ||
                             endDateController.text == null||startTimeController.text == null  ||endTimeController.text == null) {
-                        _submit();
+                          _submit();
                           print("empty");
                         }
                         else{
 
-                                        print("project_id ${widget.project_id}");
+                          print("project_id ${widget.project_id}");
 
-                                     var response=  await  ref.read(NewMainTaskProvider).AddNewMainTask(
+                          var response=  await  ref.read(NewMainTaskProvider).AddNewMainTask(
 
-                                         mainNameController.text,
-                                         subjectController.text,
-                                         noteController.text,
-                                         startDateController.text,
-                                         endDateController.text,
-                                         startTimeController.text,
-                                         endTimeController.text,
-                                              "main",
-                                       widget.project_id
-                                     );
-                                     if (response?.status == true) {
-                                        mainNameController.clear();
-                                       startDateController.clear();
-                                       endDateController.clear();
-                                      startTimeController.clear();
-                                      endTimeController.clear();
-                                     _formKey.currentState!.reset();
+                              mainNameController.text,
+                              subjectController.text,
+                              noteController.text,
+                              startDateController.text,
+                              endDateController.text,
+                              startTimeController.text,
+                              endTimeController.text,
+                              "main",
+                              widget.project_id
+                          );
+                          if (response?.status == true) {
+                            mainNameController.clear();
+                            startDateController.clear();
+                            endDateController.clear();
+                            startTimeController.clear();
+                            endTimeController.clear();
+                            _formKey.currentState!.reset();
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -660,11 +702,10 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                   : Colors.red,
                             ),
                           );
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context)=>Bottomnavigation()));
-                         }
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+                        }
                       },
-
                       child: Text(
                           "    Add Task    ",
                           style: TextStyle(color: Colors.white, fontSize: 18)
@@ -678,39 +719,39 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
             ),
           ),
 
-      )
+        )
     );
 
   }
 
   _selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
-        context: context,
-        initialDate: _selectedDate != null ? _selectedDate! : DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2040),
+      context: context,
+      initialDate: _selectedDate != null ? _selectedDate! : DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2040),
     );
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.dark(
-                primary: Colors.deepPurple,
-                onPrimary: Colors.white,
-                surface: Colors.blueGrey,
-                onSurface: Colors.yellow,
-              ),
-              dialogBackgroundColor: Colors.blue[500],
-            ),
-            child: child,
-          );
-        };
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.dark(
+            primary: Colors.deepPurple,
+            onPrimary: Colors.white,
+            surface: Colors.blueGrey,
+            onSurface: Colors.yellow,
+          ),
+          dialogBackgroundColor: Colors.blue[500],
+        ),
+        child: child,
+      );
+    };
     if (newSelectedDate != null) {
       _selectedDate = newSelectedDate;
       startDateController.text =DateFormat.yMd().format(_selectedDate!);
 
       startDateController.selection = TextSelection.fromPosition(TextPosition(
-            offset: startDateController.text.length,
-            affinity: TextAffinity.upstream));
+          offset: startDateController.text.length,
+          affinity: TextAffinity.upstream));
     }
     // print(newSelectedDate);
   }

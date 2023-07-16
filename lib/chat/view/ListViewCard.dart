@@ -7,13 +7,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../main.dart';
+import '../chats/model/UsersModel.dart';
 import '../chats/view/ChatScreen.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';
 import '../chats/model/chat_user.dart';
 class ListViewCard extends StatefulWidget {
-  final ChatUser user;
+  final UserData user;
   const ListViewCard({super.key, required this.user});
 
   @override
@@ -62,9 +63,9 @@ class _ListViewCardState extends State<ListViewCard> {
                     // user name show
                     title: Text(widget.user.name,style: GoogleFonts.balooBhai2(fontWeight: FontWeight.bold,fontSize: 20)),
                     // last msg show
-                    subtitle: Text(_messages!=null?_messages!.type==Type.image?'Photo':
-                    _messages!.msg:
-                    widget.user.about,maxLines: 1,),
+                    // subtitle: Text(_messages!=null?_messages!.type==Type.image?'Photo':
+                    // _messages!.msg:
+                    // widget.user.about,maxLines: 1,),
 
                   //  trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
                     // last msg time

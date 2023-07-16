@@ -11,6 +11,7 @@ class Profilescreen extends StatefulWidget {
 }
 
 class _ProfilescreenState extends State<Profilescreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +20,7 @@ class _ProfilescreenState extends State<Profilescreen> {
         elevation: 0.0,
         centerTitle: true,
         backgroundColor: Color(0xFF005373),
+
 
         title: Row(
           children: [

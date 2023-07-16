@@ -356,7 +356,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                   passwordController.clear();
                                                   _formKey.currentState!
                                                       .reset();
-                                                  // debugPrint("ressssssssssssssssssssssssssssssssssss$response");
+                                                   print("iddddddddddddddddddddddd${response.data!.personalInformation.id}");
                                                   SharedPreferencesInfo
                                                       .saveUserEmailSF(
                                                       response.data!
@@ -364,15 +364,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                           .email);
                                                   SharedPreferencesInfo
                                                       .saveUserIdSF(
-                                                      response.data!
-                                                          .personalInformation
-                                                          .id);
+                                                      response.data!.personalInformation.id);
                                                   SharedPreferencesInfo
                                                       .saveUserLoggedInStatus(
                                                       response.status ?? false);
                                                   SharedPreferencesInfo
                                                       .saveUserTokenSF(
-                                                      response.data?.token ??
+                                                      response.data?.token??
                                                           "");
                                                   print(response.data
                                                       ?.personalInformation

@@ -7,8 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/SharedPreferenceInfo.dart';
 import '../model/GroupModel.dart';
+import '../model/UsersModel.dart';
 import '../model/chat_msg.dart';
 import '../model/chat_user.dart';
 
@@ -24,7 +27,7 @@ class Apis {
   static String? photoURL = FirebaseAuth.instance.currentUser?.photoURL;
 
 
-  static late ChatUser me;
+  static late UserData me;
 
   // Push notifications
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
@@ -35,7 +38,7 @@ class Apis {
 
     await fMessaging.getToken().then((t) {
       if (t != null) {
-        me.pushToken = t;
+        //me.pushToken = t;
         print('Push Token: $t');
       }
     });
@@ -51,11 +54,11 @@ class Apis {
   }
 
   // sending push notifications
-  static Future<void> sendPushNotification(ChatUser chatuser,
+  static Future<void> sendPushNotification(UserData chatuser,
       String msg) async {
     try {
       final body = {
-        "to": chatuser.pushToken,
+       // "to": chatuser.pushToken,
         "notification": {
           "title": me.name, //our name should be send
           "body": msg,
@@ -84,7 +87,7 @@ class Apis {
   static Future <void> getProfileInfo() async {
     await firestore.collection('users').doc(user!).get().then((user) async {
       if (user.exists) {
-        me = ChatUser.fromJson(user.data()!);
+        me = UserData.fromJson(user.data()!);
         await getFirebaseMessagingToken();
         // for updating status of user
         Apis.updateActiveStatus(true);
@@ -115,16 +118,13 @@ class Apis {
         .now()
         .millisecondsSinceEpoch
         .toString();
-    final Chatuser = ChatUser(
-        id: user!,
+    final Chatuser = UserData(
+        id: int.parse(user??""),
         name: displayName!.toString(),
         email: email!.toString(),
-        about: "Hello, I'm using  chatk",
+
         image: photoURL.toString(),
-        createdAt: time,
-        isOnline: false,
-        lastActive: time,
-        pushToken: ''
+        type: ''
     );
     // return (await firestore.collection('users').doc(auth.currentuser!).get()).exists;
     return await firestore.collection('users').doc(user!).set(
@@ -144,13 +144,12 @@ class Apis {
   }
 
   // for getting all users from firestore database
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
-      List<String> userIds)   {
+  static Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getAllUsers(List<String> userIds) async
+  {
     log('\nUserIds: $userIds');
     print("ussssssssssssssssssssss$userIds");
-    return firestore
-        .collection('users')
-        .where('uId',isNotEqualTo: user ) //because empty list throws an error
+    return await firestore.collection('users').where('uId',isNotEqualTo: user )
+    //because empty list throws an error
      .where('email', isNotEqualTo:"mohmed112@gmail.com" )
         .snapshots();
   }
@@ -172,45 +171,67 @@ class Apis {
           .now()
           .millisecondsSinceEpoch
           .toString(),
-      'push_token': me.pushToken,
+      //'push_token': me.pushToken,
     });
   }
 
   //                      chat msgs
   // for getting a conversaton id
-  static String getConversionId(String id) =>
-      user.hashCode <= id.hashCode ? '${user}_$id' : '${id}_${user}';
+static int?idduserr;
+  static getid()async
+  {
+    await SharedPreferencesInfo.getUserIdFromSF().then(( value){
+      idduserr = value;
+        print("nameeeeeeeeeeeeee$idduserr");
+
+    });
+  }
+
+  static String getConversionId(String id) {
+
+   return user.hashCode <= id.hashCode ? '${ auth.currentUser?.uid}_$id'
+        : '${id}_${ auth.currentUser?.uid}';
+  }
+  static String getsendConversionId(String id,int idd) {
+    return user.hashCode <= id.hashCode ? '${ idd}_$id'
+        : '${id}_${ idduserr}';
+  }
 
   // to get all msgs from firestore database for a particular conversionId
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
-      ChatUser user) {
-    return firestore.collection('chat/${getConversionId(user.id)}/messages')
+      UserData user){
+
+    return  firestore.collection('chat/${getsendConversionId(user.id.toString(),idduserr??0)}/messages')
         .orderBy('send', descending: true)
         .snapshots();
   }
 
 // for sending msgs
-  static Future<void> sendMessage(ChatUser chatuser, String msg,
+  static Future<void> sendMessage(UserData chatuser, String msg,
       Type type) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
     final time = DateTime
         .now()
         .millisecondsSinceEpoch
         .toString();
     final Messages message = Messages(
         msg: msg,
-        toId: chatuser.id,
+        toId: chatuser.id.toString(),
         read: '',
         type: type,
         send: time,
         fromId: user??"");
     final ref = firestore.collection(
-        'chat/${getConversionId(chatuser.id)}/messages');
+        'chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/messages');
     await ref.doc(time).set(message.toJson()).then((value) =>
         sendPushNotification(chatuser, type == Type.text ? msg : 'Image'));
   }
 // updating status of msg read/unread
   static Future<void> updateMessageReadstatus(Messages messages) async {
-    firestore.collection('chat/${getConversionId(messages.fromId)}/messages')
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
+    firestore.collection('chat/${getsendConversionId(messages.fromId,iduserr)}/messages')
         .doc(messages.send)
         .update({'read': DateTime
         .now()
@@ -220,19 +241,21 @@ class Apis {
 
 // to get the last msg
   static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(
-      ChatUser user) {
-    return firestore.collection('chats/${getConversionId(user.id)}/messages')
+      UserData user) {
+    return firestore.collection('chats/${getConversionId(user.id.toString())}/messages')
         .orderBy('send', descending: true)
         .limit(1).snapshots();
   }
 
   // images store in database
-  static Future<void> sendChatImage(ChatUser chatUser, File file) async {
+  static Future<void> sendChatImage(UserData chatUser, File file) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
     final ext = file.path
         .split('.')
         .last;
     final ref = storage.ref().child
-      ('images/${getConversionId(chatUser.id)}/${DateTime
+      ('images/${getsendConversionId(chatUser.id.toString(),iduserr)}/${DateTime
         .now()
         .millisecondsSinceEpoch}.$ext');
     await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
@@ -244,7 +267,7 @@ class Apis {
   }
 
 // for adding an user to my user when first message is send
-  static Future<void> sendFirstMessage(ChatUser chatuser, String msg,
+  static Future<void> sendFirstMessage(UserData chatuser, String msg,
       Type type) async {
     await firestore
         .collection('users')
@@ -256,7 +279,7 @@ class Apis {
 
 // getting specific user info
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
-      ChatUser chatUser) {
+      UserData chatUser) {
     return firestore.collection('users')
         .where('id', isEqualTo: chatUser.id)
         .snapshots();
@@ -264,8 +287,10 @@ class Apis {
 
   //delete message
   static Future<void> deleteMessage(Messages message) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
     await firestore
-        .collection('chat/${getConversionId(message.toId)}/messages/')
+        .collection('chat/${getsendConversionId(message.toId,iduserr)}/messages/')
         .doc(message.send)
         .delete();
     if (message.type == Type.image) {
@@ -283,8 +308,10 @@ class Apis {
 
   // edit msgs
   static Future<void> updatemessage(Messages message, String updatedMsg) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
     await firestore
-        .collection('chat/${getConversionId(message.toId)}/messages/')
+        .collection('chat/${getsendConversionId(message.toId,iduserr)}/messages/')
         .doc(message.send)
         .update({'msg': updatedMsg});
   }
@@ -302,7 +329,6 @@ class Apis {
       //user exists
 
       log('user exists: ${data.docs.first.data()}');
-
       firestore
           .collection('users')
           .doc(user!)
@@ -351,7 +377,7 @@ class Apis {
         read: '',
         type: type,
         send: time,
-        fromId: groupModel.groupId!);
+        fromId: groupModel.groupId);
     final ref = firestore.collection(
         'groups/${getGroupChatId(groupModel.groupId)}/messages');
     // await ref.doc(time).set(message.toJson()).then((value) => sendgroupPushNotification(groupModel,type==Type.text?msg:'Image'));

@@ -12,7 +12,16 @@ class SharedPreferencesInfo{
   static String userEmailKey = "USEREMAILKEY";
   static String stringValue = "ABCD";
   static String userNameKey = "USERNAMEKEY";
+  static  SharedPreferences? sharedPreferences;
 
+  static init() async
+  {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+  static int? gettInt({required String key})
+  {
+    return sharedPreferences?.getInt(key);
+  }
   static  addToSP(TasksModel data,int index) async {
     Map<String, dynamic> map = {
       'id': data.data,
@@ -22,16 +31,7 @@ class SharedPreferencesInfo{
     prefs.setString(TASKIdKey, json);
        //   print(json);
   }
-  // void getSP() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final List<dynamic> jsonData =
-  //   jsonDecode(prefs.getString(TASKIdKey) ?? '[]');
-  //   var list = jsonData.map <List<Datum>>((jsonList) {
-  //     return jsonList.map<Datum>((jsonItem) {
-  //       return Datum.fromJson(jsonItem);
-  //     }).toList();
-  //   }).toList();
-  // }
+
 
   static Future<String?> getUserNameFromSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();

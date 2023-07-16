@@ -10,8 +10,7 @@ import '../chat_repo/ChatRepo.dart';
 
 
 ////allusers////////////////
-final AllUserProvider = ChangeNotifierProvider<AllUserNotifier>((
-    ref) =>
+final AllUserProvider = ChangeNotifierProvider<AllUserNotifier>((ref) =>
     AllUserNotifier(ref)
 );
 

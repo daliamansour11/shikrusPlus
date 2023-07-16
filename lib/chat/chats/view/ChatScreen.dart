@@ -9,9 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../core/SharedPreferenceInfo.dart';
 import '../../../main.dart';
 import '../../view/MessageCard.dart';
 import '../api/apis.dart';
+import '../model/UsersModel.dart';
 import '../model/chat_msg.dart';
 import '../model/chat_user.dart';
 
@@ -22,7 +24,7 @@ class ChatScreen extends StatefulWidget {
   final String UserName;
   final String userId;
   final String userImage;
-  final ChatUser user;
+  final UserData user;
   const ChatScreen({super.key, required this.user,
     required this.userId,
     required this.userImage,
@@ -37,8 +39,22 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Messages> _list=[];
   // _ private var
   final _textcontroller =TextEditingController();
-// emoji var           image uploading
+
+  @override
+  void initState() {
+
+    gettingUserData();
+  } // emoji var           image uploading
   bool _showEmoji=false,_isUploading=false;
+   int idt=0;
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserIdFromSF().then((value){
+      setState(() {
+        idt = value!;
+        print("nameeeeeeeeeeeeee$idt");
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +116,11 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: Apis.getAllMessages(widget.user),
+                    stream:
+                    //Apis.getAllMessages(widget.user),
+                    FirebaseFirestore.instance.collection('chat/${Apis.getsendConversionId(widget.user.id.toString(),idt??0)}/messages')
+                       .orderBy('send', descending: true)
+                       .snapshots(),
                     builder:(context, AsyncSnapshot snapshot){
                       switch (snapshot.connectionState) {
                       // if data is loading

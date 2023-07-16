@@ -6,7 +6,7 @@ class UsersModel {
   bool status;
   String errNum;
   String msg;
-  List<Datum> data;
+  List<UserData> data;
 
   UsersModel({
     required this.status,
@@ -19,7 +19,7 @@ class UsersModel {
     status: json["status"],
     errNum: json["errNum"],
     msg: json["msg"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<UserData>.from(json["data"].map((x) => UserData.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -30,26 +30,26 @@ class UsersModel {
   };
 }
 
-class Datum {
+class UserData {
   int id;
   String name;
   String email;
   String type;
   String? phone;
   String image;
-  Status status;
+  Status? status;
 
-  Datum({
+  UserData({
     required this.id,
     required this.name,
     required this.email,
     required this.type,
     this.phone,
     required this.image,
-    required this.status,
+     this.status,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory UserData.fromJson(Map<String, dynamic> json) => UserData(
     id: json["id"],
     name: json["name"],
     email: json["email"],

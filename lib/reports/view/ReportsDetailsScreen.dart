@@ -6,6 +6,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/Constants.dart';
+import '../../widgets/TextFieldWidget.dart';
 
 class ReportsDetailsScreen extends ConsumerStatefulWidget {
   String report;
@@ -49,10 +50,7 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Color(0xFF005373),
-        title: Text(
-          "Report Details",
-          style: TextStyle(fontSize: 20.sp, color: Colors.white),
-        ),
+        title:TextFieldHeaderWidget(title: "Report Details",colors: Colors.white,),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -67,17 +65,9 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Report Name",
-                        style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
-                      ),
+                      TextFieldTitleWidget(title: "Report Name",fontWeight: FontWeight.bold,),
                       SizedBox(height: 14.h,),
-                      Text(
-                        widget.report,
-                        style:
-                        TextStyle( fontSize: 15.sp),
-                      ),
+                      TextFieldTitle2Widget(title: widget.report,),
                     ],
                   ),
                 ),
@@ -113,13 +103,9 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                         Padding(
                                           padding:
                                           const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            "Updated At",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.sp,
-                                                color: Colors.grey),
-                                          ),
+                                          child:TextFieldTitleWidget(title: "Updated At",fontWeight: FontWeight.bold,colors: Colors.grey,),
+
+
                                         ),
                                         SizedBox(
                                           width: 20,
@@ -141,12 +127,10 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Text(
-                                          formattedDate(widget.created_At),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp,
-                                              color:  Color(0xFF005373)),
+                                        TextFieldTitle2Widget(title:formattedDate(widget.created_At),
+                                            fontWeight: FontWeight.bold, size: 12.sp,
+                                            colors:  Color(0xFF005373)
+
                                         ),
                                       ],
                                     )
@@ -191,12 +175,11 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                         Padding(
                                           padding:
                                           const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            "Created At",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14.sp,
-                                                color: Colors.grey),
+                                          child: TextFieldTitleWidget(
+                                            title: "Created At",
+                                              fontWeight: FontWeight.bold,
+
+                                                colors: Colors.grey
                                           ),
                                         ),
                                         SizedBox(
@@ -219,12 +202,12 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Text(
+                                        TextFieldTitle2Widget(title:
                                           formattedDate(widget.created_At),
-                                          style: TextStyle(
+
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 12.sp,
-                                              color:  Color(0xFF005373)),
+                                              size: 12.sp,
+                                              colors:  Color(0xFF005373),
                                         ),
                                       ],
                                     )
@@ -246,16 +229,15 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Report Reason",
-                        style:
-                        TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-                      ),
+                      TextFieldTitleWidget(
+                       title: "Report Reason",
+                      fontWeight: FontWeight.w600),
+
                       SizedBox(height: 15.h,),
-                      Text(
-                        widget.reason,
-                        style:
-                        TextStyle(fontSize: 14.sp),
+                      TextFieldTitle2Widget(
+                       title: widget.reason,
+
+
                       ),
                     ],
                   ),
@@ -266,9 +248,9 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Container(
-                      child: Text(
+                      child: TextFieldTitleWidget(title:
                         "Attachments",
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                       fontWeight: FontWeight.bold,
                       )),
                 ),
                 SizedBox(
@@ -302,21 +284,17 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "Progress",
-                                style: TextStyle(
+                              TextFieldTitleWidget(
+                                title: "Progress",
 
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 95.0),
-                                child: Text(
-                                  "${widget.rate}%" ?? " ",
-                                  style: TextStyle(
-                                      color:  Color(0xFF005373),
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600),
+                                child: TextFieldTitle2Widget(
+                                 title: "${widget.rate}%" ?? " ",
+                                    colors:  Color(0xFF005373),
+                                      fontWeight: FontWeight.w600
                                 ),
                               ),
                             ],

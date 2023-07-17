@@ -3,6 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -14,7 +15,9 @@ import 'package:taskmanger/home/view/ProjectsProgress.dart';
 import 'package:taskmanger/home/view/ProjectsScreen.dart';
 import '../../core/Color.dart';
 import '../../profile/profile.dart';
+import '../../widgets/TextFieldWidget.dart';
 import '../provider/DeviceTokenProvider.dart';
+import 'detailsscreen.dart';
 
 class HomeScreen extends  ConsumerStatefulWidget {
   @override
@@ -63,8 +66,7 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
         appBar: AppBar(
 
             backgroundColor: Color(0xFF005373),
-            title: Text("Home",
-                style: GoogleFonts.balooBhai2(textStyle: TextStyle(fontSize: 25))),
+            title: TextFieldHeaderWidget(title: "Home",colors: Colors.white,),
 
             centerTitle: true,
             automaticallyImplyLeading: false,
@@ -113,9 +115,8 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "My Task",
-                                style: GoogleFonts.balooBhai2(textStyle: TextStyle(fontSize: 25))),
+                      child: TextFieldTitleWidget(
+                       title: "My Task",size: 16.sp,),
 
 
 
@@ -236,9 +237,8 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
 
                     Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        "Latest project",
-                          style: GoogleFonts.balooBhai2(textStyle: TextStyle(fontSize: 22))),
+                      child: TextFieldTitleWidget(
+                        title: "Latest project",size: 16.sp,),
 
                     ),
 
@@ -251,12 +251,10 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
 
                       child: Padding(
                         padding: const EdgeInsets.all(3.0),
-                        child: Text(
-                          "see More",
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500),
+                        child: TextFieldTitleWidget(
+                         title: "see More", colors: Colors.grey,
+                              size: 14.sp,
+                              fontWeight: FontWeight.w500,
                         ),
                       ),
                     )
@@ -264,7 +262,7 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                 ),
 
                 SizedBox(
-                  height: 5,
+                  height: 5.h,
                 ),
                 Expanded(
                     flex: 1,
@@ -300,211 +298,216 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                                   scrollDirection: Axis.vertical,
                                   itemBuilder: (context, index) {
                                     final usersData = data.data[index];
-                                    return Container(
-                                      margin: EdgeInsets.only(bottom: 7,
-                                          top: 16,
-                                          left: 5,
-                                          right: 5),
-                                      height: 130,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      left: 10.0),
-                                                  child: Text(
-                                                    usersData.name ?? " ",
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight
-                                                            .bold,
-                                                        fontSize: 25),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .only(
-                                                      left: 10.0,
-                                                      right: 10,
-                                                      top: 0),
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        "Progress",
-                                                        style: TextStyle(
-                                                            color: Colors
-                                                                .grey[700],
-                                                            fontSize: 15),
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets
-                                                            .only(
-                                                            left: 90.0),
-                                                        child: Text(
-                                                          "45%" ??
-                                                              " ",
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[700],
-                                                              fontSize: 15),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets
-                                                            .only(
-                                                            left: 39.0),
-                                                        child: Row(
-                                                          children: [
-                                                            CircleAvatar(
-                                                                backgroundImage:
-                                                                AssetImage(
-                                                                  "assets/personn.jpg",
-                                                                ),
-                                                                radius: 12,
-                                                                backgroundColor:
-                                                                Colors.white60),
-                                                            CircleAvatar(
-                                                                backgroundImage:
-                                                                AssetImage(
-                                                                  "assets/ppr.jpg",
-                                                                ),
-                                                                radius: 12,
-                                                                backgroundColor:
-                                                                Colors.white60),
-                                                            CircleAvatar(
-                                                                backgroundImage:
-                                                                AssetImage(
-                                                                  "assets/ppr.jpg",
-                                                                ),
-                                                                radius: 12,
-                                                                backgroundColor:
-                                                                Colors.white60),
-                                                            Padding(
-                                                              padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 15.0),
-                                                              child: Icon(
-                                                                Icons
-                                                                    .arrow_forward_ios,
-                                                                size: 20,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Row(
+                                    return InkWell(
+                                      onTap: (){
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Detailsscreen(name:data.data[index].name??"", subject:data.data[index].subject??"", notes: data.data[index].notes??"", startDate: data.data[index].startingDate.toString()??"", endDate:  data.data[index].expectedExpiryDate.toString()??'', status: data.data[index].status?? '',)));
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(bottom: 7,
+                                            top: 16,
+                                            left: 5,
+                                            right: 5),
+                                        height: 130,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
                                                 mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Column(
-                                                    children: [
-                                                      LinearPercentIndicator(
-                                                          width: 200.0,
-                                                          lineHeight: 8.0,
-                                                          percent: 0.45,
-                                                          progressColor: Colors
-                                                              .blue,
-                                                          linearStrokeCap:
-                                                          LinearStrokeCap.round
-
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                left: 5.0,
-                                                                right: 10),
-                                                            child: Icon(
-                                                              Icons
-                                                                  .access_time_filled,
-                                                              color: Colors
-                                                                  .blue,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                              padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                left: 5.0,
-                                                              ),
-                                                              child: Text(
-                                                                  usersData
-                                                                      .startingDate!
-                                                                      .year
-                                                                      .toString() +
-                                                                      "-" +
-                                                                      usersData
-                                                                          .startingDate!
-                                                                          .month
-                                                                          .toString() +
-                                                                      "-" +
-                                                                      usersData
-                                                                          .startingDate!
-                                                                          .day
-                                                                          .toString())),
-                                                          Padding(
-                                                              padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 5.0),
-                                                              child: Text("_")),
-                                                          Padding(
-                                                              padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  left: 5.0,
-                                                                  right: 6),
-                                                              child: Text(
-                                                                  usersData
-                                                                      .expectedExpiryDate!
-                                                                      .year
-                                                                      .toString() +
-                                                                      "-" +
-                                                                      usersData
-                                                                          .expectedExpiryDate!
-                                                                          .month
-                                                                          .toString() +
-                                                                      "-" +
-                                                                      usersData
-                                                                          .expectedExpiryDate!
-                                                                          .day
-                                                                          .toString())),
-                                                        ],
-                                                      ),
-                                                    ],
+                                                  Padding(
+                                                    padding:
+                                                    const EdgeInsets.only(
+                                                        left: 10.0),
+                                                    child: TextFieldTitle2Widget(
+                                                      title:usersData.name ?? " ",
+                                                          fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .only(
+                                                        left: 10.0,
+                                                        right: 10,
+                                                        top: 10),
+                                                    child: Row(
+                                                      children: [
+                                                        TextFieldTitleWidget(
+                                                          title:"Progress",
+                                                              colors: Colors.grey,
 
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets
+                                                              .only(
+                                                              left: 90.0),
+                                                          child: TextFieldTitleWidget(
+                                                            title:"45%" ?? " ",
+                                                                colors: Colors.grey,
+
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets
+                                                              .only(
+                                                              left: 39.0),
+                                                          child: Row(
+                                                            children: [
+                                                              CircleAvatar(
+                                                                  backgroundImage:
+                                                                  AssetImage(
+                                                                    "assets/personn.jpg",
+                                                                  ),
+                                                                  radius: 12,
+                                                                  backgroundColor:
+                                                                  Colors.white60),
+                                                              CircleAvatar(
+                                                                  backgroundImage:
+                                                                  AssetImage(
+                                                                    "assets/ppr.jpg",
+                                                                  ),
+                                                                  radius: 12,
+                                                                  backgroundColor:
+                                                                  Colors.white60),
+                                                              CircleAvatar(
+                                                                  backgroundImage:
+                                                                  AssetImage(
+                                                                    "assets/ppr.jpg",
+                                                                  ),
+                                                                  radius: 12,
+                                                                  backgroundColor:
+                                                                  Colors.white60),
+                                                              Padding(
+                                                                padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 15.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .arrow_forward_ios,
+                                                                  size: 20,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        LinearPercentIndicator(
+                                                            width: 200.0,
+                                                            lineHeight: 8.0,
+                                                            percent: 0.45,
+                                                            progressColor: Colors
+                                                                .blue,
+                                                            linearStrokeCap:
+                                                            LinearStrokeCap.round
+
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(top: 5.0),
+                                                          child: Row(
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 5.0,
+
+                                                                    right: 10),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .access_time_filled,
+                                                                  color: Colors
+                                                                      .blue,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                  padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                    left: 5.0,
+                                                                  ),
+                                                                  child: Text(
+                                                                      usersData
+                                                                          .startingDate!
+                                                                          .year
+                                                                          .toString() +
+                                                                          "-" +
+                                                                          usersData
+                                                                              .startingDate!
+                                                                              .month
+                                                                              .toString() +
+                                                                          "-" +
+                                                                          usersData
+                                                                              .startingDate!
+                                                                              .day
+                                                                              .toString())),
+                                                              Padding(
+                                                                  padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 5.0),
+                                                                  child: Text("_")),
+                                                              Padding(
+                                                                  padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      left: 5.0,
+                                                                      right: 6),
+                                                                  child: Text(
+                                                                      usersData
+                                                                          .expectedExpiryDate!
+                                                                          .year
+                                                                          .toString() +
+                                                                          "-" +
+                                                                          usersData
+                                                                              .expectedExpiryDate!
+                                                                              .month
+                                                                              .toString() +
+                                                                          "-" +
+                                                                          usersData
+                                                                              .expectedExpiryDate!
+                                                                              .day
+                                                                              .toString())),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                      ),
                                     );
                                   },
                                   itemCount: data.data.length,

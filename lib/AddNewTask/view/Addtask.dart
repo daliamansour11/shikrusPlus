@@ -1,9 +1,11 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../profile/profile.dart';
 import '../../screens/bottomnavigation.dart';
+import '../../widgets/TextFieldWidget.dart';
 import '../provider/AddNewTaskProvider.dart';
 
 
@@ -56,12 +58,10 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
             backgroundColor: Color(0xFF005373),
-            title: Text(
-              "AddNewTask",
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+            title: TextFieldHeaderWidget(
+              title:"AddNewTask",
+              colors: Colors.white,
+
             ),
             centerTitle: true,
             automaticallyImplyLeading: true,
@@ -100,56 +100,11 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  // SizedBox(height: size.width* 0.02,),
-                  // Container(
-                  //   alignment: Alignment.topLeft,
-                  //   margin: EdgeInsets.only(left: 12,bottom: 2),
-                  //   child: Text("projects"
-                  //     ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 2),
-                  // Container(
-                  //     alignment: Alignment.center,
-                  //     margin:EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 5) ,
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.grey[300],
-                  //       borderRadius: BorderRadius.all(Radius.circular(10)),),
-                  //     child: DropdownButtonHideUnderline(
-                  //       child: DropdownButton (
-                  //         value: project,
-                  //           hint:Padding(
-                  //             padding: const EdgeInsets.all(8.0),
-                  //             child: Text('choose project to add task'),
-                  //           ),
-                  //           // Down Arrow Icon
-                  //           icon: const Icon(Icons.keyboard_arrow_down),
-                  //           isExpanded: true,
-                  //           // Array list of items
-                  //        // value: project,
-                  //           items: items.map((String value) {
-                  //             return new DropdownMenuItem<String>(
-                  //               value: value,
-                  //               child:  Padding(
-                  //                 padding: const EdgeInsets.all(8.0),
-                  //                 child: Text(value),
-                  //               ),
-                  //             );
-                  //           }).toList(),
-                  //           onChanged: (value) {
-                  //             setState(() {
-                  //               project = value!;
-                  //             });    project = value!;
-                  //           }),
-                  //     )
-                  // ),
-                  //
-                  // SizedBox(height: 7,),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12,bottom: 2),
-                    child: Text("Name"
-                      ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
+                    margin: EdgeInsets.only(left: 12.w,bottom: 2.h,top: 10.h),
+                    child: TextFieldTitleWidget(title: "Name",size: 16.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Container(
@@ -199,18 +154,14 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 20,top: 2,bottom: 1),
-                    child: Text(
-                      "Subject",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 23),
-                      // ),
+                    child: TextFieldTitleWidget(title: "Subject",size: 16.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Container(
 
                     alignment: Alignment.center,
                     margin:EdgeInsets.symmetric(horizontal: 5) ,
-
                     child: TextFormField(
                       controller: subjectController,
                       validator:(value){
@@ -253,11 +204,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 12,top: 2,bottom: 1),
-                    child: Text(
-                      "notes",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 23),
-                      // ),
+                    child:TextFieldTitleWidget(title: "Note",size: 16.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Container(
@@ -312,8 +260,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 12,bottom: 2),
-                    child: Text("Date" ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
-                    ),
+                    child: TextFieldTitleWidget(title: "Date",size: 16.sp,
+                      fontWeight: FontWeight.bold,),
                   ),
                   Container(
 
@@ -400,7 +348,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                             },
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 8.w,),
                         Expanded(
                           flex: 2,
                           child: TextFormField(
@@ -706,9 +654,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                               MaterialPageRoute(builder: (context)=>Bottomnavigation()));
                         }
                       },
-                      child: Text(
-                          "    Add Task    ",
-                          style: TextStyle(color: Colors.white, fontSize: 18)
+                      child: TextFieldTitleWidget(title: "Add Task",size: 16.sp,colors: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),

@@ -7,6 +7,7 @@ import 'package:taskmanger/Authentication/login/provider/LoginProvider.dart';
 import 'package:taskmanger/core/SharedPreferenceInfo.dart';
 
 import '../../../screens/bottomnavigation.dart';
+import '../../../screens/bottomnavigationclient.dart';
 
 class LoginScreen extends ConsumerStatefulWidget{
   @override
@@ -390,10 +391,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                   ),
                                                 );
 //sm3021914@gmail.c
+                                                    if(response.data?.personalInformation.type=="client")
+                                                    {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  Bottomnavigationclient()));
+                                                    }else{
                                                 Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            Bottomnavigation()));
+                                                            Bottomnavigation()));}
                                               }
                                             },
                                             child: Text(

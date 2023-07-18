@@ -19,20 +19,18 @@ import '../../widgets/TextFieldWidget.dart';
 import '../provider/DeviceTokenProvider.dart';
 import 'detailsscreen.dart';
 
-class HomeScreen extends  ConsumerStatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
-class _HomeScreenState extends  ConsumerState<HomeScreen> {
 
-
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   onStatusChang(String key) {
     if (key == "DONE") {
       return Itemcolors[0];
     } else if (key == "ON_GOING") {
       return Itemcolors[3];
-    }
-    else if (key == "TO_DO") {
+    } else if (key == "TO_DO") {
       return Itemcolors[2];
     } else if (key == "HOLD") {
       return Itemcolors[1];
@@ -48,14 +46,11 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-
 
     final projects = ref.watch(proProvider);
 
@@ -64,80 +59,85 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-
             backgroundColor: Color(0xFF005373),
-            title: TextFieldHeaderWidget(title: "Home",colors: Colors.white,),
-
+            title: TextFieldHeaderWidget(
+              title: "Home",
+              colors: Colors.white,
+            ),
             centerTitle: true,
             automaticallyImplyLeading: false,
             actions: [
-              IconButton(onPressed: () {}, icon: Container(
-                height: 130,
-                child: InkWell(
-                  onTap: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>Profilescreen()));
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Icon(Icons.notification_add, color: Colors.white,),
+              IconButton(
+                onPressed: () {},
+                icon: Container(
+                  height: 130,
+                  child: InkWell(
+                    onTap: () {
+                      // Navigator.push(context, MaterialPageRoute(builder: (context)=>Profilescreen()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Icon(
+                        Icons.notification_add,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
-
-              ), color: Colors.black,),
-              IconButton(onPressed: () {}, icon: Container(
-                height: 130,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => Profilescreen()));
-                  },
-                  child: ClipRRect(
-
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image(image: AssetImage(
-                        "assets/personn.jpg"),
-
-                      width: 50, height: 130, fit: BoxFit.cover,),
+                color: Colors.black,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Container(
+                  height: 130,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Profilescreen()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image(
+                        image: AssetImage("assets/personn.jpg"),
+                        width: 50,
+                        height: 130,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
-
-              ), color: Colors.black,),
-
-              SizedBox(width: 20, height: 20,)]),
-        body:
-        Padding(
+                color: Colors.black,
+              ),
+              SizedBox(
+                width: 20,
+                height: 20,
+              )
+            ]),
+        body: Padding(
           padding: const EdgeInsets.all(3.0),
-          child: Column(
+          child: Column(children: [
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFieldTitleWidget(
-                       title: "My Task",size: 16.sp,),
-
-
-
-                    )
-                  ],
-                ),
-
-
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xFFDDE3E5)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFieldTitleWidget(
+                    title: "My Task",
+                    size: 16.sp,
                   ),
-
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 3.8,
-                  width: double.infinity,
-                  child: statitic.when(data: (data) =>
-                      CustomScrollView(
+                )
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0xFFDDE3E5)),
+              height: MediaQuery.of(context).size.height / 3.8,
+              width: double.infinity,
+              child: statitic.when(
+                  data: (data) => CustomScrollView(
                         primary: false,
                         slivers: <Widget>[
                           SliverPadding(
@@ -148,17 +148,15 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
                               crossAxisCount: 2,
-                              children: List.generate(data.data.length, (
-                                  index) {
+                              children:
+                                  List.generate(data.data.length, (index) {
                                 return Container(
                                   height: 100,
                                   width: 180,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: onStatusChang(
-                                          "${data.data[index].key.name}")
-
-                                  ),
+                                          "${data.data[index].key.name}")),
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -167,7 +165,6 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                                               builder: (context) =>
                                                   ProjectsProgress()));
                                     },
-
                                     child: Column(
                                       children: [
                                         Padding(
@@ -183,19 +180,17 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
 
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 5,
-                                                  top: 7, right: 30),
+                                                  left: 5, top: 7, right: 30),
                                               child: Text(
-                                                  "${data.data[index]
-                                                      .count} projects ",
+                                                  "${data.data[index].count} projects ",
                                                   style: TextStyle(
                                                       fontSize: 13,
                                                       fontWeight:
-                                                      FontWeight.bold,
+                                                          FontWeight.bold,
                                                       color: Colors.white)),
                                             ),
                                             Padding(
@@ -206,11 +201,8 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                                             )
                                           ],
                                         ),
-
                                       ],
                                     ),
-
-
                                   ),
                                 );
                               }),
@@ -218,314 +210,333 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
                           ),
                         ],
                       ),
-                      error: (err, _) =>
-                          Text("$err", style: TextStyle(color: Colors.red),),
-                      loading: () => Center(child: CircularProgressIndicator())
-                  ),
-                ),
-
-
-                SizedBox(
-                  height: 10,
-                ),
-
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: TextFieldTitleWidget(
-                        title: "Latest project",size: 16.sp,),
-
-                    ),
-
-                    InkWell(
-
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => ProjectsScreen()));
-                      },
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: TextFieldTitleWidget(
-                         title: "see More", colors: Colors.grey,
-                              size: 14.sp,
-                              fontWeight: FontWeight.w500,
+                  error: (err, _) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextFieldTitleWidget(
+                                  title: "Oops!! \n"
+                                      "Connection Lost!",
+                                  fontWeight: FontWeight.bold,
+                                  size: 18.sp,
+                                ),
+                                SizedBox(width: 5.sp),
+                                CircleAvatar(
+                                  backgroundImage: AssetImage(
+                                    "assets/sad.jpg",
+                                  ),
+                                  radius: 18.sp,
+                                  backgroundColor: Colors.grey,
+                                  foregroundColor: Colors.grey,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                  loading: () => Center(child: CircularProgressIndicator())),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TextFieldTitleWidget(
+                    title: "Latest project",
+                    size: 16.sp,
+                  ),
                 ),
-
-                SizedBox(
-                  height: 5.h,
-                ),
-                Expanded(
-                    flex: 1,
-                    child: projects.when(
-                        data: (data) =>
-
-                            RefreshIndicator(
-                              backgroundColor: context.appTheme
-                                  .bottomAppBarColor,
-                              onRefresh: () async {
-                                ref.refresh(proProvider);
-                                // await ref.read(MainTasksProvider.future);
-                                return Future.delayed(
-                                    Duration(milliseconds: 300), () =>
-                                    ref.read(proProvider.future));
-                              },
-
-
-                              child: Container(
-                                height: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height,
-                                decoration: BoxDecoration(
-
-                                  color: Color(0xFFDDE3E5),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(35),
-                                    topLeft: Radius.circular(35),
-                                  ),),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemBuilder: (context, index) {
-                                    final usersData = data.data[index];
-                                    return InkWell(
-                                      onTap: (){
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Detailsscreen(name:data.data[index].name??"", subject:data.data[index].subject??"", notes: data.data[index].notes??"", startDate: data.data[index].startingDate.toString()??"", endDate:  data.data[index].expectedExpiryDate.toString()??'', status: data.data[index].status?? '',)));
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 7,
-                                            top: 16,
-                                            left: 5,
-                                            right: 5),
-                                        height: 130,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProjectsScreen()));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: TextFieldTitleWidget(
+                      title: "see More",
+                      colors: Colors.grey,
+                      size: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Expanded(
+                flex: 1,
+                child: projects.when(
+                    data: (data) => RefreshIndicator(
+                          backgroundColor: context.appTheme.bottomAppBarColor,
+                          onRefresh: () async {
+                            ref.refresh(proProvider);
+                            // await ref.read(MainTasksProvider.future);
+                            return Future.delayed(Duration(milliseconds: 300),
+                                () => ref.read(proProvider.future));
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFDDE3E5),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(35),
+                                topLeft: Radius.circular(35),
+                              ),
+                            ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) {
+                                final usersData = data.data[index];
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Detailsscreen(
+                                                  name: data.data[index].name ??
+                                                      "",
+                                                  subject: data.data[index]
+                                                          .subject ??
+                                                      "",
+                                                  notes:
+                                                      data.data[index].notes ??
+                                                          "",
+                                                  startDate: data.data[index]
+                                                          .startingDate
+                                                          .toString() ??
+                                                      "",
+                                                  endDate: data.data[index]
+                                                          .expectedExpiryDate
+                                                          .toString() ??
+                                                      '',
+                                                  status:
+                                                      data.data[index].status ??
+                                                          '',
+                                              project_id:data.data[index].id ,
+                                                )));
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        bottom: 7, top: 16, left: 5, right: 5),
+                                    height: MediaQuery.of(context).size.height/6,
+                                    width: 100.w,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets.only(
-                                                        left: 10.0),
-                                                    child: TextFieldTitle2Widget(
-                                                      title:usersData.name ?? " ",
-                                                          fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(
-                                                        left: 10.0,
-                                                        right: 10,
-                                                        top: 10),
-                                                    child: Row(
-                                                      children: [
-                                                        TextFieldTitleWidget(
-                                                          title:"Progress",
-                                                              colors: Colors.grey,
-
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets
-                                                              .only(
-                                                              left: 90.0),
-                                                          child: TextFieldTitleWidget(
-                                                            title:"45%" ?? " ",
-                                                                colors: Colors.grey,
-
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets
-                                                              .only(
-                                                              left: 39.0),
-                                                          child: Row(
-                                                            children: [
-                                                              CircleAvatar(
-                                                                  backgroundImage:
-                                                                  AssetImage(
-                                                                    "assets/personn.jpg",
-                                                                  ),
-                                                                  radius: 12,
-                                                                  backgroundColor:
-                                                                  Colors.white60),
-                                                              CircleAvatar(
-                                                                  backgroundImage:
-                                                                  AssetImage(
-                                                                    "assets/ppr.jpg",
-                                                                  ),
-                                                                  radius: 12,
-                                                                  backgroundColor:
-                                                                  Colors.white60),
-                                                              CircleAvatar(
-                                                                  backgroundImage:
-                                                                  AssetImage(
-                                                                    "assets/ppr.jpg",
-                                                                  ),
-                                                                  radius: 12,
-                                                                  backgroundColor:
-                                                                  Colors.white60),
-                                                              Padding(
-                                                                padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    left: 15.0),
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .arrow_forward_ios,
-                                                                  size: 20,
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                            children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 5.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      children: [
-                                                        LinearPercentIndicator(
-                                                            width: 200.0,
-                                                            lineHeight: 8.0,
-                                                            percent: 0.45,
-                                                            progressColor: Colors
-                                                                .blue,
-                                                            linearStrokeCap:
-                                                            LinearStrokeCap.round
-
-                                                        ),
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(top: 5.0),
-                                                          child: Row(
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    left: 5.0,
-
-                                                                    right: 10),
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .access_time_filled,
-                                                                  color: Colors
-                                                                      .blue,
-                                                                ),
-                                                              ),
-                                                              Padding(
-                                                                  padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                    left: 5.0,
-                                                                  ),
-                                                                  child: Text(
-                                                                      usersData
-                                                                          .startingDate!
-                                                                          .year
-                                                                          .toString() +
-                                                                          "-" +
-                                                                          usersData
-                                                                              .startingDate!
-                                                                              .month
-                                                                              .toString() +
-                                                                          "-" +
-                                                                          usersData
-                                                                              .startingDate!
-                                                                              .day
-                                                                              .toString())),
-                                                              Padding(
-                                                                  padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left: 5.0),
-                                                                  child: Text("_")),
-                                                              Padding(
-                                                                  padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left: 5.0,
-                                                                      right: 6),
-                                                                  child: Text(
-                                                                      usersData
-                                                                          .expectedExpiryDate!
-                                                                          .year
-                                                                          .toString() +
-                                                                          "-" +
-                                                                          usersData
-                                                                              .expectedExpiryDate!
-                                                                              .month
-                                                                              .toString() +
-                                                                          "-" +
-                                                                          usersData
-                                                                              .expectedExpiryDate!
-                                                                              .day
-                                                                              .toString())),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                    left: 10.0),
+                                                child: TextFieldTitle2Widget(
+                                                  title: usersData.name ?? " ",
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        ),
-
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0,
+                                                    right: 10,
+                                                    top: 10),
+                                                child: Row(
+                                                  children: [
+                                                    TextFieldTitleWidget(
+                                                      title: "Progress",
+                                                      colors: Colors.grey,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 90.0),
+                                                      child:
+                                                          TextFieldTitleWidget(
+                                                        title: "45%" ?? " ",
+                                                        colors: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 39.0),
+                                                      child: Row(
+                                                        children: [
+                                                          CircleAvatar(
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                "assets/personn.jpg",
+                                                              ),
+                                                              radius: 12,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white60),
+                                                          CircleAvatar(
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                "assets/ppr.jpg",
+                                                              ),
+                                                              radius: 12,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white60),
+                                                          CircleAvatar(
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                "assets/ppr.jpg",
+                                                              ),
+                                                              radius: 12,
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .white60),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 15.0),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .arrow_forward_ios,
+                                                              size: 20,
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    LinearPercentIndicator(
+                                                        width: 200.0,
+                                                        lineHeight: 8.0,
+                                                        percent: 0.45,
+                                                        progressColor:
+                                                            Colors.blue,
+                                                        linearStrokeCap:
+                                                            LinearStrokeCap
+                                                                .round),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 5.0,
+                                                                    right: 10),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .access_time_filled,
+                                                              color:
+                                                                  Colors.blue,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                left: 5.0,
+                                                              ),
+                                                              child: Text(usersData
+                                                                      .startingDate!
+                                                                      .year
+                                                                      .toString() +
+                                                                  "-" +
+                                                                  usersData
+                                                                      .startingDate!
+                                                                      .month
+                                                                      .toString() +
+                                                                  "-" +
+                                                                  usersData
+                                                                      .startingDate!
+                                                                      .day
+                                                                      .toString())),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          5.0),
+                                                              child: Text("_")),
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left: 5.0,
+                                                                      right: 6),
+                                                              child: Text(usersData
+                                                                      .expectedExpiryDate!
+                                                                      .year
+                                                                      .toString() +
+                                                                  "-" +
+                                                                  usersData
+                                                                      .expectedExpiryDate!
+                                                                      .month
+                                                                      .toString() +
+                                                                  "-" +
+                                                                  usersData
+                                                                      .expectedExpiryDate!
+                                                                      .day
+                                                                      .toString())),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
-                                  itemCount: data.data.length,
-                                ),
-                              ),),
-                        error: (err, _) =>
-                            Text(
-                              "$err",
-                              style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: data.data.length,
                             ),
-                        loading: () =>
-                            Center(child: CircularProgressIndicator()))),
-
-
-              ]),
-        )
-
-    );
+                          ),
+                        ),
+                    error: (err, _) => Text(""),
+                    loading: () => Center(child: CircularProgressIndicator()))),
+          ]),
+        ));
   }
 
   Future _firebasemessagingbackgroundHandler(RemoteMessage message) async {
@@ -561,14 +572,14 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
         //       subtitle: Text(notificationInfo?.title ?? " "),
         //       background: Colors.green.shade500);
       }
-        //   });
-        // } else if (settings.authorizationStatus ==
-        //     AuthorizationStatus.provisional) {
-        //   debugPrint("user provisional permission");
-        // } else {
-        //   debugPrint("user declined or has accepted permission");
+          //   });
+          // } else if (settings.authorizationStatus ==
+          //     AuthorizationStatus.provisional) {
+          //   debugPrint("user provisional permission");
+          // } else {
+          //   debugPrint("user declined or has accepted permission");
 
-      );
+          );
     }
   }
 
@@ -578,13 +589,11 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
         device_token = value ?? " ";
         SharedPreferencesInfo.saveDeviceIdSF(device_token);
 
-
         savetoken(value!);
         debugPrint("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn${value}nn");
       });
     });
   }
-
 
   void savetoken(String token) async {
     await FirebaseFirestore.instance
@@ -596,24 +605,24 @@ class _HomeScreenState extends  ConsumerState<HomeScreen> {
   @override
   void initState() {
     getToken();
-    Future.delayed
-      (Duration(milliseconds: 40),() async {
+    Future.delayed(Duration(milliseconds: 40), () async {
       postDeviceToken();
     });
   }
+
   postDeviceToken() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString(
-        '${SharedPreferencesInfo.deviceTokenKey}');
+    final String? token =
+        shared.getString('${SharedPreferencesInfo.deviceTokenKey}');
 
     var response = ref.read(deviceTokenProvider).postDeviceToken(token!);
     print("{tokennnnnnnnnnnnnnnnnnnnn+${response}");
   }
 }
+
 class PushNotification {
   String? title;
   String? body;
-  PushNotification({this.body,this.title});
 
+  PushNotification({this.body, this.title});
 }
-

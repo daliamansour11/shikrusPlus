@@ -122,8 +122,11 @@ flutter:
   assets:
     - assets/yask.png
     - assets/task.jpg
+    - assets/sadd.png
+    - assets/saddd.png
     - assets/onboard1.png
     - assets/waving.png
+    - assets/sad.jpg
     - assets/personn.jpg
     - assets/ppr.jpg
     - assets/NoData.jpg

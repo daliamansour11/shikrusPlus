@@ -53,7 +53,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
               },
                 child: Icon(Icons.arrow_back)),
             bottom: TabBar(
-          labelPadding: EdgeInsets.only(right: 15),
+          labelPadding: EdgeInsets.only(right: 10),
               //  padding: EdgeInsets.symmetric(horizontal: 10),
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey[400],
@@ -91,7 +91,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             child: Container(
                               margin: EdgeInsets.only(bottom: 14),
                               height: 110.h,
-                              width: 100.w,
+                              width: 120.w,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -291,7 +291,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             child: Container(
                               margin: EdgeInsets.only(bottom: 14),
                               height: 110.h,
-                              width: 100.w,
+                              width: 120.w,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -487,7 +487,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             child: Container(
                               margin: EdgeInsets.only(bottom: 14),
                               height: 110.h,
-                              width: 100.w,
+                              width: 120.w,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -687,7 +687,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             child: Container(
                               margin: EdgeInsets.only(bottom: 14),
                               height: 110.h,
-                              width: 100.w,
+                              width: 120.w,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),

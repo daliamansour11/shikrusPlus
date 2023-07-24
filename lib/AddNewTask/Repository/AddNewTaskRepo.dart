@@ -16,10 +16,14 @@ class AddNewTaskRepo{
   addNewMainTask(String name,String subject,String note,
       String start_date,String end_date,String time_from,String time_to,String type,int project_id)
   async{
-    var responseData = await dioClient.AddNewMainTask( name,subject,note,start_date,end_date,
+    var responseData;
+    try{
+     responseData = await dioClient.AddNewMainTask( name,subject,note,start_date,end_date,
         time_from,time_to,type ,project_id);
-
+           print("${responseData}ttttt");
      return responseData;
+    }catch(e){print("${e.toString()}erorrrrrrr");}
+    return responseData;
   }
 
 

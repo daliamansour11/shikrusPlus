@@ -41,7 +41,7 @@ dependencies:
   firebase_auth: ^4.1.5
   cloud_firestore: ^4.1.0
   firebase_storage:
-
+  firebase_core:
   gallery_saver: ^2.3.2
   firebase_app_check: ^0.1.4+2
   cached_network_image: ^3.2.3
@@ -68,6 +68,8 @@ dependencies:
   freezed_annotation: ^0.14.1
   http:
   google_fonts: ^4.0.3
+  flutter_local_notifications: ^14.0.0
+  awesome_notifications:
   #  timeline_tile: ^2.0.0u
   #  calendar_timeline: ^1.1.2
   image_picker:
@@ -113,7 +115,7 @@ flutter_icons:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # The following line ensures that the Material Icons font is
+  # The following line ensures trfiebasechat the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true

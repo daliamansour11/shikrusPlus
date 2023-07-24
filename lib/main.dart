@@ -1,19 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taskmanger/core/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:taskmanger/screens/splashscreen.dart';
+import 'FirebaseApi.dart';
+import 'Notification/Notification_helper.dart';
 import 'core/Constant.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 late Size mq;
 
+final navigatorkey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp( name: 'chat-app',
-  //   options:DefaultFirebaseOptions.currentPlatform,
-  // );
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
@@ -26,7 +29,6 @@ void main() async {
       name: "task_app",
       options: DefaultFirebaseOptions.currentPlatform,
     );
-
     // var result = await FlutterNotificationChannel.registerNotificationChannel(
     //   description: 'Showing Message Notifications',
     //   id: 'chats',
@@ -34,7 +36,21 @@ void main() async {
     //   name: 'Chats',
     // );
   }
+  await NotificationHelper.init();
+  await FirebaseMessaging.instance.getInitialMessage();
+  FirebaseMessaging.onBackgroundMessage(FirebaseBackgroundHandler);
+  NotificationHelper.initInfo();
+  // AwesomeNotifications().initialize("resource//drawable/not", Nitification)
+ // NotificationHelper.requestPermission();
+  // await Firebase.initializeApp( name: 'chat-app',
+  //   options:DefaultFirebaseOptions.currentPlatform,
+  // );
+
   runApp(ProviderScope(child: const MyApp()));
+}
+
+Future<void> FirebaseBackgroundHandler(RemoteMessage remoteMessage) async {
+  print("Handling background message${remoteMessage.messageId}");
 }
 
 class MyApp extends StatelessWidget {

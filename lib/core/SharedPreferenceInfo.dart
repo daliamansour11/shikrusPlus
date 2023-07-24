@@ -83,6 +83,10 @@ class SharedPreferencesInfo{
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setString(deviceTokenKey, device_token);
   }
+  static Future<String?>getDeviceIdSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.getString(deviceTokenKey);
+  }
   static saveTaskIdSF() async {
             List<int> id = [];
       List<String> strList = id.map((i) => i.toString()).toList();

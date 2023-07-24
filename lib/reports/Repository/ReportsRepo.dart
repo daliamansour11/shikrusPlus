@@ -23,12 +23,12 @@ class ReportsRepo {
     return response;
   }
   Future<ReportResponse?> addNewReport(String report, String reason,
-      PickedFile  image, int project_id
+      File  image, int project_id
 
       ) async {
     var response =  await dioClient.addNewReport(report, reason, image, project_id);
     // var static=GetStatisticsResponse.fromJson(response.toJson());
-    debugPrint("${response?.status}");
+    debugPrint("${response?.status}reeeeeport");
     return response
     ;
   }

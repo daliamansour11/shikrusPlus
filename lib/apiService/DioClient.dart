@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' as mime;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,8 @@ import 'package:taskmanger/home/model/Projectmodel.dart';
 import 'package:taskmanger/home/model/statisticsmodel.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 
+import '../Notification/model/Notificationcountmodel.dart';
+import '../Notification/model/Notifications.dart';
 import '../chat/chats/model/UsersModel.dart';
 import '../clender/Provider/SubTaskProvider.dart';
 import '../reports/model/reportsresponse.dart';
@@ -62,7 +65,7 @@ class DioClient {
   }
 
 
-  ////// get MainTask///////////
+
   Future<TasksModel?> getEmployeeMainTasks() async {
     TasksModel? tasksModel;
     try {
@@ -95,11 +98,6 @@ class DioClient {
     }
     return tasksModel;
   }
-
-//https://shapi.webautobazaar.com/api/employee/tasks/1
-  ////// get SubTask///////////
-
-
   Future<TasksModel?> getEmployeeSubTasks(int main_task_id) async {
     TasksModel? tasksModel;
 
@@ -166,6 +164,69 @@ class DioClient {
   }
 
   ////////////////////////update task Status/////////////////////\
+  Future<NotificationCount> getnotificationscount() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+    print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
+
+    var response = await Dio().get(
+        'https://shapi.webautobazaar.com/api/secretary/unread-count-notification',
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    NotificationCount notificationCountsmodel = NotificationCount.fromJson(
+        response.data);
+
+    if (response.statusCode == 200) {
+      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(response.data);
+
+
+    return notificationCountsmodel;
+  }
+
+  Future<Notifications> getnotifications() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+    print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
+
+    var response = await Dio().get(
+        'https://shapi.webautobazaar.com/api/secretary/notifications',
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    Notifications notificationsmodel = Notifications.fromJson(response.data);
+
+    if (response.statusCode == 200) {
+      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(response.data);
+
+
+    return notificationsmodel;
+  }
+
 
   Future<ReportResponse> getReport() async {
     List<ReportResponse>reportlist = [];
@@ -271,6 +332,7 @@ class DioClient {
         print('STATUS: ${e.response?.statusCode}');
         print('DATA: ${e.response?.data}');
         print('HEADERS: ${e.response?.headers}');
+
       } else {
         // Error due to setting up or sending the request
         print('Error sending request!');
@@ -426,25 +488,24 @@ class DioClient {
   //////////UploadReport////////////////////////////////
 
   Future<ReportResponse?> addNewReport(String report, String reason,
-  PickedFile  image, int project_id) async {
+  File  file, int project_id) async {
     ReportResponse? response;
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      // type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
-    );
+    // FilePickerResult? result = await FilePicker.platform.pickFiles(
+    //   // type: FileType.custom,
+    //   allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
+    // );
+    // if (result != null) {
+    //   print(file.path);
+    //
+    //   var multipartFile = await MultipartFile.fromFile(file.path ?? '',contentType: mime.MediaType("text", "plain")
+    //   );
 
 
-    if (result != null) {
-      File file = File(result.files.single.path?? "");
-      String fileName= file.path.split('/').last;
-
-      print(file.path);
-      var multipartFile = await MultipartFile.fromFile(file.path ?? '',filename: fileName
-      );
       final data = FormData.fromMap({
         "report": report,
         "reason": reason,
-        "image": multipartFile
+        'files': [
+          await MultipartFile.fromFile(file.path, filename: ''),],
       });
 
       try {
@@ -467,7 +528,7 @@ class DioClient {
       } on DioError catch (e) {
         if (e.response != null) {
           print('Dio error!');
-          print('STATUS: ${e.response?.statusCode}');
+          print('STATUSreport: ${e.response?.statusCode}');
           print('DATA: ${e.response?.data}');
           print('HEADERS: ${e.response?.headers}');
         } else {
@@ -489,40 +550,40 @@ class DioClient {
 
 
 
-   UploadAttachment(multiformData) async {
-     FilePickerResult? result = await FilePicker.platform.pickFiles(
-       type: FileType.custom,
-       allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
-     );
-     if (result != null) {
-       PlatformFile file = result.files.first;
+   // UploadAttachment(multiformData) async {
+   //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+   //     type: FileType.custom,
+   //     allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
+   //   );
+   //   if (result != null) {
+   //     PlatformFile file = result.files.first;
+   //
+   //     print(file.name);
+   //     print(file.bytes);
+   //     print(file.size);
+   //     print(file.extension);
+   //     print(file.path);
+   //     var multipartFile = await MultipartFile.fromFile(file.path ?? '',
+   //     );
+   //     FormData formData = FormData.fromMap({
+   //       "MediaFile": multipartFile, //define your json data here
+   //     });
+   //     UploadAttachment(formData); //call upload function passing multiform data
+   //   }
+   //   final response = await _dio.post(
+   //     _baseUrl + "",
+   //     data: multiformData,
+   //     options: Options(
+   //         contentType: 'multipart/form-data',
+   //         headers: {},
+   //         followRedirects: false,
+   //         validateStatus: (status) {
+   //           return status! <= 500;
+   //         }),
+   //   );
+   //   print(response.statusCode);
+   // }
 
-       print(file.name);
-       print(file.bytes);
-       print(file.size);
-       print(file.extension);
-       print(file.path);
-       var multipartFile = await MultipartFile.fromFile(file.path ?? '',
-       );
-       FormData formData = FormData.fromMap({
-         "MediaFile": multipartFile, //define your json data here
-       });
-       UploadAttachment(formData); //call upload function passing multiform data
-     }
-     final response = await _dio.post(
-       _baseUrl + "",
-       data: multiformData,
-       options: Options(
-           contentType: 'multipart/form-data',
-           headers: {},
-           followRedirects: false,
-           validateStatus: (status) {
-             return status! <= 500;
-           }),
-     );
-     print(response.statusCode);
-   }
- }
 // void _upload(List<XFile> files) async {
    //   for (var file in files) {
    //     String fname = filename;

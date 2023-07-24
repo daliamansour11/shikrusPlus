@@ -13,6 +13,9 @@ import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/home/provider/HomeProvider.dart';
 import 'package:taskmanger/home/view/ProjectsProgress.dart';
 import 'package:taskmanger/home/view/ProjectsScreen.dart';
+import 'package:taskmanger/main.dart';
+import '../../Notification/provider/NotificationProvider.dart';
+import '../../Notification/view/Notification_screen.dart';
 import '../../core/Color.dart';
 import '../../profile/profile.dart';
 import '../../widgets/TextFieldWidget.dart';
@@ -55,6 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final projects = ref.watch(proProvider);
 
     final statitic = ref.watch(statisticProvider);
+    final notificationcount = ref.watch(not_countProvider);
 
     return Scaffold(
         backgroundColor: Colors.grey[200],
@@ -73,14 +77,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   height: 130,
                   child: InkWell(
                     onTap: () {
-                      // Navigator.push(context, MaterialPageRoute(builder: (context)=>Profilescreen()));
+                       Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
                     },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Icon(
-                        Icons.notification_add,
-                        color: Colors.white,
+                    child: Stack(
+                      children:[ ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Icon(
+                          Icons.notification_add,
+                          color: Colors.white,
+                          size: 35,
+                        ),
                       ),
+                      notificationcount.when(data:(data)=>CircleAvatar(backgroundColor: Colors.red,radius: 10,child:Text("${data.data}",style: TextStyle(color: Colors.white,),)),
+                        error: (err, _) => Text(""),
+                        loading: () => Center(child: CircularProgressIndicator()),)
+                      ]
                     ),
                   ),
                 ),
@@ -255,6 +266,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    FirebaseMessaging.instance.subscribeToTopic("topic");
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -538,13 +550,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ]),
         ));
   }
+  void handlemessagenotifiction()async {
+    navigatorkey.currentState?.push( MaterialPageRoute(builder: (context)=>NotificationScreen()));
+  }
+  Future _firebasemessagingbackgroundHandler(RemoteMessage? message) async {
 
-  Future _firebasemessagingbackgroundHandler(RemoteMessage message) async {
     debugPrint("Handling Background Message ${message}");
   }
-
   void requestpermission() async {
+
     FirebaseMessaging messaging = FirebaseMessaging.instance;
+    FirebaseMessaging.instance.getInitialMessage().then(_firebasemessagingbackgroundHandler);
     FirebaseMessaging.onBackgroundMessage(_firebasemessagingbackgroundHandler);
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -582,19 +598,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
     }
   }
-
   void getToken() async {
+   // await FirebaseMessaging.instance.getInitialMessage().then(handlemessagenotification);
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
     await FirebaseMessaging.instance.getToken().then((value) async {
       setState(() {
         device_token = value ?? " ";
         SharedPreferencesInfo.saveDeviceIdSF(device_token);
 
         savetoken(value!);
-        debugPrint("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn${value}nn");
+        debugPrint("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn**:${value}:***");
       });
     });
   }
-
   void savetoken(String token) async {
     await FirebaseFirestore.instance
         .collection("usertoken")

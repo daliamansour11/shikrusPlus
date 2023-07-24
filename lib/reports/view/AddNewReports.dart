@@ -1,7 +1,9 @@
+
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,24 +22,32 @@ class AddNewReportsScreen extends ConsumerStatefulWidget {
 }
 
 class _AddNewReportsScreenState extends  ConsumerState<AddNewReportsScreen> {
-  File? image ;
+  XFile? image ;
 
-  PickedFile? _pickedFile;
-  final _picker = ImagePicker();
+
+  //PickedFile? _pickedFile;
+  ImagePicker? _picker;
 
   bool showSpinner = false ;
 
   getImage()async{
-    _pickedFile = (await _picker.pickImage(source: ImageSource.gallery , imageQuality: 80)) as PickedFile? ;
+    try{
 
-    if(_pickedFile!= null ){
+    //  _pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
 
+    image = await ImagePicker().pickImage(source: ImageSource.gallery) ;
+
+    if(image!= null ){
 
       setState(() {
-        image = File(_pickedFile!.path);
+        image = XFile(image?.path??"");
       });
     }else {
       print('no image selected');
+    }}
+    on PlatformException catch(e)
+    {
+  print("failed to pick image $e");
     }
   }
 
@@ -62,222 +72,216 @@ class _AddNewReportsScreenState extends  ConsumerState<AddNewReportsScreen> {
         //),
         centerTitle: true,
       ),
+      body: Container(
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
 
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
 
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text("Report",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+            ),
+            Container(
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                    children: [
+                      TextField(
+                        controller: reportController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius:
+                            BorderRadius.all(
+                                Radius.circular(20)
+                            ),),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1,
 
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text("Report",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              ),
-              Container(
+                            ),
 
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                      children: [
-                        TextField(
-                          controller: reportController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 4,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(
-                                  Radius.circular(20)
-                              ),),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 1,
+                            borderRadius: BorderRadius
+                                .all(Radius.circular(20)
 
-                              ),
-
-                              borderRadius: BorderRadius
-                                  .all(Radius.circular(20)
-
-                              ),
-                            ), // labelText: "Reason", //babel text
-                            hintText: "Enter Report",
-                          ),
-
-
-                        )])),
-
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Text("Reason",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-              ),
-              SizedBox(height: 3,),
-              Container(
-
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                      children: [
-                        TextField(
-                          controller: reasonController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 4,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.all(
-                                  Radius.circular(20)
-                              ),),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 1,
-
-                              ),
-                              borderRadius: BorderRadius
-                                  .all(Radius.circular(20)
-
-                              ),
-                            ), // labelText: "Reason", //babel text
-                            hintText: "Enter Reason",
-                          ),
-
+                            ),
+                          ), // labelText: "Reason", //babel text
+                          hintText: "Enter Report",
                         ),
-                      ])),
-              SizedBox(
-                height: 5,
-              ),
 
-              Padding(
-                padding: const EdgeInsets.only(right: 230.0),
-                child: Text(
-                  "Attachments",
-                  style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+
+                      )])),
+
+            SizedBox(
+              height: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text("Reason",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+            ),
+            SizedBox(height: 3,),
+            Container(
+
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.all(10),
+                child: Column(
+                    children: [
+                      TextField(
+                        controller: reasonController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius:
+                            BorderRadius.all(
+                                Radius.circular(20)
+                            ),),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1,
+
+                            ),
+                            borderRadius: BorderRadius
+                                .all(Radius.circular(20)
+
+                            ),
+                          ), // labelText: "Reason", //babel text
+                          hintText: "Enter Reason",
+                        ),
+
+                      ),
+                    ])),
+            SizedBox(
+              height: 5,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(right: 230.0),
+              child: Text(
+                "Attachments",
+                style: TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Center(
+                child: GestureDetector(
+                  // margin: EdgeInsets.only(bottom: 10),
+
+                  child: Text('Select An Image')
+                  ,onTap: () {getImage();
+                    print("${File(image!.path)}pathhhhh");
+                    },
+
+                )),
+
+            SizedBox(height: 3,),
+            Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                decoration:BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey[200],
                 ),
+                height: 180,
+                child: image != null?
+                Image.file(File(image!.path),width: 100,height: 100,fit: BoxFit.cover,
+                ):Text("Please Select An Image")
+            ),
+
+            SizedBox(height: 3,),
+            Container(
+              margin: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 10),
+              height: 63,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(160),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.3),
+                      blurRadius: 2,
+                      spreadRadius: 1,
+                      offset: Offset(0, 0.50))
+                ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                  child: GestureDetector(
-                    // margin: EdgeInsets.only(bottom: 10),
+              child: ElevatedButton(
 
-                    child: Text('Select An Image')
-                    ,onTap: () {getImage();},
-
-                  )),
-
-              SizedBox(height: 15,),
-              Container(
-                  alignment: Alignment.center,
-                  width: double.infinity,
-                  decoration:BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey[200],
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF005373),
+                  padding: EdgeInsets.all(20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                  height: 200,
-                  child: _pickedFile != null?
-                  Image.file(File(_pickedFile!.path),width: 100,height: 100,fit: BoxFit.cover,
-                  ):Text("Please Select An Image")
-              ),
-
-              SizedBox(height: 15,),
-              Container(
-                margin: EdgeInsets.only(top: 25, left: 20, right: 20, bottom: 10),
-                height: 63,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(160),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.3),
-                        blurRadius: 2,
-                        spreadRadius: 1,
-                        offset: Offset(0, 0.50))
-                  ],
                 ),
-                child: ElevatedButton(
+                onPressed: () async {
 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF005373),
-                    padding: EdgeInsets.all(20.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (reportController.text.isEmpty ||
-                        reasonController.text.isEmpty ||
-                        reportController.text == null ||
-                        reasonController.text == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Enter report Data"),
-                            duration: const Duration(seconds: 2),
-                            backgroundColor: Colors.red,
-                          ));
-                    }
-                    else {
-                      final response = await ref.read(
-                          NewReportProvider).AddNewReport(
-                          reportController.text,
-                          reasonController.text,
-                          _pickedFile!,
-                          widget . project_id
-                      );
-                      if (response?.status == true) {
-                        reportController.clear();
-                        reasonController.clear();
-
-                        _formKey.currentState!.reset();
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
+                  if (reportController.text.isEmpty ||
+                      reasonController.text.isEmpty ||
+                      reportController.text == null ||
+                      reasonController.text == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("${response?.status == true
-                              ? "Done"
-                              : "failed"}"),
-                          duration: const Duration(seconds: 4),
-                          backgroundColor: (response?.status == true)
-                              ? Colors.green
-                              : Colors.red,
-                        ),
-                      );
-                      //012809796921
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+                          content: Text("Enter report Data"),
+                          duration: const Duration(seconds: 2),
+                          backgroundColor: Colors.red,
+                        ));
+                  }
+                  else {
+                    final response = await ref.read(
+                        NewReportProvider).AddNewReport(
+                        reportController.text,
+                        reasonController.text,
+                       File(image?.path??""),
+                        widget . project_id
+                    );
+                    if (response?.status == true) {
+                      reportController.clear();
+                      reasonController.clear();
+
+                      _formKey.currentState!.reset();
                     }
-                  },
-                  child: Text(
-                      "  Add Report    ",
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 18)
-                  ),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${response?.status == true
+                            ? "${response?.status}"
+                            : "${response?.status}"}"),
+                        duration: const Duration(seconds: 4),
+                        backgroundColor: (response?.status == true)
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    );
+                    //012809796921
+
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+                  }
+                  print("${File(image?.path??"").path}thhhhh");
+                },
+                child: Text(
+                    "  Add Report    ",
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 18)
                 ),
               ),
-
-              //),
-
-
-
-
-
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

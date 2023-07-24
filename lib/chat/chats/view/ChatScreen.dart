@@ -15,7 +15,6 @@ import '../../view/MessageCard.dart';
 import '../api/apis.dart';
 import '../model/UsersModel.dart';
 import '../model/chat_msg.dart';
-import '../model/chat_user.dart';
 
 
 
@@ -127,15 +126,13 @@ class _ChatScreenState extends State<ChatScreen> {
                         case  ConnectionState.waiting:
                         case  ConnectionState.none:
                           return SizedBox();
-                      // if some/all data is loaded then show it
+
                         case  ConnectionState.active:
                         case  ConnectionState.done:
                           final data=snapshot.data?.docs;
+
                           _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
-                          // print('${jsonEncode(data![0].data())}');
-                          //   _list.clear();
-                          //   _list.add(Messages(msg: "hii!!", toId: "abcd", read: '', type: Type.text, send: '10:00 am', fromId: Apis.user.uid));
-                          // _list.add(Messages(msg: "Fine", toId: Apis.user.uid, read: '', type: Type.text, send: '10:10 am', fromId: "abcd"));
+
                           if(_list.isNotEmpty){
                             return ListView.builder(
                                 // last msg to show 1st
@@ -148,7 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   // return Text("msgs:${_list[index]}");
                                 });
                           }
-                          // if no users available
+
                           else {
                             return Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),);
                           }

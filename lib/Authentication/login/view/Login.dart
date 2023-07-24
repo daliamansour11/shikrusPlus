@@ -352,6 +352,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                 var response = await ref.read(
                                                     logedInProvider).onLogedIn(
                                                     user);
+
                                                 if (response.status == true) {
                                                   userEmailController.clear();
                                                   passwordController.clear();

@@ -12,7 +12,6 @@ import '../chats/view/ChatScreen.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';
-import '../chats/model/chat_user.dart';
 class ListViewCard extends StatefulWidget {
   final UserData user;
   const ListViewCard({super.key, required this.user});

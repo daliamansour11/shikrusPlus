@@ -25,7 +25,7 @@ class NewReportNotifier extends ChangeNotifier{
   NewReportNotifier(this.ref);
 
   Future<ReportResponse?> AddNewReport(String report, String reason,
-      PickedFile image, int project_id)async{
+      File image, int project_id)async{
     var ReportRepo=await ref.read(reportRepo).addNewReport(report, reason,image, project_id);
     debugPrint("repooooooooooooooooooproviderrrrrrrrrrrrrrrrrrrrrrrr");
     return ReportRepo;

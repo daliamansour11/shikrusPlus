@@ -5,9 +5,13 @@ import 'package:taskmanger/Authentication/login/model/LoginModel.dart';
 import 'package:taskmanger/Authentication/login/model/Users.dart';
 import 'package:taskmanger/apiService/ApiService.dart';
 
+import '../../../apiService/DioClient.dart';
+
 class LoginRepo {
   final ApiService apiService;
-  LoginRepo(this.apiService,);
+  final DioClient dioClient;
+
+  LoginRepo(this.apiService,this.dioClient);
 
   ///Login////////////////////////////////
 
@@ -22,5 +26,5 @@ class LoginRepo {
 
 }
 final userRepoApi = Provider<LoginRepo>((ref) =>
-    LoginRepo(ApiService(Dio()),),
+    LoginRepo(ApiService(Dio()),DioClient()),
 );

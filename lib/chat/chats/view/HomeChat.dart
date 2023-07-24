@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskmanger/chat/chats/model/UsersModel.dart';
-import 'package:taskmanger/chat/chats/model/chat_user.dart';
+import 'package:taskmanger/chat/chats/view/users.dart';
 import 'package:taskmanger/chat/view/ListViewCard.dart';
 import '../../../Authentication/login/model/Users.dart';
 import '../../../TextFiledContainerWidget.dart';
@@ -52,20 +52,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
 
   List<UserData> results = [];
 
-  // void _runFilter(String enteredKeyword) {
-  //
-  //   if (enteredKeyword.isEmpty) {
-  //     // if the search field is empty or only contains white-space, we'll display all users
-  //     results = _allUsers;
-  //   } else {
-  //     results = _allUsers
-  //         .where((user) =>
-  //         user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-  //         .toList();
-  //     // we use the toLowerCase() method to make it case-insensitive
-  //   }
-  //
-  // }
+
   List<UsersModel> allUsers = [];
   String? Auth = FirebaseAuth.instance.currentUser?.email;
   CollectionReference groupCollection =
@@ -84,11 +71,21 @@ class _HomeChatState extends ConsumerState<HomeChat> {
   void dispose() {
     searchTextController.dispose();
   }
+  int idt = 0;
 
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserIdFromSF().then((value) {
+      setState(() {
+        idt = value!;
+        print("nameeeeeeeeeeeeee$idt");
+      });
+    });
+  }
   @override
   void initState() {
     super.initState();
     Apis.getid();
+    gettingUserData();
   }
 
   @override
@@ -107,6 +104,13 @@ class _HomeChatState extends ConsumerState<HomeChat> {
 
   // String? user = auth.currentUser?.uid;
   List<UserData> searchlist = [];
+  // String ik="";
+  //  Future<String> get_data() async {
+  //   DocumentReference doc_ref=FirebaseFirestore.instance.collection("chat").doc();
+  //   DocumentSnapshot docSnap = await doc_ref.get();
+  //   ik = docSnap.reference.id;
+  //   return ik;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,15 +124,13 @@ class _HomeChatState extends ConsumerState<HomeChat> {
             elevation: 0.0,
             backgroundColor:
                 _isSearch == true ? Colors.transparent : Color(0xFF005373),
-            title: _isSearch == true
-                ? _emptyContainer()
-                : Container(
+            title: Container(
                     width: screenWidth,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 12.0),
                       child: Center(
                         child: TextFieldHeaderWidget(
-                            title: "Messages", colors: Colors.white),
+                            title: "Home", colors: Colors.white),
                       ),
                     ),
                   ),
@@ -169,34 +171,17 @@ class _HomeChatState extends ConsumerState<HomeChat> {
             // leading:
             actions: [
               IconButton(
-                onPressed: () {
+                onPressed: ()async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>  SearchUser()));
+                          builder: (context) => Users()));
 
                 },
                 icon: Icon(Icons.search_sharp),
               )
             ],
-            // _isSearch == true
-            //     ? []
-            //     : [
-            //   InkWell(
-            //     child: Padding(
-            //       padding: const EdgeInsets.only(right: 8.0, top: 12),
-            //       child: Icon(
-            //         Icons.search,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     onTap: () {
-            //       setState(() {
-            //         _isSearch = !_isSearch;
-            //       });
-            //     },
-            //   ),
-            // ],
+
             leading: _isSearch == true
                 ? Visibility(
                     // hiding the child widget
@@ -209,10 +194,11 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                     padding: const EdgeInsets.only(top: 12.0, left: 4),
                     child: InkWell(
                       onTap: () {
+                      //  print("${Apis.ik}proo");
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Profilescreen()));
+                                builder: (context) => Users()));
                       },
                       child: CircleAvatar(
                         backgroundImage: AssetImage(
@@ -231,7 +217,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
               ),
               tabs: [
                 TextFieldTittleWidget(
-                  title: 'chat',
+                  title: 'Chat',
                   size: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -247,183 +233,183 @@ class _HomeChatState extends ConsumerState<HomeChat> {
           children: [
             Center(
               child: Container(
-                child: userslist.when(
-                    data: (data) => ListView.builder(
-                        itemCount:
-                            _isSearch ? searchlist.length : data.data.length,
-                        padding: EdgeInsets.only(top: mq.height * .01),
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          List<UserData> search = data.data
-                              .where((user) =>
-                                  user.name.contains(searchTextController.text))
-                              .toList();
-                          return _isSearch == true
-                              ? Card(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: mq.width * .03, vertical: 5),
-                                  color: Colors.grey[300],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  elevation: 2,
-                                  child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => ChatScreen(
-                                                      userId:
-                                                          '${searchlist[index].id}',
-                                                      userImage:
-                                                          '${searchlist[index].image}',
-                                                      UserName:
-                                                          '${searchlist[index].name}',
-                                                      user: searchlist[index],
-                                                    )));
-                                      },
-                                      // profile pic + list of chat users
-                                      child: ListTile(
-                                        // user profile pic
-                                        leading: InkWell(
-                                          onTap: () {
-                                            // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                mq.height * .3),
-                                            child: CachedNetworkImage(
-                                              width: mq.height * .050,
-                                              height: mq.height * .050,
-                                              imageUrl: search[index].image,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      CircleAvatar(
-                                                child:
-                                                    Icon(CupertinoIcons.person),
-                                              ),
-                                            ),
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('usersid')
+                      // .where('ids', arrayContains: idt)
+                          .snapshots(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                          case ConnectionState.none:
+                            return SizedBox();
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                          //    final data = snapshot.data?.docs;
+                            return ListView.builder(
+
+                              itemBuilder:(context,indexx){
+                                List<dynamic>addd=[];
+                                //  for(int i=0;i<snapshot.data.docs.length;i++){
+                                addd.add(snapshot.data.docs[indexx]["ids"] );
+                                print("${addd}listt");
+                                // }
+
+                                List<dynamic>listt = snapshot.data.docs[indexx]["ids"] ?? [];
+                                List<int>id = [];
+
+
+                                if (listt[0] != idt) {
+                                  id.add(listt[0]);
+                                }
+                                else {
+                                  if (listt[1] != idt) {
+                                    id.add(listt[1]);
+                                  }
+                                }
+                                id.toSet().toList();
+                                print("${id}insidestream");
+                                return   userslist.when(
+                                    data: (dataapi) => ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: ClampingScrollPhysics(),
+                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).toList().length,
+                                        padding: EdgeInsets.only(
+                                            top: mq.height * .01),
+                                        //   physics: const BouncingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          int idapi=dataapi.data[index].id ;
+                                          dataapi.data.toSet().toList();
+
+                                          //  List<dynamic>listtt= LinkedHashSet<dynamic>.from(listt).toList()??[];
+                                          //   listt.where((element) => element[0].toString()==idt||element[1].toString()==idt).toList();
+                                          //List<UserData>userdatalist=   data.data.where((element) => element.id==listt[0]||element.id==listt[1]).toList();
+
+                                          //  listt.toSet().toList()
+                                          //   listtt.where((element) => element[index]!=idt).toList();
+                                          List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).toList();
+                                          print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");
+                                          print("${id}iddd*");
+
+                                          // print("${data.data.where((
+                                          //     element) =>
+                                          // element.id == id[0])
+                                          //     .toList()[index]
+                                          //     .name}snnnnnn");
+                                          //      List<int>id2=id[0];
+                                          // List<String> id=[];
+                                          // for(int i=0;i<listt.length;i++){
+                                          // if(listt[index].toString()!=idt){
+                                          //   id.add(listt[index].toString());
+                                          // }}
+                                          //  print("${id[index]}iddd");
+                                          List<int>idd = [];
+                                          // idd.add(id[0]);
+                                          //print("${idd}iddd");
+                                          //  List<UserData>userss=data.data.where((element) =>element.id==id[0]).toList();
+                                          //    return Text("${userdatalist[index].name}");
+                                          return  Card(
+                                              margin: EdgeInsets
+                                                  .symmetric(
+                                                  horizontal: mq.width *
+                                                      .03,
+                                                  vertical: 5),
+                                              color: Colors.grey[300],
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      20)),
+                                              elevation: 2,
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (
+                                                                _) =>
+                                                                ChatScreen(
+                                                                  userId:
+                                                                  '${userdatalist[index]
+                                                                      .id}',
+                                                                  userImage:
+                                                                  '${userdatalist[index]
+                                                                      .image}',
+                                                                  UserName:
+                                                                  '${
+                                                                      userdatalist[index]
+                                                                          .name}',
+                                                                  user: userdatalist[index],
+                                                                )));
+                                                  },
+                                                  // profile pic + list of chat users
+                                                  child: ListTile(
+
+                                                    leading: InkWell(
+                                                      onTap: () {
+                                                        // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
+                                                      },
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            mq.height *
+                                                                .3),
+                                                        child: CachedNetworkImage(
+                                                          width: mq.height * .050,
+                                                          height: mq.height * .050,
+                                                          imageUrl:userdatalist[index].image??"",
+                                                          errorWidget: (context, url, error) =>
+                                                              CircleAvatar(
+                                                                child: Icon(CupertinoIcons.person),
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                    title: TextFieldTitleWidget(
+                                                      title: "${userdatalist[index].name}" ??
+                                                          "",
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                    ),
+                                                    // last msg show
+                                                    // subtitle:
+                                                    //     TextFieldTitleWidget(
+                                                    //   title: "${listt[index]}"??"",
+                                                    //   colors: Colors.grey,
+                                                    // ),
+                                                  )));
+                                        }),
+                                    error: (err, _) => Center(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          TextFieldTitleWidget(
+                                            title:
+                                            "No Internet Connection",
+                                            fontWeight: FontWeight.normal,
+                                            size: 20.sp,
                                           ),
-                                        ),
-                                        // user name show
-                                        title: TextFieldTitleWidget(
-                                          title: search[index].name,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        // last msg show
-                                        subtitle: TextFieldTitleWidget(
-                                          title: search[index].type,
-                                          colors: Colors.grey,
-                                        ),
-
-                                        //  trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
-                                        // last msg time
-                                        trailing: Container(
-                                          width: 10,
-                                          height: 10,
-                                          decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        // show send time for read msg);
-                                      )))
-                              : Card(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: mq.width * .03, vertical: 5),
-                                  color: Colors.grey[300],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  elevation: 2,
-                                  child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) => ChatScreen(
-                                                      userId:
-                                                          '${data.data[index].id}',
-                                                      userImage:
-                                                          '${data.data[index].image}',
-                                                      UserName:
-                                                          '${data.data[index].name}',
-                                                      user: data.data[index],
-                                                    )));
-                                      },
-                                      // profile pic + list of chat users
-                                      child: ListTile(
-                                        // user profile pic
-                                        leading: InkWell(
-                                          onTap: () {
-                                            // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
-                                          },
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                mq.height * .3),
-                                            child: CachedNetworkImage(
-                                              width: mq.height * .050,
-                                              height: mq.height * .050,
-                                              imageUrl: data.data[index].image,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      CircleAvatar(
-                                                child:
-                                                    Icon(CupertinoIcons.person),
-                                              ),
+                                          SizedBox(width: 5.sp),
+                                          CircleAvatar(
+                                            child: Image.asset(
+                                              "assets/sad.jpg",
                                             ),
-                                          ),
-                                        ),
-                                        // user name show
-                                        title: TextFieldTitleWidget(
-                                          title: data.data[index].name,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        // last msg show
-                                        subtitle: TextFieldTitleWidget(
-                                          title: data.data[index].type,
-                                          colors: Colors.grey,
-                                        ),
+                                            radius: 20,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    loading: () => Center(
+                                        child: CircularProgressIndicator(
+                                        )
+                                    ));
+                              },itemCount: snapshot.data.docs.length,);
 
-                                        //  trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
-                                        // last msg time
-                                        trailing: Container(
-                                          width: 10,
-                                          height: 10,
-                                          decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        // show send time for read msg);
-                                      )));
-                        }),
-                    error: (err, _) => Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextFieldTitleWidget(
-                                title: "No Internet Connection",
-                                fontWeight: FontWeight.normal,
-                                size: 20.sp,
-                              ),
-                              SizedBox(width: 5.sp),
-                              CircleAvatar(
-                                child: Image.asset(
-                                  "assets/sad.jpg",
-                                ),
-                                radius: 20,
-                              )
-                            ],
-                          ),
-                        ),
-                    loading: () => Center(child: CircularProgressIndicator())),
 
-                // return Padding(
-                //   padding: const EdgeInsets.only(bottom: 490),
-                //   child: ListViewCard(
-                //       user:_list[0]
-                //   ),
-                // );
-              ),
+                        }
+                      })),
             ),
             Center(
                 child: GroupListScreen(

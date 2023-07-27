@@ -41,6 +41,7 @@ class _ReportsState extends ConsumerState<Reports> {
         backgroundColor: Colors.grey[300],
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            print('idddddddddddddddddddd${widget.id}');
             Navigator.push(context,
                 MaterialPageRoute(builder: (context)=>AddNewReportsScreen(  project_id:widget.id,)));
           },
@@ -75,11 +76,10 @@ class _ReportsState extends ConsumerState<Reports> {
                   data: (data) =>
                       ListView.separated(
                           itemBuilder: (context, index) {
+
                             String finalD = '';
                             double percentage;
                             var  progress= data.data[index].rate;
-
-
                             checkNullProgress(String value){
                               if( progress != null && progress !=""){
                                 double rate =double.parse('${progress}');

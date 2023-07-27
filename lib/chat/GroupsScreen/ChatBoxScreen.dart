@@ -82,11 +82,11 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
     });
   }
 
-  @override
-  void dispose()
-  {
-  _messageController.dispose();
-  }
+  // @override
+  // void dispose()
+  // {
+  // _messageController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -450,16 +450,12 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  setState(() {
 
+                  setMessage( );
 
-                  setMessage( _messageController.text,);
-                  print("sessssssssssss${Type.text}");
-                 _messageController.clear();
-                  });
                 },
                 child: Icon(
-                  _messageController.text.isEmpty ? Icons.mic : Icons.send,
+                  Icons.send,
                   color: Colors.white,
                 ),)),
         ],
@@ -467,23 +463,20 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
     );
   }
 
-  setMessage( String msg, ) {
-    bool isMe = logedInUser == widget.groupModel.senderId;
-
+  setMessage() {
     if (_messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = ({
-        'message': msg,
+        'message': _messageController.text,
         'sender': logedInUser,
         'senderId': logedInUserId,
         'time': widget.groupMessageTile.time,
 
         // 'type': type,
       });
-      setMessages("${widget.groupId}", chatMessageMap);
       _messageController.clear();
+      setMessages("${widget.groupId}", chatMessageMap);
     }
   }
-
   setMessages(String groupId, Map<String, dynamic> chatMessageData) {
     groupCollection.doc(groupId).collection("messages").add(chatMessageData);
     groupCollection.doc(groupId).update({

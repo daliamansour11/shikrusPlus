@@ -26,7 +26,7 @@ part'DioClient.g.dart';
 @JsonSerializable()
 class DioClient {
   final Dio _dio = Dio();
-  final _baseUrl = 'https://shapi.webautobazaar.com/api/';
+  final _baseUrl = 'https://management-system.webautobazaar.com/api/';
   Future LoggingIn(String email, String password) async {
     final loginData = FormData.fromMap({
       "email": email,
@@ -37,7 +37,6 @@ class DioClient {
       final String? token = shared.getString(
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
-
       var response = await _dio.post(
           _baseUrl + "app-login",
           data: loginData,
@@ -65,8 +64,6 @@ class DioClient {
     }
   }
 
-
-
   Future<TasksModel?> getEmployeeMainTasks() async {
     TasksModel? tasksModel;
     try {
@@ -75,7 +72,8 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       Response userData = await _dio.get(
-          _baseUrl + 'employee/tasks/1', options: Options(
+           'https://management-system.webautobazaar.com/api/employee/tasks/9',
+          options: Options(
         headers: {
           "Content-Type": CONTENT_TYPE,
           "lang": 'ar',
@@ -108,7 +106,8 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhh   ${token}");
       Response userData = await _dio.get(
-          _baseUrl + 'employee/sub-tasks/1/${main_task_id}', options: Options(
+           'https://management-system.webautobazaar.com/api/employee/sub-tasks/9/${main_task_id}'
+          , options: Options(
         headers: {
           "Content-Type": CONTENT_TYPE,
           "lang": 'ar',
@@ -235,9 +234,8 @@ class DioClient {
     final String? token = shared.getString(
         '${SharedPreferencesInfo.userTokenKey}');
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
-
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/employee/reports',
+        'https://management-system.webautobazaar.com/api/employee/reports',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',

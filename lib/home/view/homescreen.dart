@@ -505,14 +505,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ],
                                           ),
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10.0,
-                                                    right: 10,
-                                                    top: 10),
-                                                child: Row(
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0,
+                                                right: 10,
+                                                top: 10),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                              children: [
+                                                Row(
                                                   children: [
                                                     TextFieldTitleWidget(
                                                       title: "Progress",
@@ -527,85 +529,91 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                         colors: Colors.grey,
                                                       ),
                                                     ),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-
-
-                                                    // Padding(
-                                                    //   padding:
-                                                    //       const EdgeInsets.only(
-                                                    //           left: 39.0),
-                                                    //   child: RefreshIndicator(
-                                                    //       backgroundColor: context.appTheme.bottomAppBarColor,
-                                                    //       onRefresh: () async {
-                                                    //         ref.refresh( adminprojectProvider(data.data[index].id));
-                                                    //         return Future.delayed(Duration(milliseconds: 300),
-                                                    //                 () => ref.read( adminprojectProvider(data.data[index].id)));
-                                                    //       },
-                                                    //     child: adminprojects.when(
-                                                    //         data: (dataa) => ListView.builder(
-                                                    //           shrinkWrap: true,
-                                                    //             physics: ClampingScrollPhysics(),
-                                                    //             scrollDirection: Axis.horizontal,
-                                                    //                 itemCount: dataa?.data[index].employeeProjects.length,
-                                                    //                 itemBuilder: (BuildContext context, int indexadmin) {
-                                                    //                   return Text("${90}");
-                                                    //
-                                                    //                     // CircleAvatar(
-                                                    //                     //   backgroundImage:
-                                                    //                     //       AssetImage(
-                                                    //                     //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
-                                                    //                     //   ),
-                                                    //                     //   radius:
-                                                    //                     //       12,
-                                                    //                     //   backgroundColor:
-                                                    //                     //       Colors.white60);
-                                                    //                 }),
-                                                    //         error: (err, _) =>
-                                                    //             Text("$err"),
-                                                    //         loading: () => Center(
-                                                    //             child:
-                                                    //                 CircularProgressIndicator())),
-                                                    //   ),
-                                                    // ),
                                                   ],
                                                 ),
-                                              )
-                                            ],
+
+                                                Row(
+                                                  children: [
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                  ],
+                                                ),
+
+
+
+                                                // Padding(
+                                                //   padding:
+                                                //       const EdgeInsets.only(
+                                                //           left: 39.0),
+                                                //   child: RefreshIndicator(
+                                                //       backgroundColor: context.appTheme.bottomAppBarColor,
+                                                //       onRefresh: () async {
+                                                //         ref.refresh( adminprojectProvider(data.data[index].id));
+                                                //         return Future.delayed(Duration(milliseconds: 300),
+                                                //                 () => ref.read( adminprojectProvider(data.data[index].id)));
+                                                //       },
+                                                //     child: adminprojects.when(
+                                                //         data: (dataa) => ListView.builder(
+                                                //           shrinkWrap: true,
+                                                //             physics: ClampingScrollPhysics(),
+                                                //             scrollDirection: Axis.horizontal,
+                                                //                 itemCount: dataa?.data[index].employeeProjects.length,
+                                                //                 itemBuilder: (BuildContext context, int indexadmin) {
+                                                //                   return Text("${90}");
+                                                //
+                                                //                     // CircleAvatar(
+                                                //                     //   backgroundImage:
+                                                //                     //       AssetImage(
+                                                //                     //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
+                                                //                     //   ),
+                                                //                     //   radius:
+                                                //                     //       12,
+                                                //                     //   backgroundColor:
+                                                //                     //       Colors.white60);
+                                                //                 }),
+                                                //         error: (err, _) =>
+                                                //             Text("$err"),
+                                                //         loading: () => Center(
+                                                //             child:
+                                                //                 CircularProgressIndicator())),
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                             padding:

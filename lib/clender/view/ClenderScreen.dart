@@ -153,22 +153,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   () => ref.read(MainTasksProvider.future));
         },
         child: userTask.when(
-            data: (data) =>data.data.length==0?Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
-                    SizedBox(height: 5.h,),
-                    Text(
-                      "No Tasks Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
-                  ],
-                ),
-              ],
-            ) :
+            data: (data) =>
                 ListView.builder(
                     itemCount: data.data.length,
                     itemBuilder: (context, index) {

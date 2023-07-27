@@ -17,9 +17,9 @@ class StatisticRepo {
 
 
   Future<GetStatisticsResponse> getstatistic() async {
-    var response =  await dioClient.gettaskestatistics();
+    var response =  await dioClient.gettaskstatistics();
    // var static=GetStatisticsResponse.fromJson(response.toJson());
-    debugPrint("${response}");
+    debugPrint("${response.status}statisticssssss");
     return response;
   }
 

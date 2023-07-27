@@ -27,25 +27,25 @@ class ChatGroupData{
     DocumentSnapshot documentSnapshot =await documentReference.get();
     return documentSnapshot['admin'];
   }
- getGroupMembeers(String geoupId){
+  getGroupMembeers(String geoupId){
     return groupCollection.doc(geoupId).snapshots();
- }
+  }
 
   // saving the data to SF
 
   static  saveUserLoggedInStatus(bool isUserLoggedIn) async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return await sf.setBool(userLoggedInKey, isUserLoggedIn);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setBool(userLoggedInKey, isUserLoggedIn);
   }
 
   static saveUserNameSF(String userName) async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return await sf.setString(userNameKey, userName);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userNameKey, userName);
   }
 
   static  saveUserEmailSF(String userEmail) async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return await sf.setString(userEmailKey, userEmail);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userEmailKey, userEmail);
   }
 
   addStringToSF() async {
@@ -56,20 +56,20 @@ class ChatGroupData{
   // getting the data from SF
 
   static Future<bool?> getUserLoggedInStatus() async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return sf.getBool(userLoggedInKey);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getBool(userLoggedInKey);
   }
 
   static Future<String?> getUserEmailFromSF() async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return sf.getString(userEmailKey);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userEmailKey);
   }
 
   static Future<String?> getUserNameFromSF() async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  return sf.getString(userNameKey);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userNameKey);
   }
-  }
+}
 
 
 

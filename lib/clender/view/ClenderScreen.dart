@@ -93,7 +93,10 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height /25,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -150,7 +153,22 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   () => ref.read(MainTasksProvider.future));
         },
         child: userTask.when(
-            data: (data) =>
+            data: (data) =>data.data.length==0?Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
+                    SizedBox(height: 5.h,),
+                    Text(
+                      "No Tasks Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                  ],
+                ),
+              ],
+            ) :
                 ListView.builder(
                     itemCount: data.data.length,
                     itemBuilder: (context, index) {
@@ -272,7 +290,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                             borderRadius: BorderRadius.circular(
                                                 20),
                                             color: onStatusChang(status!)),
-                                        height: 90.h,
+                                        height: 100.h,
                                         width: 100.w,
                                         child: ListTile(
                                           title: Row(
@@ -329,139 +347,143 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                                       }
                                                     })
                                               ]),
-                                          subtitle: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10, right: 10),
-                                                child: TextFieldTitle2Widget(
-                                                    title: "${empTask.status}",
-                                                    size: 12.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    colors: Colors.white),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 30, top: 5),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 1.0,
-                                                          right: 4,
-                                                          top: 4,
-                                                          bottom: 20),
-                                                      child: CircleAvatar(
-                                                          backgroundImage:
-                                                          AssetImage(
-                                                            "assets/personn.jpg",
-                                                          ),
-                                                          radius: 10,
-                                                          backgroundColor:
-                                                          Colors.white60),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 1.0,
-                                                          right: 4,
-                                                          top: 4,
-                                                          bottom: 20),
-                                                      child: CircleAvatar(
-                                                          backgroundImage:
-                                                          AssetImage(
-                                                            "assets/ppr.jpg",
-                                                          ),
-                                                          radius: 10,
-                                                          backgroundColor:
-                                                          Colors.white60),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 1.0,
-                                                          right: 4,
-                                                          top: 4,
-                                                          bottom: 20),
-                                                      child: CircleAvatar(
-                                                          backgroundImage:
-                                                          AssetImage(
-                                                            "assets/ppr.jpg",
-                                                          ),
-                                                          radius: 10,
-                                                          backgroundColor:
-                                                          Colors.white60),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 34,
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 1.0,
-                                                          right: 4,
-                                                          top: 0,
-                                                          bottom: 20),
-                                                      child: Icon(
-                                                        Icons
-                                                            .access_time_filled,
-                                                        color: Colors.white,
-                                                        size: 12.sp,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          left: 1.0,
-                                                          top: 4,
-                                                          bottom: 20),
-                                                      child: TextFieldTitle2Widget(
-                                                          title: "${empTask
-                                                              .timeFrom}",
-                                                          size: 9.sp,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          colors: Colors.white),
-                                                    ),
-                                                    Padding(
+                                          subtitle: Padding(
+                                            padding: const EdgeInsets.only(bottom: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 10, right: 10),
+                                                  child: TextFieldTitle2Widget(
+                                                      title: "${empTask.status}",
+                                                      size: 12.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      colors: Colors.white),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      top: 5),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                    children: [
+                                                      Padding(
                                                         padding:
                                                         const EdgeInsets.only(
-                                                            left: 2.0,
+                                                            left: 1.0,
+                                                            right: 4,
                                                             top: 4,
                                                             bottom: 20),
-                                                        child:TextFieldTitle2Widget(
-                                                            title: "_",
-                                                            size: 9.sp,
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            colors: Colors.white)),
-                                                    Padding(
+                                                        child: CircleAvatar(
+                                                            backgroundImage:
+                                                            AssetImage(
+                                                              "assets/personn.jpg",
+                                                            ),
+                                                            radius: 10,
+                                                            backgroundColor:
+                                                            Colors.white60),
+                                                      ),
+                                                      Padding(
                                                         padding:
                                                         const EdgeInsets.only(
-                                                            left: 5.0,
-                                                            right: 1,
+                                                            left: 1.0,
+                                                            right: 4,
+                                                            top: 4,
+                                                            bottom: 20),
+                                                        child: CircleAvatar(
+                                                            backgroundImage:
+                                                            AssetImage(
+                                                              "assets/ppr.jpg",
+                                                            ),
+                                                            radius: 10,
+                                                            backgroundColor:
+                                                            Colors.white60),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.only(
+                                                            left: 1.0,
+                                                            right: 4,
+                                                            top: 4,
+                                                            bottom: 20),
+                                                        child: CircleAvatar(
+                                                            backgroundImage:
+                                                            AssetImage(
+                                                              "assets/ppr.jpg",
+                                                            ),
+                                                            radius: 10,
+                                                            backgroundColor:
+                                                            Colors.white60),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 34,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.only(
+                                                            left: 1.0,
+                                                            right: 4,
+                                                            top: 0,
+                                                            bottom: 20),
+                                                        child: Icon(
+                                                          Icons
+                                                              .access_time_filled,
+                                                          color: Colors.white,
+                                                          size: 12.sp,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.only(
+                                                            left: 1.0,
                                                             top: 4,
                                                             bottom: 20),
                                                         child: TextFieldTitle2Widget(
                                                             title: "${empTask
-                                                                .timeTo}",
+                                                                .timeFrom}",
                                                             size: 9.sp,
                                                             fontWeight:
                                                             FontWeight.bold,
-                                                            colors: Colors.white)),
-                                                  ],
+                                                            colors: Colors.white),
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 2.0,
+                                                              top: 4,
+                                                              bottom: 20),
+                                                          child:TextFieldTitle2Widget(
+                                                              title: "_",
+                                                              size: 9.sp,
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              colors: Colors.white)),
+                                                      Padding(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              left: 5.0,
+                                                              right: 1,
+                                                              top: 4,
+                                                              bottom: 20),
+                                                          child: TextFieldTitle2Widget(
+                                                              title: "${empTask
+                                                                  .timeTo}",
+                                                              size: 9.sp,
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              colors: Colors.white)),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                SizedBox(height: 10.h,)
+                                              ],
+                                            ),
                                           ),
                                         )),
                                   ),

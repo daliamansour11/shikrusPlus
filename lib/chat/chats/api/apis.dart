@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/SharedPreferenceInfo.dart';
@@ -211,10 +212,34 @@ static int?idduserr;
 static List<String>ids=[];
  static String ik="";
 
+ static List <dynamic>listtt=[];
+
+  Widget methd(BuildContext context) {
+
+    return  Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('usersid')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return new Text("Loading");
+              }
+              var userDocument = snapshot.data?.docs[0]["ids"];
+              listtt.add(userDocument);
+              return Center();
+
+            }
+        ),
+      );
+  }
 // for sending msgs
   static Future<void> sendMessage(UserData chatuser, String msg, Type type) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     int iduserr=sf.getInt("USERIDKEY")??0;
+
     final time = DateTime
         .now()
         .millisecondsSinceEpoch
@@ -223,7 +248,7 @@ static List<String>ids=[];
         msg: msg,
         toId: chatuser.id.toString(),
         read: 'false',
-        receiverimg: chatuser.image,
+        receiverimg: chatuser.image??"",
         type: type,
         receivername:chatuser.name.toString() ,
 
@@ -232,14 +257,21 @@ static List<String>ids=[];
     final ref = firestore.collection('chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/messages');
    final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
      final doc = await userDocRef.get();
-    await firestore.collection('usersid').doc().set({"ids":FieldValue.arrayUnion([chatuser.id,iduserr])});
-    await firestore.collection('usersid').doc().get().then((doc){
-     print("${doc.exists}doccccccccccc");
+  //  await firestore.collection('usersid').doc().set({"ids":FieldValue.arrayUnion([chatuser.id,iduserr])});
+  //   await firestore.collection('usersid').doc().get().then((doc){
+  //    print("${doc.exists}doccccccccccc");
+  //   });
+    var query = FirebaseFirestore.instance
+        .collection('usersid')
+        .where('ids',arrayContains: FieldValue.arrayUnion([chatuser.id,iduserr]));
+    query.get().then((QuerySnapshot snapshot) {
+     List l= snapshot.docs;
 
+      // handle the results here
     });
 
     ik=doc.id;
-     print("${ik}doccccccccccccccccc");
+     print("${listtt}doccccccccccccccccc");
     // if (!doc.exists ) {
     //     firestore.collection(
     //     'chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/sender').add({"senderid":FieldValue.arrayUnion(["${doc}","${iduserr}"])});
@@ -298,14 +330,11 @@ static List<String>ids=[];
   }
 
 // for adding an user to my user when first message is send
-  static Future<void> sendFirstMessage(UserData chatuser, String msg,
-      Type type) async {
-    await firestore
-        .collection('users')
-        .doc(user)
-        // .collection('my_users')
-        //  .doc(user)
-        .set({}).then((value) => sendMessage(chatuser, msg, type));
+  static Future<void> sendusersMessage(UserData chatuser) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
+    await firestore.collection('usersid').doc().set({"ids":FieldValue.arrayUnion([chatuser.id,iduserr])});
+
   }
 
 // getting specific user info

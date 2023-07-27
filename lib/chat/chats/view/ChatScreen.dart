@@ -78,37 +78,27 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Scaffold(
             backgroundColor: Colors.teal[50],  appBar: AppBar(
             backgroundColor: Colors.grey[300],
-            title: Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey[400],
-                    radius: 21.0,
-                    backgroundImage: NetworkImage('${widget.userImage}'),
-                  ),
-                  SizedBox(
-                    width: 3,
-                  ),
-                  Column(
-                    children: [
-                      Text("  ${widget.UserName}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,)),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text("  ${widget.userId}",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                ],
-              ),
+            title: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.grey[400],
+                  radius: 21.0,
+                  backgroundImage: NetworkImage('${widget.userImage}'),
+                ),
+                SizedBox(
+                  width: 3,
+                ),
+                Column(
+                  children: [
+                    Text("  ${widget.UserName}",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,)),
+
+                  ],
+                ),
+              ],
             ),
           ),
             body: Column(
@@ -252,16 +242,21 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           // click to send msgs
-          MaterialButton(onPressed: (){
+          MaterialButton(onPressed: ()async{
             if(_textcontroller.text.isNotEmpty){
               if(_list.isEmpty){
                 // on 1st msg add the user
-                Apis.sendFirstMessage(widget.user, _textcontroller.text,Type.text);
+                print("${_list.isEmpty}emptyy");
+                Apis.sendusersMessage(widget.user);
+                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
+
               }else{
+                print("${_list.isEmpty} ${widget.user.id}emptyy");
                 Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }
             }
             _textcontroller.text='';
+            _textcontroller.clear();
           },
             shape: CircleBorder(),
             minWidth: 0,

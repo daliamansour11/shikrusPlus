@@ -16,6 +16,7 @@ import 'package:taskmanger/home/model/Projectmodel.dart';
 import 'package:taskmanger/home/model/statisticsmodel.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 
+import '../Admin_projects/model/Admin_ProjectModel.dart';
 import '../Notification/model/Notificationcountmodel.dart';
 import '../Notification/model/Notifications.dart';
 import '../chat/chats/model/UsersModel.dart';
@@ -132,14 +133,14 @@ class DioClient {
     return tasksModel;
   }
 
-  Future<GetStatisticsResponse> gettaskestatistics() async {
+  Future<GetStatisticsResponse> gettaskstatistics() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString(
         '${SharedPreferencesInfo.userTokenKey}');
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/employee/task-statistics',
+        'https://management-system.webautobazaar.com/api/employee/statistics',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
@@ -444,6 +445,33 @@ class DioClient {
     print(response.data);
     return projectmodel;
   }
+  ///////////////////////////getemployeeprojects////////////////////////////////
+  Future<AdminProjectModel> getProjectEmployees(int project_id) async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+
+    var response = await Dio().get(
+        'https://management-system.webautobazaar.com/api/admin/project-employees/${project_id}',
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    AdminProjectModel projectmodel = AdminProjectModel.fromJson(response.data);
+    if (response.statusCode == 200) {
+      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(response.data);
+    return projectmodel;
+  }
 
 
 
@@ -451,9 +479,7 @@ class DioClient {
 
   Future  PostDeviceToken(String device_token, ) async {
     final data = FormData.fromMap({
-      "token": device_token,
-
-
+      "fcm_token": device_token,
     });
     try {
       SharedPreferences shared = await SharedPreferences.getInstance();
@@ -513,7 +539,7 @@ class DioClient {
         final String? token = shared.getString(
             '${SharedPreferencesInfo.userTokenKey}');
         var response = await _dio.post(
-          _baseUrl+ "auth/report/${project_id}",
+            'https://shapi.webautobazaar.com/api/employee/report/1',
             data: data,
             onSendProgress: (int sent,int total){
             print("$sent,$total");

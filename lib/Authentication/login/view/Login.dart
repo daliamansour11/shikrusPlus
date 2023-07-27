@@ -370,19 +370,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                   SharedPreferencesInfo
                                                       .saveUserLoggedInStatus(
                                                       response.status ?? false);
-                                                  SharedPreferencesInfo
-                                                      .saveUserTokenSF(
-                                                      response.data?.token??
-                                                          "");
-                                                  print(response.data
-                                                      ?.personalInformation
-                                                      .email);
+
+                                                  SharedPreferencesInfo.saveUserTypeFromSF(response.data?.personalInformation.type??"");
+                                                  SharedPreferencesInfo.saveUsernameFromSF(response.data?.personalInformation.name??"");
+                                                  SharedPreferencesInfo.saveUserTokenSF(response.data?.token?? "");
+                                                  String? t=await SharedPreferencesInfo.getUserTypeFromSF();
+                                                  print("${t}tyyype");
+                                                  print(response.data?.personalInformation.email);
                                                   print(response.data?.token);
                                                 }
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(content: Text(
-                                                      "${response.msg}"),
+                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${response.msg}"),
                                                     duration: const Duration(
                                                         seconds: 4),
                                                     backgroundColor:

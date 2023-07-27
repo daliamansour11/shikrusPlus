@@ -7,6 +7,7 @@ class SharedPreferencesInfo{
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userIdKey = "USERIDKEY";
   static String TASKIdKey = "TASKIdKey";
+  static String userTypeKey = "USERTYPEKEY";
   static String userTokenKey = "USERTOKENKEY";
   static String deviceTokenKey = "DEVICETOKENKEY";
   static String userEmailKey = "USEREMAILKEY";
@@ -131,6 +132,23 @@ class SharedPreferencesInfo{
 
      print(token);
      return token;
+  }
+  static Future<String?> getUserTypeFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    var type = sf.getString(userTypeKey);
+
+    print(type);
+    return type;
+  }
+  static  saveUserTypeFromSF(String type) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+
+    print(type);
+    return await sf.setString(userTypeKey,type);
+  }
+  static  saveUsernameFromSF(String name) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userNameKey,name);
   }
   static Future getStringAb() async {
     SharedPreferences sf = await SharedPreferences.getInstance();

@@ -41,6 +41,7 @@ dependencies:
   firebase_auth: ^4.1.5
   cloud_firestore: ^4.1.0
   firebase_storage:
+  multi_select_flutter:
   firebase_core:
   gallery_saver: ^2.3.2
   firebase_app_check: ^0.1.4+2
@@ -124,13 +125,16 @@ flutter:
   assets:
     - assets/yask.png
     - assets/task.jpg
+    - assets/not.jpg
     - assets/sadd.png
+    - assets/notification.png
     - assets/saddd.png
     - assets/onboard1.png
     - assets/waving.png
     - assets/sad.jpg
     - assets/personn.jpg
     - assets/ppr.jpg
+    - assets/pro.jpg
     - assets/NoData.jpg
     - assets/img_1.png
 

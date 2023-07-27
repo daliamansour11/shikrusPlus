@@ -108,8 +108,23 @@ class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
                               topLeft: Radius.circular(35),
                             ),
                           ),
-                          child: ListView.builder(
-                            itemCount: data!.data.length,
+                          child:data!.data.isEmpty?Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
+                                  SizedBox(height: 5.h,),
+                                  Text(
+                                    "No SubTasks Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                                ],
+                              ),
+                            ],
+                          ) : ListView.builder(
+                            itemCount: data.data.length,
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {

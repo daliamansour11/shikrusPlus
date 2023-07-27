@@ -1,8 +1,3 @@
-
-
-
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskmanger/clender/Repository/SubtTaskRepo.dart';
@@ -13,11 +8,9 @@ import '../model/TasksModel.dart';
 import '../viewModel/SubTaskViewModel.dart';
 
 final SubTaskProvider = FutureProvider.family<TasksModel?,int>((ref, main_task_id) {
-
   var subtasks= ref.read(SubTasksRepoProvider).getEmployeeSubTasks(main_task_id);
   return subtasks;
 });
-
 //
 //
 // final getSubTasksNotifier = StateNotifierProvider<GetSubTask,StateModel<TasksModel>>((ref) {
@@ -32,8 +25,3 @@ final SubTaskProvider = FutureProvider.family<TasksModel?,int>((ref, main_task_i
 //     ref) =>
 //     SubTaskProviderNotifier (ref)
 // );
-
-
-
-
-

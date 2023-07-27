@@ -11,6 +11,6 @@ final proProvider = FutureProvider.autoDispose<Projectmodel>((ref) {
 
 
 
-final statisticProvider = FutureProvider.autoDispose<GetStatisticsResponse>((ref) {
+final statisticProvider = FutureProvider.autoDispose<GetStatisticsResponse>((ref ) {
 //
    return  ref.read(statisticrepo).getstatistic();});

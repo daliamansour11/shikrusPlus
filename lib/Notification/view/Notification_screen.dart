@@ -126,7 +126,22 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
           ),
           Expanded(
             child: notifications.when(
-                data: (data) => ListView.builder(
+                data: (data) =>data.data.length==0?Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/not.jpg",),backgroundColor: Colors.white,),
+                        SizedBox(height: 10.h,),
+                        Text(
+                          "No Notifications Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                      ],
+                    ),
+                  ],
+                ) : ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         if (data.data.length == 0) {

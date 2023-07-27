@@ -163,16 +163,6 @@ import 'package:flutter/material.dart';
 // }
 
 
-
-
-
-
-
-
-
-
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -186,7 +176,6 @@ class GroupInfo extends StatefulWidget {
   final String adminName;
   const GroupInfo({Key? key, required this.groupName, required this.groupId, required this.adminName}) : super(key: key);
 
-
   @override
   State<GroupInfo> createState() => _GroupInfoState();
 }
@@ -194,8 +183,10 @@ class GroupInfo extends StatefulWidget {
 class _GroupInfoState extends State<GroupInfo> {
   AuthService authService = AuthService();
   Stream? member;
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     getMember();
   }
@@ -314,7 +305,7 @@ class _GroupInfoState extends State<GroupInfo> {
                             child: Text(getName(snapshot.data['members'][index]).substring(0,1).toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                           ),
                           title: Text(getName(snapshot.data['members'][index])),
-                          subtitle: Text(getId(snapshot.data['members'][index])),
+                          // subtitle: Text(getId(snapshot.data['members'][index])),
                         ),
                       );
                     },

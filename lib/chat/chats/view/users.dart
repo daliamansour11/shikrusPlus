@@ -129,7 +129,7 @@ class _ChatScreenState extends ConsumerState<Users> {
                                                 top: mq.height * .01),
                                          //   physics: const BouncingScrollPhysics(),
                                             itemBuilder: (context, index) {
-                                              int idapi=dataapi.data[index].id ;
+                                              int? idapi=dataapi.data[index].id ;
                                               dataapi.data.toSet().toList();
 
                                               //  List<dynamic>listtt= LinkedHashSet<dynamic>.from(listt).toList()??[];

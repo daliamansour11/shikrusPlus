@@ -142,8 +142,28 @@ class _ReportsState extends ConsumerState<Reports> {
                                                   fontSize: 12.sp),
                                             ),
                                           ),
+
                                         ],
                                       ),
+                                      SizedBox(height: 15.h,),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(left: 10.0),
+                                            child: Text(
+                                              "${data.data[index].reason}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 13.sp),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10.h,),
                                       Row(
                                         children: [
                                           Padding(
@@ -160,39 +180,13 @@ class _ReportsState extends ConsumerState<Reports> {
                                                 Padding(
                                                   padding: const EdgeInsets.only(
                                                       left: 95.0),
-                                                  child: Text(" ${data.data[index].rate} %",
+                                                  child: Text(" ${data.data[index].rate??0} %",
                                                     style: TextStyle(
                                                         color: Color(0xFF005373),
                                                         fontSize: 12.sp),
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 55.0,top: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(height: 13.h,),
-                                                      CircleAvatar(
 
-                                                          backgroundImage:emptyimage ==""?AssetImage("assets/task.jpg"):
-                                                          NetworkImage("${data.data[index].image}") as ImageProvider,
-                                                          // :AssetImage("assets/NoData.jpg")  as ImageProvider,
-                                                          radius: 20.sp,
-                                                          backgroundColor:
-                                                          Colors.grey),
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsets.only(
-                                                            left: 15.0),
-                                                        child: Icon(
-                                                          color: Color(0xFF005373),
-                                                          Icons.arrow_forward_ios,
-                                                          size: 16.sp,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           )
@@ -209,7 +203,7 @@ class _ReportsState extends ConsumerState<Reports> {
                                                 LinearPercentIndicator(
                                                     width: 200.0.w,
                                                     lineHeight: 8.0,
-                                                    percent:.45,
+                                                    percent:double.parse(data.data[index].rate??"${0.0}")/100.0,
                                                     // checkNullProgress("$progress")??.20,
                                                     progressColor:  Color(0xFF005373),
                                                     linearStrokeCap:

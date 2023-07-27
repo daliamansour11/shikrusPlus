@@ -14,11 +14,13 @@ import 'package:taskmanger/home/provider/HomeProvider.dart';
 import 'package:taskmanger/home/view/ProjectsProgress.dart';
 import 'package:taskmanger/home/view/ProjectsScreen.dart';
 import 'package:taskmanger/main.dart';
+import '../../Admin_projects/provider/Admin_Projectsprovider.dart';
 import '../../Notification/provider/NotificationProvider.dart';
 import '../../Notification/view/Notification_screen.dart';
 import '../../core/Color.dart';
 import '../../profile/profile.dart';
 import '../../widgets/TextFieldWidget.dart';
+import '../model/statisticsmodel.dart';
 import '../provider/DeviceTokenProvider.dart';
 import 'detailsscreen.dart';
 
@@ -40,6 +42,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   }
 
+  List<String>listname = ["TO_DO", "DONE", "HOLD", "ON_GOING"];
+  List<Color> Itemcolor = <Color>[
+    Colors.orange,
+    Colors.green,
+    Colors.blue,
+    Colors.redAccent,
+
+  ];
+
   String device_token = '';
 
   DateTime now = DateTime.now();
@@ -49,14 +60,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
+    var size = MediaQuery
+        .of(context)
+        .size;
+    List<GetStatisticsResponse>statistic = [];
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
 
     final projects = ref.watch(proProvider);
-
+    final adminprjects = ref.watch(AdminprojectsProvider);
     final statitic = ref.watch(statisticProvider);
     final notificationcount = ref.watch(not_countProvider);
 
@@ -77,10 +90,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   height: 130,
                   child: InkWell(
                     onTap: () {
-                       Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationScreen()));
                     },
-                    child: Stack(
-                      children:[ ClipRRect(
+                    child: Stack(children: [
+                      ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: Icon(
                           Icons.notification_add,
@@ -88,11 +104,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           size: 35,
                         ),
                       ),
-                      notificationcount.when(data:(data)=>CircleAvatar(backgroundColor: Colors.red,radius: 10,child:Text("${data.data}",style: TextStyle(color: Colors.white,),)),
+                      notificationcount.when(
+                        data: (data) =>
+                            CircleAvatar(
+                                backgroundColor: Colors.red,
+                                radius: 10,
+                                child: Text(
+                                  "${data.data}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                )),
                         error: (err, _) => Text(""),
-                        loading: () => Center(child: CircularProgressIndicator()),)
-                      ]
-                    ),
+                        loading: () =>
+                            Center(child: CircularProgressIndicator()),
+                      )
+                    ]),
                   ),
                 ),
                 color: Colors.black,
@@ -145,29 +172,105 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFFDDE3E5)),
-              height: MediaQuery.of(context).size.height / 3.8,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 3.8,
               width: double.infinity,
               child: statitic.when(
-                  data: (data) => CustomScrollView(
-                        primary: false,
-                        slivers: <Widget>[
-                          SliverPadding(
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 10, bottom: 10, top: 10),
-                            sliver: SliverGrid.count(
-                              childAspectRatio: (1 / .5),
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              crossAxisCount: 2,
-                              children:
-                                  List.generate(data.data.length, (index) {
+                  data: (data) =>
+                  // data.data.isEmpty?CustomScrollView(
+                  //   primary: false,
+                  //   slivers: <Widget>[
+                  //     SliverPadding(
+                  //       padding: const EdgeInsets.only(
+                  //           left: 10, right: 10, bottom: 10, top: 10),
+                  //       sliver: SliverGrid.count(
+                  //         childAspectRatio: (1 / .5),
+                  //         crossAxisSpacing: 10,
+                  //         mainAxisSpacing: 10,
+                  //         crossAxisCount: 2,
+                  //         children: List.generate(statistic.length,
+                  //                 (index) {
+                  //               return Container(
+                  //                 height: 100,
+                  //                 width: 180,
+                  //                 decoration: BoxDecoration(
+                  //                     borderRadius: BorderRadius.circular(20),
+                  //                     color: onStatusChang(
+                  //                         "${Itemcolor[index]}")),
+                  //                 child: InkWell(
+                  //                   onTap: () {
+                  //                     Navigator.push(
+                  //                         context,
+                  //                         MaterialPageRoute(
+                  //                             builder: (context) =>
+                  //                                 ProjectsProgress()));
+                  //                   },
+                  //                   child: Column(
+                  //                     children: [
+                  //                       Padding(
+                  //                         padding: const EdgeInsets.only(
+                  //                             left: 3.0, top: 15, right: 50),
+                  //                         child: Text(listname[index],
+                  //                             style: TextStyle(
+                  //                                 fontSize: 15,
+                  //                                 fontWeight: FontWeight.bold,
+                  //                                 color: Colors.white)),
+                  //                       ),
+                  //                       // SizedBox(height: 7,),
+                  //
+                  //                       Row(
+                  //                         mainAxisAlignment:
+                  //                         MainAxisAlignment.center,
+                  //                         children: [
+                  //                           Padding(
+                  //                             padding: const EdgeInsets.only(
+                  //                                 left: 5, top: 7, right: 30),
+                  //                             child: Text(
+                  //                                 "${0} projects ",
+                  //                                 style: TextStyle(
+                  //                                     fontSize: 13,
+                  //                                     fontWeight:
+                  //                                     FontWeight.bold,
+                  //                                     color: Colors.white)),
+                  //                           ),
+                  //                           Padding(
+                  //                             padding: const EdgeInsets.only(
+                  //                                 right: 8.0),
+                  //                             child: Icon(Icons.arrow_forward,
+                  //                                 color: Colors.white),
+                  //                           )
+                  //                         ],
+                  //                       ),
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //               );
+                  //             }),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ):
+                  CustomScrollView(
+                    primary: false,
+                    slivers: <Widget>[
+                      SliverPadding(
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, bottom: 10, top: 10),
+                        sliver: SliverGrid.count(
+                          childAspectRatio: (1 / .5),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          crossAxisCount: 2,
+                          children: List.generate(data.data.length,
+                                  (index) {
                                 return Container(
                                   height: 100,
                                   width: 180,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color: onStatusChang(
-                                          "${data.data[index].key.name}")),
+                                      color: Itemcolor[index]),
                                   child: InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -181,7 +284,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               left: 3.0, top: 15, right: 50),
-                                          child: Text(data.data[index].key.name,
+                                          child: Text(data.data[index].key,
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold,
@@ -191,17 +294,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 5, top: 7, right: 30),
                                               child: Text(
-                                                  "${data.data[index].count} projects ",
+                                                  "${data.data[index]
+                                                      .count} projects ",
                                                   style: TextStyle(
                                                       fontSize: 13,
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight.bold,
                                                       color: Colors.white)),
                                             ),
                                             Padding(
@@ -217,38 +321,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ),
                                 );
                               }),
-                            ),
-                          ),
-                        ],
-                      ),
-                  error: (err, _) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextFieldTitleWidget(
-                                  title: "Oops!! \n"
-                                      "Connection Lost!",
-                                  fontWeight: FontWeight.bold,
-                                  size: 18.sp,
-                                ),
-                                SizedBox(width: 5.sp),
-                                CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    "assets/sad.jpg",
-                                  ),
-                                  radius: 18.sp,
-                                  backgroundColor: Colors.grey,
-                                  foregroundColor: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
                         ),
                       ),
+                    ],
+                  ),
+                  error: (err, _) {  Center(child: Text("${err}"));
+                    print("${err}errrr");},
+                  // Center(
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       Row(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           TextFieldTitleWidget(
+                  //             title: "Oops!! \n"
+                  //                 "Connection Lost!",
+                  //             fontWeight: FontWeight.bold,
+                  //             size: 18.sp,
+                  //           ),
+                  //           SizedBox(width: 5.sp),
+                  //           CircleAvatar(
+                  //             backgroundImage: AssetImage(
+                  //               "assets/sad.jpg",
+                  //             ),
+                  //             radius: 18.sp,
+                  //             backgroundColor: Colors.grey,
+                  //             foregroundColor: Colors.grey,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   loading: () => Center(child: CircularProgressIndicator())),
             ),
             SizedBox(
@@ -290,60 +396,92 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Expanded(
                 flex: 1,
                 child: projects.when(
-                    data: (data) => RefreshIndicator(
+                    data: (data) =>
+                        RefreshIndicator(
                           backgroundColor: context.appTheme.bottomAppBarColor,
                           onRefresh: () async {
                             ref.refresh(proProvider);
                             // await ref.read(MainTasksProvider.future);
                             return Future.delayed(Duration(milliseconds: 300),
-                                () => ref.read(proProvider.future));
+                                    () => ref.read(proProvider.future));
                           },
                           child: Container(
-                            height: MediaQuery.of(context).size.height,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height,
                             decoration: BoxDecoration(
                               color: Color(0xFFDDE3E5),
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(35),
                                 topLeft: Radius.circular(35),
                               ),
+
                             ),
-                            child: ListView.builder(
+                            child: data.data.isEmpty ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
+                                  SizedBox(height: 5.h,),
+                                    Text(
+                                        "No Projects Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                                  ],
+                                ),
+                              ],
+                            ) : ListView.builder(
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
+                                final adminprojects = ref.watch(
+                                    adminprojectProvider(data.data[index].id));
+
                                 final usersData = data.data[index];
-                                return InkWell(
+                                return data.data.isEmpty
+                                    ? Text("no prject",
+                                  style: TextStyle(color: Colors.black),)
+                                    : InkWell(
                                   onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Detailsscreen(
+                                            builder: (context) =>
+                                                Detailsscreen(
                                                   name: data.data[index].name ??
                                                       "",
                                                   subject: data.data[index]
-                                                          .subject ??
+                                                      .subject ??
                                                       "",
                                                   notes:
-                                                      data.data[index].notes ??
-                                                          "",
+                                                  data.data[index].notes ??
+                                                      "",
                                                   startDate: data.data[index]
-                                                          .startingDate
-                                                          .toString() ??
+                                                      .startingDate
+                                                      .toString() ??
                                                       "",
                                                   endDate: data.data[index]
-                                                          .expectedExpiryDate
-                                                          .toString() ??
+                                                      .expectedExpiryDate
+                                                      .toString() ??
                                                       '',
                                                   status:
-                                                      data.data[index].status ??
-                                                          '',
-                                              project_id:data.data[index].id ,
+                                                  data.data[index].status ??
+                                                      '',
+                                                  project_id:
+                                                  data.data[index].id,
                                                 )));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
                                         bottom: 7, top: 16, left: 5, right: 5),
-                                    height: MediaQuery.of(context).size.height/6,
+                                    height:
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .height / 6,
                                     width: 100.w,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -355,7 +493,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                             children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -382,61 +520,88 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                     ),
                                                     Padding(
                                                       padding:
-                                                          const EdgeInsets.only(
-                                                              left: 90.0),
-                                                      child:
-                                                          TextFieldTitleWidget(
+                                                      const EdgeInsets.only(
+                                                          left: 90.0),
+                                                      child: TextFieldTitleWidget(
                                                         title: "45%" ?? " ",
                                                         colors: Colors.grey,
                                                       ),
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 39.0),
-                                                      child: Row(
-                                                        children: [
-                                                          CircleAvatar(
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                "assets/personn.jpg",
-                                                              ),
-                                                              radius: 12,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white60),
-                                                          CircleAvatar(
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                "assets/ppr.jpg",
-                                                              ),
-                                                              radius: 12,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white60),
-                                                          CircleAvatar(
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                "assets/ppr.jpg",
-                                                              ),
-                                                              radius: 12,
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .white60),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 15.0),
-                                                            child: Icon(
-                                                              Icons
-                                                                  .arrow_forward_ios,
-                                                              size: 20,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+                                                    CircleAvatar(
+                                                        backgroundImage:
+                                                        AssetImage(
+                                                          "assets/ppr.jpg",
+                                                        ),
+                                                        radius:
+                                                        12,
+                                                        backgroundColor:
+                                                        Colors.white60),
+
+
+                                                    // Padding(
+                                                    //   padding:
+                                                    //       const EdgeInsets.only(
+                                                    //           left: 39.0),
+                                                    //   child: RefreshIndicator(
+                                                    //       backgroundColor: context.appTheme.bottomAppBarColor,
+                                                    //       onRefresh: () async {
+                                                    //         ref.refresh( adminprojectProvider(data.data[index].id));
+                                                    //         return Future.delayed(Duration(milliseconds: 300),
+                                                    //                 () => ref.read( adminprojectProvider(data.data[index].id)));
+                                                    //       },
+                                                    //     child: adminprojects.when(
+                                                    //         data: (dataa) => ListView.builder(
+                                                    //           shrinkWrap: true,
+                                                    //             physics: ClampingScrollPhysics(),
+                                                    //             scrollDirection: Axis.horizontal,
+                                                    //                 itemCount: dataa?.data[index].employeeProjects.length,
+                                                    //                 itemBuilder: (BuildContext context, int indexadmin) {
+                                                    //                   return Text("${90}");
+                                                    //
+                                                    //                     // CircleAvatar(
+                                                    //                     //   backgroundImage:
+                                                    //                     //       AssetImage(
+                                                    //                     //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
+                                                    //                     //   ),
+                                                    //                     //   radius:
+                                                    //                     //       12,
+                                                    //                     //   backgroundColor:
+                                                    //                     //       Colors.white60);
+                                                    //                 }),
+                                                    //         error: (err, _) =>
+                                                    //             Text("$err"),
+                                                    //         loading: () => Center(
+                                                    //             child:
+                                                    //                 CircularProgressIndicator())),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                               )
@@ -444,11 +609,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                           ),
                                           Padding(
                                             padding:
-                                                const EdgeInsets.only(top: 5.0),
+                                            const EdgeInsets.only(top: 5.0),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 Column(
                                                   children: [
@@ -457,76 +622,78 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                         lineHeight: 8.0,
                                                         percent: 0.45,
                                                         progressColor:
-                                                            Colors.blue,
+                                                        Colors.blue,
                                                         linearStrokeCap:
-                                                            LinearStrokeCap
-                                                                .round),
+                                                        LinearStrokeCap
+                                                            .round),
                                                     Padding(
                                                       padding:
-                                                          const EdgeInsets.only(
-                                                              top: 5.0),
+                                                      const EdgeInsets.only(
+                                                          top: 5.0),
                                                       child: Row(
                                                         children: [
                                                           Padding(
                                                             padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5.0,
-                                                                    right: 10),
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 5.0,
+                                                                right: 10),
                                                             child: Icon(
                                                               Icons
                                                                   .access_time_filled,
                                                               color:
-                                                                  Colors.blue,
+                                                              Colors.blue,
                                                             ),
                                                           ),
                                                           Padding(
                                                               padding:
-                                                                  const EdgeInsets
-                                                                      .only(
+                                                              const EdgeInsets
+                                                                  .only(
                                                                 left: 5.0,
                                                               ),
-                                                              child: Text(usersData
+                                                              child: Text(
+                                                                  usersData
                                                                       .startingDate!
                                                                       .year
                                                                       .toString() +
-                                                                  "-" +
-                                                                  usersData
-                                                                      .startingDate!
-                                                                      .month
-                                                                      .toString() +
-                                                                  "-" +
-                                                                  usersData
-                                                                      .startingDate!
-                                                                      .day
-                                                                      .toString())),
+                                                                      "-" +
+                                                                      usersData
+                                                                          .startingDate!
+                                                                          .month
+                                                                          .toString() +
+                                                                      "-" +
+                                                                      usersData
+                                                                          .startingDate!
+                                                                          .day
+                                                                          .toString())),
                                                           Padding(
                                                               padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          5.0),
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left:
+                                                                  5.0),
                                                               child: Text("_")),
                                                           Padding(
                                                               padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 5.0,
-                                                                      right: 6),
-                                                              child: Text(usersData
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 5.0,
+                                                                  right: 6),
+                                                              child: Text(
+                                                                  usersData
                                                                       .expectedExpiryDate!
                                                                       .year
                                                                       .toString() +
-                                                                  "-" +
-                                                                  usersData
-                                                                      .expectedExpiryDate!
-                                                                      .month
-                                                                      .toString() +
-                                                                  "-" +
-                                                                  usersData
-                                                                      .expectedExpiryDate!
-                                                                      .day
-                                                                      .toString())),
+                                                                      "-" +
+                                                                      usersData
+                                                                          .expectedExpiryDate!
+                                                                          .month
+                                                                          .toString() +
+                                                                      "-" +
+                                                                      usersData
+                                                                          .expectedExpiryDate!
+                                                                          .day
+                                                                          .toString())),
                                                         ],
                                                       ),
                                                     ),
@@ -550,17 +717,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ]),
         ));
   }
-  void handlemessagenotifiction()async {
-    navigatorkey.currentState?.push( MaterialPageRoute(builder: (context)=>NotificationScreen()));
-  }
-  Future _firebasemessagingbackgroundHandler(RemoteMessage? message) async {
 
+  void handlemessagenotifiction() async {
+    navigatorkey.currentState
+        ?.push(MaterialPageRoute(builder: (context) => NotificationScreen()));
+  }
+
+  Future _firebasemessagingbackgroundHandler(RemoteMessage? message) async {
     debugPrint("Handling Background Message ${message}");
   }
-  void requestpermission() async {
 
+  void requestpermission() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.instance.getInitialMessage().then(_firebasemessagingbackgroundHandler);
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then(_firebasemessagingbackgroundHandler);
     FirebaseMessaging.onBackgroundMessage(_firebasemessagingbackgroundHandler);
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -588,19 +759,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         //       subtitle: Text(notificationInfo?.title ?? " "),
         //       background: Colors.green.shade500);
       }
-          //   });
-          // } else if (settings.authorizationStatus ==
-          //     AuthorizationStatus.provisional) {
-          //   debugPrint("user provisional permission");
-          // } else {
-          //   debugPrint("user declined or has accepted permission");
+        //   });
+        // } else if (settings.authorizationStatus ==
+        //     AuthorizationStatus.provisional) {
+        //   debugPrint("user provisional permission");
+        // } else {
+        //   debugPrint("user declined or has accepted permission");
 
-          );
+      );
     }
   }
+
   void getToken() async {
-   // await FirebaseMessaging.instance.getInitialMessage().then(handlemessagenotification);
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true,badge: true,sound: true);
+    // await FirebaseMessaging.instance.getInitialMessage().then(handlemessagenotification);
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
     await FirebaseMessaging.instance.getToken().then((value) async {
       setState(() {
         device_token = value ?? " ";
@@ -611,6 +785,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       });
     });
   }
+
   void savetoken(String token) async {
     await FirebaseFirestore.instance
         .collection("usertoken")
@@ -629,7 +804,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   postDeviceToken() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token =
-        shared.getString('${SharedPreferencesInfo.deviceTokenKey}');
+    shared.getString('${SharedPreferencesInfo.deviceTokenKey}');
 
     var response = ref.read(deviceTokenProvider).postDeviceToken(token!);
     print("{tokennnnnnnnnnnnnnnnnnnnn+${response}");

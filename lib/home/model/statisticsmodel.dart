@@ -37,7 +37,7 @@ class GetStatisticsResponse {
 }
 
 class Datum {
-  Msg key;
+  String key;
   int count;
   List<Task> tasks;
 
@@ -48,26 +48,17 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    key: msgValues.map[json["key"]]!,
+    key: json["key"],
     count: json["count"],
     tasks: List<Task>.from(json["tasks"].map((x) => Task.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "key": msgValues.reverse[key],
+    "key": key,
     "count": count,
     "tasks": List<dynamic>.from(tasks.map((x) => x.toJson())),
   };
 }
-
-enum Msg { TO_DO, DONE, HOLD, ON_GOING }
-
-final msgValues = EnumValues({
-  "done": Msg.DONE,
-  "hold": Msg.HOLD,
-  "on-going": Msg.ON_GOING,
-  "to-do": Msg.TO_DO
-});
 
 class Task {
   int id;
@@ -153,14 +144,34 @@ class Task {
   };
 }
 
-enum MakerType { ADMIN, EMPLOYEE }
+enum MakerType {
+  ADMIN,
+  EMPLOYEE
+}
 
 final makerTypeValues = EnumValues({
   "admin": MakerType.ADMIN,
   "employee": MakerType.EMPLOYEE
 });
 
-enum Type { MAIN, SUB }
+enum Msg {
+  DONE,
+  HOLD,
+  ON_GOING,
+  TO_DO
+}
+
+final msgValues = EnumValues({
+  "done": Msg.DONE,
+  "hold": Msg.HOLD,
+  "on-going": Msg.ON_GOING,
+  "to-do": Msg.TO_DO
+});
+
+enum Type {
+  MAIN,
+  SUB
+}
 
 final typeValues = EnumValues({
   "main": Type.MAIN,

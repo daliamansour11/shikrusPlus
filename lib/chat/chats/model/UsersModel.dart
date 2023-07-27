@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 // part'UsersModel.dart.g.dart';
 @JsonSerializable()
@@ -31,21 +30,21 @@ class UsersModel {
 }
 
 class UserData {
-  int id;
-  String name;
-  String email;
-  String type;
+  int? id;
+  String? name;
+  String? email;
+  String? type;
   String? phone;
-  String image;
+  String? image;
   Status? status;
 
   UserData({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.type,
+     this.id,
+     this.name,
+     this.email,
+     this.type,
     this.phone,
-    required this.image,
+     this.image,
      this.status,
   });
 

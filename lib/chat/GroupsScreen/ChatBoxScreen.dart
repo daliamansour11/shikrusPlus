@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Authentication/login/model/Users.dart';
+import '../../core/SharedPreferenceInfo.dart';
 import '../../main.dart';
 import '../GroupsScreen/GroupInfo.dart';
 import '../chats/api/MyDate.dart';
@@ -25,12 +27,15 @@ class ChatBoxScreen extends StatefulWidget {
   final String groupId;
   final String groupImage;
   GroupModel groupModel;
+  GroupMessageTile groupMessageTile ;
+
   ChatBoxScreen({
     required this.groupName,
     required this.groupId,
     required this.UserName,
     required this.groupImage,
     required this.groupModel,
+    required this.groupMessageTile,
   });
 
   @override
@@ -39,42 +44,48 @@ class ChatBoxScreen extends StatefulWidget {
 
 class _ChatBoxScreenState extends State<ChatBoxScreen> {
 
-  bool  _isUploading = false;
-  bool  _showEmoji = false;
+
+  bool _isUploading = false;
+  bool _showEmoji = false;
+
   @override
   CollectionReference groupCollection =
   FirebaseFirestore.instance.collection('groups');
+  List<GroupMessageTile> groupMessage = [];
 
-  // void dispose() {
-  //   _messageController.dispose();
-  // }
+
 
   String admin = "";
   Stream <QuerySnapshot>? chats;
-  Users_model users_model = Users_model("", "email", "phone", "password", "", true, "image", "status",[]);
+  String logedInUser = '';
+  int logedInUserId = 0;
+
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserNameFromSF().then((value) {
+      setState(() {
+        logedInUser = value ?? "";
+      });
+      print("nameeeeeeeeeeeeee22222222222 ${logedInUser}");
+    });await SharedPreferencesInfo.getUserIdFromSF().then((senderId) {
+      setState(() {
+        logedInUserId = senderId ?? 0;
+      });
+      print("nameeeeeeeeeeeeee22222222222 ${logedInUser}");
+    });
+  }
 
   @override
   void initState() {
+    gettingUserData();
     _messageController.addListener(() {
       setState(() {});
     });
-    getChatandAdmin();
   }
 
-  getChatandAdmin() async {
-    var chatResult = await DataBaseService().getChats(widget.groupId);
-    if (chatResult != null) {
-      setState(() {
-        chats = chatResult;
-      });
-    }
-
-    var adminResult = await DataBaseService().getGroupAdmin(widget.groupId);
-    if (adminResult != null) {
-      setState(() {
-        admin = adminResult;
-      });
-    }
+  @override
+  void dispose()
+  {
+  _messageController.dispose();
   }
 
   @override
@@ -82,37 +93,35 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[300],
-        title: Expanded(
-          flex: 1,
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.grey[400],
-                radius: 21.0,
-                backgroundImage: NetworkImage('${widget.groupImage}'),
-              ),
-              SizedBox(
-                width: 3,
-              ),
-              Column(
-                children: [
-                  Text("  ${widget.groupName}",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,)),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text("  ${widget.groupId}",
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ],
-          ),
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.grey[400],
+              radius: 21.0,
+              backgroundImage: NetworkImage('${widget.groupImage}'),
+            ),
+            SizedBox(
+              width: 3,
+            ),
+            Column(
+              children: [
+                SizedBox(height: 4,),
+                Text("  ${widget.groupName}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,)),
+                // SizedBox(
+                //   height: 4,
+                // ),
+                // Text("  ${widget.groupId}",
+                //     style: TextStyle(
+                //         color: Colors.green,
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -120,13 +129,14 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GroupInfo(
-                          groupName: '${widget.groupName}',
-                          groupId: '${widget.groupId}',
-                          adminName: admin,
-                        )));
+                        builder: (context) =>
+                            GroupInfo(
+                              groupName: '${widget.groupName}',
+                              groupId: '${widget.groupId}',
+                              adminName: admin,
+                            )));
               },
-              icon: Icon(Icons.info,color: Colors.grey,))
+              icon: Icon(Icons.info, color: Colors.grey,))
         ],
       ),
       body: Column(
@@ -135,7 +145,8 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
           if(_isUploading)
             Align(alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:15.0,vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 5),
                   child: CircularProgressIndicator(strokeWidth: 2,),
                 )),
           // _chatInput(),
@@ -144,12 +155,12 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
           if(_showEmoji)
 
             SizedBox(
-              height: mq.height *.35,
+              height: mq.height * .35,
               child: EmojiPicker(
                 textEditingController: _messageController,
                 config: Config(
                   columns: 8,
-                  emojiSizeMax: 32 * (Platform.isIOS?1.3:1.0),
+                  emojiSizeMax: 32 * (Platform.isIOS ? 1.3 : 1.0),
                 ),
               ),
             )
@@ -168,23 +179,166 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
             .orderBy('time')
             .snapshots(),
         builder: (context, AsyncSnapshot snapshot) {
+          final data=snapshot.data?.docs;
+          groupMessage=data?.map((e) => GroupMessageTile.fromJson(e.data())).toList().cast<GroupMessageTile>()?? [];
           print("we are here");
           return snapshot.hasData
               ? ListView.builder(
-            itemCount: snapshot.data.docs.length,
-            itemBuilder: (context, index) {
-              print("${snapshot.data.docs[index]['message']}");
-              return MessageTile(
-                  message: snapshot.data.docs[index]['message'],
-                  sender: snapshot.data.docs[index]['sender'],
-                  sendByMe: widget.UserName ==
-                      snapshot.data.docs[index]['sender'], time:snapshot.data.docs[index]['time'].toDate(), senderImage: '' ,);
-            },
-          )
-              : Container(
-          child: Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) {
+                GroupMessageTile groupMessageTile = groupMessage[index];
+                print("${snapshot.data.docs[index]['message']}");
+                if (groupMessageTile.sender == logedInUser) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Column(
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(width: mq.width * .04,),
+                                  // blue tick icon for read messages
+                                  if(widget.groupMessageTile.read.isNotEmpty)
+                                    Icon(Icons.done_all_rounded, color: Colors.blue, size: 20,),
+                                  SizedBox(width: mq.width * .01,),
+                                  // msg send time
+                                ],
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(
+                                    widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
+                                        .width * .02),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: mq.height * .02, horizontal: mq.width * .03),
+                                decoration: BoxDecoration(color: Color.fromARGB(255, 130, 223, 135),
+                                    border: Border.all(color: Colors.green),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                        bottomLeft: Radius.circular(30))),
+                                child: Column(
+                                    children: [
 
-          ));
+                                      Text(
+                                        logedInUser.toUpperCase(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            letterSpacing: -0.5),
+                                      ),
+
+                                      // to send images
+                                      widget.groupMessageTile.type == Type.text
+                                          ? Text("${snapshot.data.docs[index]['message']}",
+                                        style: GoogleFonts.balooBhai2(fontSize: 20),) :
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) =>
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: CircularProgressIndicator(strokeWidth: 2,),
+                                              ),
+                                          imageUrl: widget.groupMessageTile.message,
+                                          errorWidget: (context, url, error) => Icon(Icons.image),
+                                        ),
+                                      ),
+
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            right: mq.width * .029991, top: 10, left: .09),
+                                        child:
+                                        // formatted send time
+                                        Text(MyDate.getLastMsgTime(context: context,
+                                            time: widget.groupMessageTile.time
+                                                .millisecondsSinceEpoch.toString()),
+                                          style: TextStyle(color: Colors.black54),),
+
+                                      )
+                                    ]),
+                              ),
+
+                            ]
+                        )
+
+                      ],
+                    ),
+                  );
+                }else {
+
+                  return  Align(
+                      alignment: Alignment.centerLeft,
+                      child:Row(
+                        //
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        // crossAxisAlignment: CrossAxisAlignment
+                        // .start,
+                          children: [
+
+                            Container(
+
+                              padding: EdgeInsets.all(
+                                  widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
+                                      .width * .02),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: mq.height * .01, horizontal: mq.width * .03),
+                              decoration: BoxDecoration(color: Colors.grey[400],
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                      bottomRight: Radius.circular(30))),
+                              child: Column(
+                                  children: [
+                                    Text(
+                                      "${snapshot.data.docs[index]['sender']}".toUpperCase(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          letterSpacing: -0.5),
+                                    ),
+                                    widget.groupMessageTile.type == Type.text
+                                        ? Text("${snapshot.data.docs[index]['message']}",
+                                      style: GoogleFonts.balooBhai2(fontSize: 20),) :
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: CircularProgressIndicator(strokeWidth: 2,),
+                                            ),
+                                        imageUrl: widget.groupMessageTile.message,
+                                        errorWidget: (context, url, error) => Icon(Icons.image),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          right: mq.width * .029991, top: 10, left: .07),
+                                      child: Text(MyDate.getLastMsgTime(context: context,
+                                          time: widget.groupMessageTile.time.millisecondsSinceEpoch.toString()),
+                                        style: TextStyle(color: Colors.black54),),
+                                    )
+                                  ]),
+                            ),
+
+
+                          ])
+                  );
+
+                }
+
+              }
+
+          ): Container(
+              child: Center(child: Text(
+                "Say Hii!!👋", style: GoogleFonts.balooBhai2(fontSize: 30),),
+
+              ));
           return CircularProgressIndicator();
         });
   }
@@ -211,14 +365,15 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                   SizedBox(
                     width: 4,
                   ),
-                  IconButton(onPressed: (){
+                  IconButton(onPressed: () {
                     FocusScope.of(context).unfocus();
                     setState(() {
-                      _showEmoji=!_showEmoji;
+                      _showEmoji = !_showEmoji;
                     });
                   },
                       icon:
-                      Icon(Icons.emoji_emotions_outlined,color: Colors.purple,size: 23,)),
+                      Icon(Icons.emoji_emotions_outlined, color: Colors.purple,
+                        size: 23,)),
                   SizedBox(
                     width: 10,
                   ),
@@ -228,10 +383,10 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         controller: _messageController,
-                        onTap: (){
-                          if(_showEmoji)
+                        onTap: () {
+                          if (_showEmoji)
                             setState(() {
-                              _showEmoji=!_showEmoji;
+                              _showEmoji = !_showEmoji;
                             });
                         },
                         decoration: InputDecoration(
@@ -246,30 +401,34 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                   ),
                   IconButton(
                       onPressed: () async {
-                        final ImagePicker picker=ImagePicker();
-                        final XFile? image = await picker.pickImage(source: ImageSource.camera);
-                        if(image!=null){
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera);
+                        if (image != null) {
                           print("image path: ${image.path}");
-                          setState(() => _isUploading=true,);
+                          setState(() => _isUploading = true,);
 
-                          Apis.sendGroupImage(widget.groupModel,File(image.path));
-                          setState(() => _isUploading=false,);
-
+                          Apis.sendGroupImage(
+                              widget.groupModel, File(image.path));
+                          setState(() => _isUploading = false,);
                         }
                       },
-                      icon: Icon(Icons.camera_alt_rounded,color: Colors.purple,size: 30,)),
+                      icon: Icon(Icons.camera_alt_rounded, color: Colors.purple,
+                        size: 30,)),
                   SizedBox(width: mq.width * .01,),
                   IconButton(
                       onPressed: () async {
-                        final ImagePicker picker=ImagePicker();
-                        final List<XFile> images = await picker.pickMultiImage();
-                        for(var i in images){
-                          setState(() => _isUploading=true,);
-                          await Apis.sendGroupImage(widget.groupModel,File(i.path));
-                          setState(() => _isUploading=false,);
+                        final ImagePicker picker = ImagePicker();
+                        final List<XFile> images = await picker
+                            .pickMultiImage();
+                        for (var i in images) {
+                          setState(() => _isUploading = true,);
+                          await Apis.sendGroupImage(widget.groupModel, File(i
+                              .path));
+                          setState(() => _isUploading = false,);
                         }
                       },
-                      icon: Icon(Icons.image,color: Colors.purple,size: 30,)),
+                      icon: Icon(Icons.image, color: Colors.purple, size: 30,)),
                   SizedBox(
                     width: 2,
                   ),
@@ -277,7 +436,6 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
               ),
             ),
           ),
-
 
 
           SizedBox(
@@ -292,23 +450,34 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  setMessage();
+                  setState(() {
+
+
+                  setMessage( _messageController.text,);
+                  print("sessssssssssss${Type.text}");
+                 _messageController.clear();
+                  });
                 },
                 child: Icon(
                   _messageController.text.isEmpty ? Icons.mic : Icons.send,
                   color: Colors.white,
-                ),
-              )),
+                ),)),
         ],
       ),
     );
   }
-  setMessage() {
+
+  setMessage( String msg, ) {
+    bool isMe = logedInUser == widget.groupModel.senderId;
+
     if (_messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = ({
-        'message': _messageController.text,
-        'sender': widget.UserName,
-        'time': DateTime.now(),
+        'message': msg,
+        'sender': logedInUser,
+        'senderId': logedInUserId,
+        'time': widget.groupMessageTile.time,
+
+        // 'type': type,
       });
       setMessages("${widget.groupId}", chatMessageMap);
       _messageController.clear();
@@ -320,96 +489,52 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
     groupCollection.doc(groupId).update({
       "recentMessage": chatMessageData["message"],
       "recentMessageSender": chatMessageData["sender"],
-      "recentMessageTime": chatMessageData["time"].toString(),
+      "recentMessageSender": chatMessageData["senderId"],
+      "recentMessageTime": chatMessageData["time"].toDate(),
+      // "recentMessageType": chatMessageData["type"].toString(),
     });
     SetOptions(merge: true);
   }
+
+
+
 }
 
 
 
-class MessageTile extends StatefulWidget {
-  final String message;
+class  GroupMessageTile {
 
-  final String sender;
-  final String senderImage;
-  final DateTime time;
-
-
-  final bool sendByMe;
-
-  MessageTile(
-      {required this.message, required this.sender, required this.sendByMe, required this.time, required this.senderImage});
-
-  @override
-  State<MessageTile> createState() => _MessageTileState();
-}
-
-class _MessageTileState extends State<MessageTile> {
-  Messages? _messages;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-          top: 4,
-          bottom: 4,
-          left: widget.sendByMe ? 0 : 24,
-
-
-          right: widget.sendByMe ? 24 : 0),
-      alignment: widget.sendByMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: widget.sendByMe
-            ? const EdgeInsets.only(left: 30)
-            : const EdgeInsets.only(right: 30),
-        padding: EdgeInsets.only(top: 17, bottom: 17, left: 20, right: 20),
-        decoration: BoxDecoration(
-          color: widget.sendByMe
-              ? Colors.purple[400]
-              : Colors.blueGrey,
-          borderRadius: widget.sendByMe
-              ? const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
-          )
-              : const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          ),
-        ),
-        child:
-
-
-
-
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                widget.sender.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: -0.5),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(" ${ widget.message}"
-                ,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-              // Spacer(),
-              Text(MyDate.getLastMsgTime(context: context, time:widget.time.millisecondsSinceEpoch.toString()),style: TextStyle(color: Colors.black54),),
-]  )
-
-
-
-      ),
-    );
+  GroupMessageTile(
+      {required this.message,
+        required this.time,
+        required this.type,
+        required this.sender,
+        required this.senderId,
+        required this.read
+      });
+  late final String message;
+  late final String sender;
+  late final String senderId;
+  late final String read;
+  late final  DateTime time;
+  late final Type type;
+  GroupMessageTile.fromJson(Map<String, dynamic> json){
+    message = json['message'].toString();
+    sender = json['sender'].toString();
+    senderId = json['senderId'].toString();
+    read = json['read'].toString();
+    type = json['type'].toString()==Type.image.name?Type.image:Type.text;
+    time = json['time'].toDate();
+  }
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['message'] = message;
+    _data['sender'] = sender;
+    _data['senderId'] = senderId;
+    _data['read'] = read;
+    _data['type'] = type.name;
+    _data['time'] = time;
+    return _data;
   }
 }
-
+enum Type{text,image}

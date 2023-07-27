@@ -5,13 +5,18 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:taskmanger/Admin_projects/model/Admin_ProjectModel.dart';
+import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/home/model/Projectmodel.dart';
+import 'package:taskmanger/home/view/homescreen.dart';
+import '../../Admin_projects/provider/Admin_Projectsprovider.dart';
 import '../../Notification/Notification_helper.dart';
 import '../../home/provider/HomeProvider.dart';
 import '../../profile/profile.dart';
 import '../../screens/bottomnavigation.dart';
 import '../../widgets/TextFieldWidget.dart';
 import '../provider/AddNewTaskProvider.dart';
+import 'dropfield.dart';
 
 class AddTaskScreen extends ConsumerStatefulWidget {
   int project_id;
@@ -25,6 +30,33 @@ class AddTaskScreen extends ConsumerStatefulWidget {
 }
 
 class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
+  List<String> _selectedItems = [];
+
+  void _showMultiSelect() async {
+    final List<String> items = [
+      'Flutter',
+      'Node.js',
+      'React Native',
+      'Java',
+      'Docker',
+      'MySQL'
+    ];
+
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(items: items);
+      },
+    );
+
+    // Update UI
+    if (results != null) {
+      setState(() {
+        _selectedItems = results;
+        print("${_selectedItems}itemm");
+      });
+    }
+  }
   var _formKey = GlobalKey<FormState>();
   var isLoading = false;
   bool showSpinner = false;
@@ -49,14 +81,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   TextEditingController subjectController = TextEditingController();
   String project = ' ';
 
-  // List of items in our dropdown menu
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
+
 
   @override
   void initState() {
@@ -65,8 +90,9 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails(
+        AndroidNotificationDetails(
       'dbfood', 'dbfood', importance: Importance.high,
       priority: Priority.high,
       playSound: true,
@@ -76,10 +102,12 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       android: androidNotificationDetails,
     );
     final projects = ref.read(proProvider);
-int idpro=0;
+    int idpro = 0;
+   final employees =ref.watch(adminprojectProvider(idpro));
     Size size = MediaQuery.of(context).size;
-    List<String> list = ["1", "2", "3", "4", "5"] ?? [];
-    String? selecteditem = "1";
+    List<String> _selectedItems = [];
+
+
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
@@ -100,7 +128,7 @@ int idpro=0;
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Profilescreen()));
+                              builder: (context) => HomePage()));
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -127,414 +155,314 @@ int idpro=0;
             color: Colors.white,
           ),
           child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12.w, bottom: 2.h, top: 10.h),
-                    child: TextFieldTitleWidget(
-                      title: "Name",
-                      size: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: TextFormField(
-                      controller: mainNameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please enter name";
-                        } else if (value.length < 6) {
-                          return "Too short title,choosea title with 6 character or more characters";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: Column(
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 12.w, bottom: 2.h, top: 10.h),
+                        child: TextFieldTitleWidget(
+                          title: "Name",
+                          size: 16.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF005373),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        // labelText: "Title", //babel text
-                        hintText: " title ",
-                        //hint text
-                        prefixIcon: Icon(Icons.title),
-                        //prefix iocn
-                        hintStyle: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400), //hint text style
-                        //  labelStyle: TextStyle(fontSize: 13, color: Colors.white), //label style
                       ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
-                    child: TextFieldTitleWidget(
-                      title: "Subject",
-                      size: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: TextFormField(
-                      controller: subjectController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please enter your subject";
-                        } else if (value.length < 4) {
-                          return "Too short title,choosea title with 6 character or more characters";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1,
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: TextFormField(
+                          controller: mainNameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "please enter name";
+                            } else if (value.length < 6) {
+                              return "Too short title,choosea title with 6 character or more characters";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFF005373),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            // labelText: "Title", //babel text
+                            hintText: " title ",
+                            //hint text
+                            prefixIcon: Icon(Icons.title),
+                            //prefix iocn
+                            hintStyle: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400), //hint text style
+                            //  labelStyle: TextStyle(fontSize: 13, color: Colors.white), //label style
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF005373),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        // labelText: "Title", //babel text
-                        hintText: " subject ",
-                        //hint text
-                        prefixIcon: Icon(Icons.title),
-                        //prefix iocn
-                        hintStyle: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w400), //hint text style
                       ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
-                    child: TextFieldTitleWidget(
-                      title: "Note",
-                      size: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                      child: TextFormField(
-                        // maxLines: 1,
-                        controller: noteController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "please enter your notes";
-                          }
-                          return null;
-                        },
-
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color:Color(0xFF005373) ,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          //labelText: "Note", //babel text
-                          hintText: "Enter your Note",
-                          //hint text
-                          prefixIcon: Icon(Icons.note),
-                          //prefix iocn
-                          hintStyle: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400), //hint text style
-                          //    labelStyle: TextStyle(fontSize: 13, color: Colors.white), //label style
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
+                        child: TextFieldTitleWidget(
+                          title: "Subject",
+                          size: 16.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
-                    child: TextFieldTitleWidget(
-                      title: "Project Name",
-                      size: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0,top: 2,right: 8),
-                    child: projects.when(
-                        data: (dataa) => ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: 1,
-                            itemBuilder: (BuildContext context, int index) {
-
-                              List<String>pro_list_name=[];
-                              int id=dataa.data[index].id??0;
-                              String projectname=dataa.data[index].name??"";
-                              pro_list_name.add(projectname);
-                              String? pro_name="";
-                              List<Datum>projectmodel=dataa.data.where((element) =>element.name==projectname).toList();
-                              idpro=projectmodel[index].id;
-                              return SizedBox(
-                                width:200,
-                                child: DropdownButtonFormField<String>(
-                                  decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(width:0,color: Colors.grey,),
-                                      borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2,color: Color(0xFF005373),),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(width: 2,color: Color(0xFF005373),),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                  ),
-                                    value: dataa.data[0].name??"",
-                                    items: pro_list_name
-                                        .map((item) => DropdownMenuItem(
-                                        value: item,
-                                        child: Text(
-                                          item.toString(), style: TextStyle(fontWeight: FontWeight.bold),)))
-                                        .toList(),
-                                    onChanged: (item) {
-                                      setState(() {
-                                        pro_name = item;
-                                        print("itemmm$pro_name");
-                                      });
-                                    }),
-                              );}
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: TextFormField(
+                          controller: subjectController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "please enter your subject";
+                            } else if (value.length < 4) {
+                              return "Too short title,choosea title with 6 character or more characters";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0xFF005373),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            // labelText: "Title", //babel text
+                            hintText: " subject ",
+                            //hint text
+                            prefixIcon: Icon(Icons.title),
+                            //prefix iocn
+                            hintStyle: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400), //hint text style
+                          ),
                         ),
-                        error: (err, _) => Text(""),
-                        loading: () => Center(child: CircularProgressIndicator())
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.width * 0.02,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.only(left: 12, bottom: 2),
-                    child: TextFieldTitleWidget(
-                      title: "Date",
-                      size: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
+                      ),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
+                        child: TextFieldTitleWidget(
+                          title: "Note",
+                          size: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 5),
                           child: TextFormField(
-                            controller: startDateController,
-                            decoration: const InputDecoration(
+                            // maxLines: 1,
+                            controller: noteController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "please enter your notes";
+                              }
+                              return null;
+                            },
+
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
+                                      BorderRadius.all(Radius.circular(10))),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.grey,
                                   width: 1,
                                 ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Colors.blue,
+                                  color: Color(0xFF005373),
                                   width: 2,
                                 ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
-                              hintStyle: TextStyle(color: Colors.black45),
-                              errorStyle: TextStyle(color: Colors.redAccent),
-                              suffixIcon: Icon(Icons.event_note),
-                              labelText: 'startDate',
+                              //labelText: "Note", //babel text
+                              hintText: "Enter your Note",
+                              //hint text
+                              prefixIcon: Icon(Icons.note),
+                              //prefix iocn
+                              hintStyle: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400), //hint text style
+                              //    labelStyle: TextStyle(fontSize: 13, color: Colors.white), //label style
                             ),
-                            onTap: () async {
-                              DateTime? newSelectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: _selectedDate != null
-                                      ? _selectedDate!
-                                      : DateTime.now(),
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2040),
-                                  builder: (context, child) {
-                                    return Theme(
-                                      data: ThemeData.dark().copyWith(
-                                        colorScheme: ColorScheme.dark(
-                                          primary: Colors.deepPurple,
-                                          onPrimary: Colors.white,
-                                          surface: Colors.blueGrey,
-                                          onSurface: Colors.yellow,
-                                        ),
-                                        dialogBackgroundColor: Colors.blue[500],
-                                      ),
-                                      child: child!,
-                                    );
-                                  });
-                              if (newSelectedDate != null) {
-                                _selectedDate = newSelectedDate;
-                                startDateController
-                                  ..text = DateFormat("yyyy-MM-dd")
-                                      .format(_selectedDate!)
-                                  ..selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                          offset:
-                                              startDateController.text.length,
-                                          affinity: TextAffinity.upstream));
-                              }
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty || value == null) {
-                                return "please enter  your startDate";
+                          )),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
+                        child: TextFieldTitleWidget(
+                          title: "Project Name",
+                          size: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 12.0, top: 2, right: 8),
+                        child: projects.when(
+                            data: (dataa) => ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: 1,
+                                itemBuilder: (BuildContext context, int index) {
+                                  List<String>emptyy=[];
+                                  if(dataa.data.isEmpty){
+                                    return SizedBox(
+                                      width: 200,
+                                      child: DropdownButtonFormField<String>(
+                                          decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  color: Colors.grey,
+                                                ),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: Color(0xFF005373),
+                                                ),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: Color(0xFF005373),
+                                                ),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                          ),
+                                          value: "" ?? "",
+                                          items:
+                                              emptyy.map((item) => DropdownMenuItem(
+                                              value: item,
+                                              child: Text(
+                                                item.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              )))
+                                              .toList(),
+                                          onChanged: (item) {
 
-                                // else if(!value .contains("@") ||!value .contains(".") ){
-                                //   return " please enter valide starttime ";
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 8.w,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            controller: endDateController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              hintStyle: TextStyle(color: Colors.black45),
-                              errorStyle: TextStyle(color: Colors.redAccent),
-                              suffixIcon: Icon(Icons.event_note),
-                              labelText: 'endDate',
+                                          }),
+                                    );
+                                  }
+
+                                  List<String> pro_list_name = [];
+
+                                  String projectname = dataa.data[index].name ?? "";
+                                  pro_list_name.add(projectname);
+                                  String? pro_name = "";
+                                  List<Datum> projectmodel = dataa.data
+                                      .where(
+                                          (element) => element.name == projectname)
+                                      .toList();
+                                  idpro = projectmodel[index].id??0;
+                                  return SizedBox(
+                                    width: 200,
+                                    child: DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: 0,
+                                                color: Colors.grey,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: 2,
+                                                color: Color(0xFF005373),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                width: 2,
+                                                color: Color(0xFF005373),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                        ),
+                                        value: dataa.data[0].name ?? "",
+                                        items: pro_list_name
+                                            .map((item) => DropdownMenuItem(
+                                                value: item,
+                                                child: Text(
+                                                  item.toString(),
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold),
+                                                )))
+                                            .toList(),
+                                        onChanged: (item) {
+                                          setState(() {
+
+                                            pro_name = item;
+
+                                            print("itemmm$pro_name");
+                                          });
+                                        }),
+                                  );}
                             ),
-                            onTap: () async {
-                              DateTime? newSelectedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: _selectedDate != null
-                                      ? _selectedDate!
-                                      : DateTime.now(),
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(2040),
-                                  builder: (context, child) {
-                                    return Theme(
-                                      data: ThemeData.dark().copyWith(
-                                        colorScheme: ColorScheme.dark(
-                                          primary: Colors.deepPurple,
-                                          onPrimary: Colors.white,
-                                          surface: Colors.blueGrey,
-                                          onSurface: Colors.yellow,
-                                        ),
-                                        dialogBackgroundColor: Colors.blue[500],
-                                      ),
-                                      child: child!,
-                                    );
-                                  });
-                              if (newSelectedDate != null) {
-                                _selectedDate = newSelectedDate;
-                                endDateController
-                                  ..text = DateFormat("yyyy-MM-dd")
-                                      .format(_selectedDate!)
-                                  ..selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                          offset: endDateController.text.length,
-                                          affinity: TextAffinity.upstream));
-                                print(
-                                    "daaaaaaaaaaaaaaaaa${endDateController.text.runtimeType}");
-                              }
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty || value == null) {
-                                return "please enter  your endDate";
-
-                                // else if(!value .contains("@") ||!value .contains(".") ){
-                                //   return " please enter valide starttime ";
-                              }
-                              return null;
-                            },
-                          ),
+                            error: (err, _) => Text(""),
+                            loading: () => Center(child: CircularProgressIndicator())
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.width * 0.02,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      children: [
-                        Expanded(
-                            flex: 2,
-                            child: Container(
+                      ),
+                      SizedBox(
+                        height: size.width * 0.02,
+                      ),
+
+
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 12, bottom: 2),
+                        child: TextFieldTitleWidget(
+                          title: "Date",
+                          size: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
                               child: TextFormField(
-                                controller: startTimeController,
+                                controller: startDateController,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(20))),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20))),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey,
@@ -552,37 +480,47 @@ int idpro=0;
                                         BorderRadius.all(Radius.circular(20)),
                                   ),
                                   hintStyle: TextStyle(color: Colors.black45),
-                                  errorStyle:
-                                      TextStyle(color: Colors.redAccent),
+                                  errorStyle: TextStyle(color: Colors.redAccent),
                                   suffixIcon: Icon(Icons.event_note),
-                                  labelText: 'startTime',
+                                  labelText: 'startDate',
                                 ),
                                 onTap: () async {
-                                  var time = await showTimePicker(
-                                    builder: (context, child) {
-                                      return Theme(
-                                        data: ThemeData.light().copyWith(
-                                          colorScheme: ColorScheme.dark(
-                                            primary: const Color(0xffE5E0A1),
-                                            onPrimary: Colors.black,
-                                            surface: Colors.white,
-                                            onSurface: Colors.black,
+                                  DateTime? newSelectedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: _selectedDate != null
+                                          ? _selectedDate!
+                                          : DateTime.now(),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime(2040),
+                                      builder: (context, child) {
+                                        return Theme(
+                                          data: ThemeData.dark().copyWith(
+                                            colorScheme: ColorScheme.dark(
+                                              primary: Colors.deepPurple,
+                                              onPrimary: Colors.white,
+                                              surface: Colors.blueGrey,
+                                              onSurface: Colors.yellow,
+                                            ),
+                                            dialogBackgroundColor: Colors.blue[500],
                                           ),
-                                          dialogBackgroundColor: Colors.white,
-                                        ),
-                                        child: child!,
-                                      );
-                                    },
-                                    context: context,
-                                    initialTime: TimeOfDay.now(),
-                                    //timeController.text = time.format(context) from here
-                                  ); //end of showTimePicker
-                                  startTimeController.text =
-                                      time!.format(context); // to h{
+                                          child: child!,
+                                        );
+                                      });
+                                  if (newSelectedDate != null) {
+                                    _selectedDate = newSelectedDate;
+                                    startDateController
+                                      ..text = DateFormat("yyyy-MM-dd")
+                                          .format(_selectedDate!)
+                                      ..selection = TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset:
+                                                  startDateController.text.length,
+                                              affinity: TextAffinity.upstream));
+                                  }
                                 },
                                 validator: (value) {
                                   if (value!.isEmpty || value == null) {
-                                    return "please enter  your starttime";
+                                    return "please enter  your startDate";
 
                                     // else if(!value .contains("@") ||!value .contains(".") ){
                                     //   return " please enter valide starttime ";
@@ -590,162 +528,398 @@ int idpro=0;
                                   return null;
                                 },
                               ),
-                            )),
-                        SizedBox(
-                          width: size.width * 0.03,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
+                            ),
+                            SizedBox(
+                              width: 8.w,
+                            ),
+                            Expanded(
+                              flex: 2,
                               child: TextFormField(
-                                  controller: endTimeController,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20))),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.grey,
-                                        width: 1,
-                                      ),
+                                controller: endDateController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
+                                          BorderRadius.all(Radius.circular(20))),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey,
+                                      width: 1,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.blue,
-                                        width: 2,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    hintStyle: TextStyle(color: Colors.black45),
-                                    errorStyle:
-                                        TextStyle(color: Colors.redAccent),
-                                    suffixIcon: Icon(Icons.event_note),
-                                    labelText: 'endTime',
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
                                   ),
-                                  onTap: () async {
-                                    var time = await showTimePicker(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.blue,
+                                      width: 2,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  hintStyle: TextStyle(color: Colors.black45),
+                                  errorStyle: TextStyle(color: Colors.redAccent),
+                                  suffixIcon: Icon(Icons.event_note),
+                                  labelText: 'endDate',
+                                ),
+                                onTap: () async {
+                                  DateTime? newSelectedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: _selectedDate != null
+                                          ? _selectedDate!
+                                          : DateTime.now(),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime(2040),
                                       builder: (context, child) {
                                         return Theme(
-                                          data: ThemeData.light().copyWith(
+                                          data: ThemeData.dark().copyWith(
                                             colorScheme: ColorScheme.dark(
-                                              primary: const Color(0xffE5E0A1),
-                                              onPrimary: Colors.black,
-                                              surface: Colors.white,
-                                              onSurface: Colors.black,
+                                              primary: Colors.deepPurple,
+                                              onPrimary: Colors.white,
+                                              surface: Colors.blueGrey,
+                                              onSurface: Colors.yellow,
                                             ),
-                                            dialogBackgroundColor: Colors.white,
+                                            dialogBackgroundColor: Colors.blue[500],
                                           ),
                                           child: child!,
                                         );
-                                      },
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                      //timeController.text = time.format(context) from here
-                                    ); //end of showTimePicker
-                                    endTimeController.text =
-                                        time!.format(context); // to h
-                                  },
-                                  validator: (value) {
-                                    if (value!.isEmpty || value == null) {
-                                      return "please enter  your endtime";
-                                      return null;
-                                    }
-                                  })),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: 15, left: 20, right: 20, bottom: 10),
-                    height: 62,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(160),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(.3),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            offset: Offset(0, 0.50))
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF005373),
-                        padding: EdgeInsets.all(20.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                                      });
+                                  if (newSelectedDate != null) {
+                                    _selectedDate = newSelectedDate;
+                                    endDateController
+                                      ..text = DateFormat("yyyy-MM-dd")
+                                          .format(_selectedDate!)
+                                      ..selection = TextSelection.fromPosition(
+                                          TextPosition(
+                                              offset: endDateController.text.length,
+                                              affinity: TextAffinity.upstream));
+                                    print(
+                                        "daaaaaaaaaaaaaaaaa${endDateController.text.runtimeType}");
+                                  }
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty || value == null) {
+                                    return "please enter  your endDate";
+
+                                    // else if(!value .contains("@") ||!value .contains(".") ){
+                                    //   return " please enter valide starttime ";
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      onPressed: () async {
-                        if (mainNameController.text.isEmpty ||
-                            startDateController.text.isEmpty ||
-                            endDateController.text == null ||
-                            startTimeController.text == null ||
-                            endTimeController.text == null) {
-                          _submit();
-                          print("empty");
-                        } else {
-                          print("project_id ${idpro}");
-                          NotificationHelper.flutterLocalNotificationsPlugin.show(
-                              0,
-                              "Add New Task",
-                              "${mainNameController.text}",notificationDetails,payload: "");
-
-                          var response = await ref
-                              .read(NewMainTaskProvider)
-                              .AddNewMainTask(
-                                  mainNameController.text,
-                                  subjectController.text,
-                                  noteController.text,
-                                  startDateController.text,
-                                  endDateController.text,
-                                  startTimeController.text,
-                                  endTimeController.text,
-                                  "main",
-                                idpro);
-                          print("${response}ressssss");
-                          if (response?.status == true) {
-                            mainNameController.clear();
-                            startDateController.clear();
-                            endDateController.clear();
-                            startTimeController.clear();
-                            endTimeController.clear();
-                            _formKey.currentState!.reset();
-                          }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "${response?.status == true}"),
-                              duration: const Duration(seconds: 4),
-                              backgroundColor: (response?.status == true)
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                          );
-                          print("${response?.status} -${idpro}statusssss");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Bottomnavigation()));
-                        }
-
-                      },
-                      child: TextFieldTitleWidget(
-                        title: "Add Task",
-                        size: 16.sp,
-                        colors: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      SizedBox(
+                        height: size.width * 0.02,
                       ),
-                    ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 2,
+                                child: Container(
+                                  child: TextFormField(
+                                    controller: startTimeController,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.grey,
+                                          width: 1,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(20)),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.blue,
+                                          width: 2,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(20)),
+                                      ),
+                                      hintStyle: TextStyle(color: Colors.black45),
+                                      errorStyle:
+                                          TextStyle(color: Colors.redAccent),
+                                      suffixIcon: Icon(Icons.event_note),
+                                      labelText: 'startTime',
+                                    ),
+                                    onTap: () async {
+                                      var time = await showTimePicker(
+                                        builder: (context, child) {
+                                          return Theme(
+                                            data: ThemeData.light().copyWith(
+                                              colorScheme: ColorScheme.dark(
+                                                primary: const Color(0xffE5E0A1),
+                                                onPrimary: Colors.black,
+                                                surface: Colors.white,
+                                                onSurface: Colors.black,
+                                              ),
+                                              dialogBackgroundColor: Colors.white,
+                                            ),
+                                            child: child!,
+                                          );
+                                        },
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                        //timeController.text = time.format(context) from here
+                                      ); //end of showTimePicker
+                                      startTimeController.text =
+                                          time!.format(context); // to h{
+                                    },
+                                    validator: (value) {
+                                      if (value!.isEmpty || value == null) {
+                                        return "please enter  your starttime";
+
+                                        // else if(!value .contains("@") ||!value .contains(".") ){
+                                        //   return " please enter valide starttime ";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                )),
+                            SizedBox(
+                              width: size.width * 0.03,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                  child: TextFormField(
+                                      controller: endTimeController,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.grey,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.all(Radius.circular(20)),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.blue,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.all(Radius.circular(20)),
+                                        ),
+                                        hintStyle: TextStyle(color: Colors.black45),
+                                        errorStyle:
+                                            TextStyle(color: Colors.redAccent),
+                                        suffixIcon: Icon(Icons.event_note),
+                                        labelText: 'endTime',
+                                      ),
+                                      onTap: () async {
+                                        var time = await showTimePicker(
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: ThemeData.light().copyWith(
+                                                colorScheme: ColorScheme.dark(
+                                                  primary: const Color(0xffE5E0A1),
+                                                  onPrimary: Colors.black,
+                                                  surface: Colors.white,
+                                                  onSurface: Colors.black,
+                                                ),
+                                                dialogBackgroundColor: Colors.white,
+                                              ),
+                                              child: child!,
+                                            );
+                                          },
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                          //timeController.text = time.format(context) from here
+                                        ); //end of showTimePicker
+                                        endTimeController.text =
+                                            time!.format(context); // to h
+                                      },
+                                      validator: (value) {
+                                        if (value!.isEmpty || value == null) {
+                                          return "please enter  your endtime";
+                                          return null;
+                                        }
+                                      })),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 30,),
+                      Container(
+                        margin: EdgeInsets.only(
+                            top: 15, left: 20, right: 20, bottom: 10),
+                        height: 62,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(160),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(.3),
+                                blurRadius: 2,
+                                spreadRadius: 1,
+                                offset: Offset(0, 0.50))
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF005373),
+                            padding: EdgeInsets.all(20.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (mainNameController.text.isEmpty ||
+                                startDateController.text.isEmpty ||
+                                endDateController.text == null ||
+                                startTimeController.text == null ||
+                                endTimeController.text == null) {
+                              _submit();
+                              print("empty");
+                            } else {
+                              print("project_id ${idpro}");
+                              NotificationHelper.flutterLocalNotificationsPlugin
+                                  .show(
+                                      0, "Add New Task",
+                                      "${mainNameController.text}",
+                                      notificationDetails,
+                                      payload: "");
+
+                              var response = await ref
+                                  .read(NewMainTaskProvider)
+                                  .AddNewMainTask(
+                                      mainNameController.text,
+                                      subjectController.text,
+                                      noteController.text,
+                                      startDateController.text,
+                                      endDateController.text,
+                                      startTimeController.text,
+                                      endTimeController.text,
+                                      "main",
+                                      idpro);
+                              Navigator.pushReplacement(
+
+                                  context, MaterialPageRoute(builder: (
+                                  _) =>
+                                  HomeScreen()));
+                              print("${response}ressssss");
+                              if (response?.status == true) {
+                                mainNameController.clear();
+                                startDateController.clear();
+                                endDateController.clear();
+                                startTimeController.clear();
+                                endTimeController.clear();
+                                _formKey.currentState!.reset();
+                              }
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Text(
+                              //         "${response?.status == true}"),
+                              //     duration: const Duration(seconds: 4),
+                              //     backgroundColor: (response?.status == true)
+                              //         ? Colors.green
+                              //         : Colors.red,
+                              //   ),
+                              // );
+                              print("${response?.status} -${idpro}statusssss");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Bottomnavigation()));
+                            }
+                          },
+                          child: TextFieldTitleWidget(
+                            title: "Add Task",
+                            size: 16.sp,
+                            colors: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      // RefreshIndicator(
+                      //   backgroundColor: context.appTheme.bottomAppBarColor,
+                      //   onRefresh: () async {
+                      //     ref.refresh(adminprojectProvider(idpro));
+                      //     return Future.delayed(Duration(milliseconds: 300),
+                      //             () => ref.read(adminprojectProvider(idpro).future));
+                      //   },
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(20),
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       mainAxisAlignment: MainAxisAlignment.start,
+                      //       children: [
+                      //     employees.when(
+                      //           data:(dataa)=> ElevatedButton(
+                      //             onPressed:() {
+                      //               setState(()async {
+                      //                 final List<String> items = [
+                      //                   'Flutter',
+                      //                   'Node.js',
+                      //                   'React Native',
+                      //                   'Java',
+                      //                   'Docker',
+                      //                   'MySQL'
+                      //                 ];
+                      //
+                      //                 final List<String>? results = await showDialog(
+                      //                   context: context,
+                      //                   builder: (BuildContext context) {
+                      //                     return ListView.builder(
+                      //                       itemCount: 1,
+                      //                       itemBuilder: (BuildContext context, int index) {
+                      //                         List<Projects>projects=dataa?.data.where((element) => element.id==idpro).toList()??[];
+                      //                               String nameemployee= projects[index].employeeProjects[index].name;
+                      //                               List<String>names=[];
+                      //                               names.add(nameemployee);
+                      //                               print("${names}nammm");
+                      //
+                      //                       return MultiSelect(items:items);
+                      //                     },);
+                      //                   },
+                      //                 );
+                      //
+                      //                 // Update UI
+                      //                 if (results != null) {
+                      //                   setState(() {
+                      //                     _selectedItems = results;
+                      //                     print("${_selectedItems}itemm");
+                      //                   });
+                      //                 }
+                      //               });
+                      //             },
+                      //             child: const Text('Select Employees'),
+                      //           ),
+                      //       error: (err,_)=>Text("${err.toString()}"),
+                      //       loading: ()=>Center(child: CircularProgressIndicator())
+                      //         ),
+                      //         const Divider(
+                      //           height: 10,
+                      //         ),
+                      //         Wrap(
+                      //           children: _selectedItems
+                      //               .map((e) => Chip(
+                      //             label: Text(e,style: TextStyle(color: Colors.black),),
+                      //           ))
+                      //               .toList(),
+                      //         )
+                      //       ],
+                      //     ),),
+                      // ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+              ],
             ),
           ),
         ));
@@ -784,3 +958,68 @@ int idpro=0;
     // print(newSelectedDate);
   }
 }
+class MultiSelect extends StatefulWidget {
+  final List<String> items;
+  const MultiSelect({Key? key, required this.items}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MultiSelectState();
+}
+
+class _MultiSelectState extends State<MultiSelect> {
+  // this variable holds the selected items
+  final List<String> _selectedItems = [];
+
+// This function is triggered when a checkbox is checked or unchecked
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedItems.add(itemValue);
+      } else {
+        _selectedItems.remove(itemValue);
+      }
+    });
+  }
+
+  // this function is called when the Cancel button is pressed
+  void _cancel() {
+    Navigator.pop(context);
+  }
+
+// this function is called when the Submit button is tapped
+  void _submit() {
+    Navigator.pop(context, _selectedItems);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Topics'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: widget.items
+              .map((item) => CheckboxListTile(
+            value: _selectedItems.contains(item),
+            title: Text(item),
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (isChecked) => _itemChange(item, isChecked!),
+          ))
+              .toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _cancel,
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: const Text('Submit'),
+        ),
+      ],
+    );
+  }
+}
+
+
+

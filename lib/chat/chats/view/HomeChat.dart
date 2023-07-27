@@ -45,8 +45,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
 
   void filter(List<UserData> list) {
     list
-        .where((user) =>
-            user.name.toLowerCase().contains(searchTextController.text))
+        .where((user) => user.name?.toLowerCase().contains(searchTextController.text)??false)
         .toList();
   }
 
@@ -72,6 +71,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
     searchTextController.dispose();
   }
   int idt = 0;
+String type="";
 
   gettingUserData() async {
     await SharedPreferencesInfo.getUserIdFromSF().then((value) {
@@ -81,10 +81,19 @@ class _HomeChatState extends ConsumerState<HomeChat> {
       });
     });
   }
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
   @override
   void initState() {
     super.initState();
     Apis.getid();
+    gettingUserType();
     gettingUserData();
   }
 
@@ -170,15 +179,35 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                 : _emptyContainer(),
             // leading:
             actions: [
-              IconButton(
-                onPressed: ()async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Users()));
+              type=="admin"?
+              Visibility(
+                visible: true,
+                child: IconButton(
+                  onPressed: ()async {
 
-                },
-                icon: Icon(Icons.search_sharp),
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchUser()));
+
+                  },
+                  icon: Icon(Icons.search_sharp),
+                ),
+              ):Visibility(
+                visible: false,
+                child: IconButton(
+                  onPressed: ()async {
+
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SearchUser()));
+
+                  },
+                  icon: Icon(Icons.search_sharp),
+                ),
               )
             ],
 
@@ -198,7 +227,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Users()));
+                                builder: (context) => Profilescreen()));
                       },
                       child: CircleAvatar(
                         backgroundImage: AssetImage(
@@ -233,7 +262,8 @@ class _HomeChatState extends ConsumerState<HomeChat> {
           children: [
             Center(
               child: Container(
-                  child: StreamBuilder<QuerySnapshot>(
+                  child:type=="admin"?
+                  StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('usersid')
                       // .where('ids', arrayContains: idt)
@@ -267,8 +297,14 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                                     id.add(listt[1]);
                                   }
                                 }
-                                id.toSet().toList();
-                                print("${id}insidestream");
+
+                                // FirebaseFirestore.instance.collection('usersid').doc()
+                                //     .get().then((DocumentSnapshot) =>
+                                //     print("${DocumentSnapshot.data()?.length}docccc")
+                                // );
+                                List<int>id2=[];
+                                id2.add(id.single);
+                                print("${id2.toSet().toList()}insidestream");
                                 return   userslist.when(
                                     data: (dataapi) => ListView.builder(
                                         shrinkWrap: true,
@@ -278,107 +314,87 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                                             top: mq.height * .01),
                                         //   physics: const BouncingScrollPhysics(),
                                         itemBuilder: (context, index) {
-                                          int idapi=dataapi.data[index].id ;
-                                          dataapi.data.toSet().toList();
 
-                                          //  List<dynamic>listtt= LinkedHashSet<dynamic>.from(listt).toList()??[];
-                                          //   listt.where((element) => element[0].toString()==idt||element[1].toString()==idt).toList();
-                                          //List<UserData>userdatalist=   data.data.where((element) => element.id==listt[0]||element.id==listt[1]).toList();
-
-                                          //  listt.toSet().toList()
-                                          //   listtt.where((element) => element[index]!=idt).toList();
                                           List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).toList();
+                                          // List<UserData>userdatalistclient=dataapi.data.where((element) => element.type=="admin").toList();
+
                                           print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");
                                           print("${id}iddd*");
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                            child: Card(
+                                                margin: EdgeInsets
+                                                    .symmetric(
+                                                    horizontal: mq.width *
+                                                        .03,
+                                                    vertical: 5),
+                                                color: Colors.grey[300],
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        20)),
+                                                elevation: 2,
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (
+                                                                  _) =>
+                                                                  ChatScreen(
+                                                                    userId:
+                                                                    '${userdatalist[index]
+                                                                        .id}',
+                                                                    userImage:
+                                                                    '${userdatalist[index]
+                                                                        .image}',
+                                                                    UserName:
+                                                                    '${
+                                                                        userdatalist[index]
+                                                                            .name}',
+                                                                    user: userdatalist[index],
+                                                                  )));
+                                                    },
+                                                    // profile pic + list of chat users
+                                                    child: ListTile(
 
-                                          // print("${data.data.where((
-                                          //     element) =>
-                                          // element.id == id[0])
-                                          //     .toList()[index]
-                                          //     .name}snnnnnn");
-                                          //      List<int>id2=id[0];
-                                          // List<String> id=[];
-                                          // for(int i=0;i<listt.length;i++){
-                                          // if(listt[index].toString()!=idt){
-                                          //   id.add(listt[index].toString());
-                                          // }}
-                                          //  print("${id[index]}iddd");
-                                          List<int>idd = [];
-                                          // idd.add(id[0]);
-                                          //print("${idd}iddd");
-                                          //  List<UserData>userss=data.data.where((element) =>element.id==id[0]).toList();
-                                          //    return Text("${userdatalist[index].name}");
-                                          return  Card(
-                                              margin: EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: mq.width *
-                                                      .03,
-                                                  vertical: 5),
-                                              color: Colors.grey[300],
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      20)),
-                                              elevation: 2,
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (
-                                                                _) =>
-                                                                ChatScreen(
-                                                                  userId:
-                                                                  '${userdatalist[index]
-                                                                      .id}',
-                                                                  userImage:
-                                                                  '${userdatalist[index]
-                                                                      .image}',
-                                                                  UserName:
-                                                                  '${
-                                                                      userdatalist[index]
-                                                                          .name}',
-                                                                  user: userdatalist[index],
-                                                                )));
-                                                  },
-                                                  // profile pic + list of chat users
-                                                  child: ListTile(
-
-                                                    leading: InkWell(
-                                                      onTap: () {
-                                                        // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
-                                                      },
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(
-                                                            mq.height *
-                                                                .3),
-                                                        child: CachedNetworkImage(
-                                                          width: mq.height * .050,
-                                                          height: mq.height * .050,
-                                                          imageUrl:userdatalist[index].image??"",
-                                                          errorWidget: (context, url, error) =>
-                                                              CircleAvatar(
-                                                                child: Icon(CupertinoIcons.person),
-                                                              ),
+                                                      leading: InkWell(
+                                                        onTap: () {
+                                                          // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
+                                                        },
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              mq.height *
+                                                                  .3),
+                                                          child: CachedNetworkImage(
+                                                            width: mq.height * .050,
+                                                            height: mq.height * .050,
+                                                            imageUrl:userdatalist[index].image??"",
+                                                            errorWidget: (context, url, error) =>
+                                                                CircleAvatar(
+                                                                  child: Icon(CupertinoIcons.person),
+                                                                ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
 
-                                                    title: TextFieldTitleWidget(
-                                                      title: "${userdatalist[index].name}" ??
-                                                          "",
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                    ),
-                                                    // last msg show
-                                                    // subtitle:
-                                                    //     TextFieldTitleWidget(
-                                                    //   title: "${listt[index]}"??"",
-                                                    //   colors: Colors.grey,
-                                                    // ),
-                                                  )));
+                                                      title: TextFieldTitleWidget(
+                                                        title: "${userdatalist[index].name}" ??
+                                                            "",
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                      ),
+                                                      // last msg show
+                                                      // subtitle:
+                                                      //     TextFieldTitleWidget(
+                                                      //   title: "${listt[index]}"??"",
+                                                      //   colors: Colors.grey,
+                                                      // ),
+                                                    ))),
+                                          );
+
                                         }),
                                     error: (err, _) => Center(
                                       child: Row(
@@ -409,7 +425,104 @@ class _HomeChatState extends ConsumerState<HomeChat> {
 
 
                         }
-                      })),
+                      }):
+                  userslist.when(data:(datax)=> ListView.builder(
+                    itemBuilder: (context,index){
+                      List<UserData>userdata=datax.data.where((element) => element.type=="admin").toList();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Card(
+                          margin: EdgeInsets
+                              .symmetric(
+                              horizontal: mq.width *
+                                  .03,
+                              vertical: 5),
+                          color: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(
+                                  20)),
+                          elevation: 2,
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (
+                                            _) =>
+                                            ChatScreen(
+                                              userId:
+                                              '${userdata[index]
+                                                  .id}',
+                                              userImage:
+                                              '${userdata[index]
+                                                  .image}',
+                                              UserName:
+                                              '${
+                                                  userdata[index]
+                                                      .name}',
+                                              user: userdata[index],
+                                            )));
+                              },
+                              // profile pic + list of chat users
+                              child: ListTile(
+
+                                leading: InkWell(
+                                  onTap: () {
+                                    // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius:
+                                    BorderRadius
+                                        .circular(
+                                        mq.height *
+                                            .3),
+                                    child: CachedNetworkImage(
+                                      width: mq.height * .050,
+                                      height: mq.height * .050,
+                                      imageUrl:userdata[index].image??"",
+                                      errorWidget: (context, url, error) =>
+                                          CircleAvatar(
+                                            child: Icon(CupertinoIcons.person),
+                                          ),
+                                    ),
+                                  ),
+                                ),
+
+                                title: TextFieldTitleWidget(
+                                  title: "${userdata[index].name}" ??
+                                      "",
+                                  fontWeight:
+                                  FontWeight.bold,
+                                ),
+
+                              ))),
+                    );
+                  },itemCount:datax.data.where((element) => element.type=="admin").toList().length ,), error: (err, _) => Center(
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        TextFieldTitleWidget(
+                          title:
+                          "No Internet Connection",
+                          fontWeight: FontWeight.normal,
+                          size: 20.sp,
+                        ),
+                        SizedBox(width: 5.sp),
+                        CircleAvatar(
+                          child: Image.asset(
+                            "assets/sad.jpg",
+                          ),
+                          radius: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                      loading: () => Center(
+                          child: CircularProgressIndicator(
+                          )
+                      ))),
             ),
             Center(
                 child: GroupListScreen(
@@ -453,5 +566,17 @@ class _HomeChatState extends ConsumerState<HomeChat> {
         onChanged: (val) {},
       ),
     );
+  }
+
+}
+extension ListExtensions<T> on List<T> {
+  Iterable<T> whereWithIndex(bool test(T element, int index)) {
+    final List<T> result = [];
+    for (var i = 0; i < this.length; i++) {
+      if (test(this[i], i)) {
+        result.add(this[i]);
+      }
+    }
+    return result;
   }
 }

@@ -20,8 +20,7 @@ final reportProvider = FutureProvider.autoDispose<ReportResponse>((ref) {
 
 
 final NewReportProvider = ChangeNotifierProvider.autoDispose<NewReportNotifier>((
-    ref) =>
-    NewReportNotifier(ref)
+    ref) => NewReportNotifier(ref)
 );
 
 

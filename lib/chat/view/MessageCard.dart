@@ -99,6 +99,13 @@ class _MessageCardState extends State<MessageCard> {
             Text(
               MyDate.getFormattedtime(context: context, time: widget.messages.send),
               style: GoogleFonts.balooBhai2(fontSize: 15,color: Colors.black54),),
+            // Padding(
+            //   padding: EdgeInsets.only(
+            //       right: mq.width * .029991, top: 10, left: .07),
+            //   child: Text(MyDate.getLastMsgTime(context: context,
+            //       time: widget.message.time.millisecondsSinceEpoch.toString()),
+            //     style: TextStyle(color: Colors.black54),),
+            // )
           ],
         ),
         Flexible(

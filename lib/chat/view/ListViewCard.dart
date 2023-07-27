@@ -54,13 +54,13 @@ class _ListViewCardState extends State<ListViewCard> {
                         child: CachedNetworkImage(
                           width: mq.height * .050,
                           height: mq.height *.050,
-                          imageUrl: widget.user.image,
+                          imageUrl: widget.user.image??"",
                           errorWidget: (context, url, error) => CircleAvatar(child: Icon(CupertinoIcons.person),),
                         ),
                       ),
                     ),
                     // user name show
-                    title: Text(widget.user.name,style: GoogleFonts.balooBhai2(fontWeight: FontWeight.bold,fontSize: 20)),
+                    title: Text(widget.user.name??"",style: GoogleFonts.balooBhai2(fontWeight: FontWeight.bold,fontSize: 20)),
                     // last msg show
                     // subtitle: Text(_messages!=null?_messages!.type==Type.image?'Photo':
                     // _messages!.msg:

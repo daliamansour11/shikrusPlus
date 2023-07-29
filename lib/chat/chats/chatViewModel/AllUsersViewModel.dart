@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskmanger/chat/chats/model/UsersModel.dart';
-import 'package:taskmanger/clender/Repository/ClenderMainTaskRepo.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 
 import '../chat_repo/ChatRepo.dart';

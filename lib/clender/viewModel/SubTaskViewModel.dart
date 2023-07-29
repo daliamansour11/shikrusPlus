@@ -12,6 +12,17 @@ import 'package:taskmanger/clender/model/StateModel.dart';
 import '../Repository/SubtTaskRepo.dart';
 import '../model/TasksModel.dart';
 
+
+
+// class EmployeeSubTaskNotifier  extends ChangeNotifier {
+//   EmployeeSubTaskNotifier(this.ref) :super();
+//   final Ref ref;
+//   Future<TasksModel?> EmployeeMainTask(int project_id,int main_task_id ) async {
+//     var repoRes =  await ref.read(SubTasksRepoProvider).getEmployeeSubTasks(project_id, main_task_id);
+//     return repoRes;
+//   }
+// }
+
 // class SubTaskProviderNotifier extends ChangeNotifier{
 //   final Ref ref;
 //   TasksModel tasksModel = TasksModel();

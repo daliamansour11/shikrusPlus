@@ -131,7 +131,6 @@ class _MessageCardState extends State<MessageCard> {
             ),
           ),
         ),
-
       ],
     );
   }

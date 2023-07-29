@@ -18,7 +18,7 @@ class TasksModel {
      this.status,
      this.errNum,
      this.msg,
-       this.data =const[],
+       required this.data ,
   });
 
   factory TasksModel.fromJson(Map<String, dynamic> json) => TasksModel(

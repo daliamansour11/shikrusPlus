@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
 
-import '../../clender/Provider/ClenderMainTaskProvider.dart';
+import '../provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
 import '../../clender/model/TasksModel.dart';
 import '../../clender/view/SubTasksScreen.dart';
@@ -51,7 +51,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userTask = ref.watch(MainTasksProvider);
+    final userTask = ref.watch(MainTasksProvider(widget.project_id));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF005373),

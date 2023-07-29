@@ -1,8 +1,9 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskmanger/clender/Repository/ClenderMainTaskRepo.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
-import 'package:taskmanger/clender/viewModel/ClenderMainTaskViewModel.dart';
+import 'package:taskmanger/home/viewModel/MainTaskViewModel.dart';
+
+import '../repo/MainTaskRepo.dart';
 
 
 
@@ -15,8 +16,8 @@ final MainTaskProvider = ChangeNotifierProvider<EmployeeMainTaskNotifier>((
 
 
 ////mainTask////////////////
-final MainTasksProvider= FutureProvider<TasksModel>((ref) =>
-    ref.read(TasksRepoProvider).getEmployeeMainTasks()
+final MainTasksProvider= FutureProvider.family<TasksModel,int>((ref,project_id) =>
+    ref.read(TasksRepoProvider).getEmployeeMainTasks(project_id)
 );
 
 

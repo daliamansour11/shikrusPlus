@@ -47,6 +47,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                       final usersData = data.data[index];
                       return InkWell(
                         onTap: () {
+                          print('idddddddddddddddddddd${data.data[index].id}');
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -81,8 +82,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                                         title: usersData.name ?? " ",
                                         fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                  ],
+                                    ),],
                                 ),
                                 Row(
                                   children: [

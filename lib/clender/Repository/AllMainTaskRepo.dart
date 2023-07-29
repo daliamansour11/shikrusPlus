@@ -4,23 +4,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 import '../../apiService/DioClient.dart';
+import '../model/AllMainTaskModel.dart';
 
-class MainTasksRepo {
+class AllMainTasksRepo {
   final DioClient dioClient;
-  MainTasksRepo( this.dioClient);
+  AllMainTasksRepo( this.dioClient);
 
-  ///////GET EMPLOYEE MAINTASKS/////
+  ///////GET All EMPLOYEE MAINTASKS/////
 
-  Future <TasksModel>getEmployeeMainTasks() async{
-    var responseData = await dioClient.getEmployeeMainTasks( );
-    var response= TasksModel .fromJson(responseData!.toJson());
+  Future <AllMainTaskModel>getAllEmployeeMainTasks() async{
+    var responseData = await dioClient.getAllEmployeeMainTasks( );
+    var response= AllMainTaskModel .fromJson(responseData!.toJson());
+    print("ressssssssssssssssssssssssssss${response.data}");
     return response;
   }
 
 
   // ///////GET EMPLOYEE SUBTASKS/////
-  // Future <TasksModel?>getEmployeeSubTasks() async{
-  //   var responseData = await dioClient.getEmployeeSubTasks( );
+  // Future <TasksModel?>getEmployeeSubTasks() async{//   var responseData = await dioClient.getEmployeeSubTasks( );
   //   var response= TasksModel .fromJson(responseData!.toJson());
   //   return responseData;
   // }
@@ -45,6 +46,6 @@ class MainTasksRepo {
 }
 
 
-final TasksRepoProvider = Provider<MainTasksRepo>((ref) =>
-    MainTasksRepo(DioClient()),
+final AllTasksRepoProvider = Provider<AllMainTasksRepo>((ref) =>
+    AllMainTasksRepo(DioClient()),
 );

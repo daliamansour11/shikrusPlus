@@ -6,7 +6,7 @@ import 'package:taskmanger/core/utils.dart';
 import '../../AddNewTask/view/Addtask.dart';
 import '../../core/ContainerWidget.dart';
 import '../../popMenuItem/PopMenuItems.dart';
-import '../../clender/Provider/ClenderMainTaskProvider.dart';
+import '../provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
 import '../../core/Color.dart';
 import '../../popMenuItem/TaskMenuItems.dart';
@@ -50,7 +50,7 @@ class _ProjectsTasksScreenState extends ConsumerState<ProjectsTasksScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    final projectMainTask = ref.watch(MainTasksProvider);
+    final projectMainTask = ref.watch(MainTasksProvider(widget.project_id));
 
     return Scaffold(
 
@@ -74,11 +74,11 @@ class _ProjectsTasksScreenState extends ConsumerState<ProjectsTasksScreen> {
         body:  RefreshIndicator(
             backgroundColor: context.appTheme.bottomAppBarColor,
             onRefresh: ()  async{
-              await ref.refresh(MainTasksProvider);
+              await ref.refresh(MainTasksProvider(widget.project_id));
               // ref.read(SubTaskProvider( widget.main_task_id).future);
               print("updated");
               // await ref.read(MainTasksProvider.future);
-              return Future.delayed(Duration(milliseconds: 300) , () => ref.read(MainTasksProvider));
+              return Future.delayed(Duration(milliseconds: 300) , () => ref.read(MainTasksProvider(widget.project_id)));
             },
             child:projectMainTask.when(data: (data)=>   ListView.builder(
                     itemCount: data.data.length??0,

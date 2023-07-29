@@ -7,7 +7,7 @@ import 'package:taskmanger/clender/model/TasksModel.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
 import '../../popMenuItem/PopMenuItems.dart';
-import '../../clender/Provider/ClenderMainTaskProvider.dart';
+import '../../home/provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
 import '../../core/Color.dart';
 import '../../popMenuItem/TaskMenuItems.dart';
@@ -29,14 +29,13 @@ class SubTasksScreen extends ConsumerStatefulWidget {
 
 class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
   bool hasData = false;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPersistentFrameCallback((_) async {
       Future.delayed(Duration(seconds: 1));
 
-      ref.read(SubTaskProvider(widget.project_id));
+      ref.read(SubTaskProvider(widget.main_task_id));
     });
   }
 

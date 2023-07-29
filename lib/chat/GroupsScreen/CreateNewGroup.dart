@@ -1,5 +1,5 @@
-import 'dart:io';
 
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +30,7 @@ class CreateNewGroup extends StatefulWidget {
   State<CreateNewGroup> createState() => _CreateNewGroupState();
 }
 String membersName='';
-int membersId=0;
+List<String> member=[];
 var userName ='';
 CollectionReference groupCollection =   FirebaseFirestore.instance.collection("groups");
 CollectionReference userCollection =   FirebaseFirestore.instance.collection('users ');
@@ -38,7 +38,6 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
   TextEditingController _groupnameController = TextEditingController();
   String? Auth = FirebaseAuth.instance.currentUser?.uid;
   String groupName = '';
-  bool isEmpty=false;
 
 
 
@@ -73,10 +72,9 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
 
   }
   List<String> memberName = [];
-  List<int> memberId = [];
   String? uid='';
 
-  Future createGroup(String userName, String id, String groupName,String members ) async {
+  Future createGroup(String userName, String id, String groupName,String members) async {
 
     memberName.add(userName);
 
@@ -84,7 +82,7 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
       "groupName": groupName,
       "groupIcon": "",
       "admin": "${id}_$userName",
-      "members": memberName,
+      "members": membersName,
       "groupId": "",
       "recentMessage": "",
       "recentMessageSender": "",
@@ -110,188 +108,189 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
         title: Text("CreateNewGroup"),
       ),
       body: CustomScrollView(
-          slivers: [
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Column(children: [
-            SizedBox(
-              height: 5,
-            ),
-            Expanded(
+        slivers:[
+    SliverFillRemaining(
+    hasScrollBody: false,
+        child: Column(children: [
+          SizedBox(
+            height: 5,
+          ),
+          Expanded(
 
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 85,vertical: 0),
-                child: Container(
-
-                    child:   CircleAvatar(
-                      radius: 40,
-                      backgroundImage: AssetImage("assets/personn.jpg"),
-                      child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: CircleAvatar(
-                                radius: 14,
-                                backgroundColor: Color(0xFF775FAF),
-                                child: InkWell(
-                                    onTap: ()async{
-
-                                      final ImagePicker picker=ImagePicker();
-                                      final XFile? image = await picker.pickImage(source: ImageSource.camera);
-                                      if(image!=null){
-                                        print("image path: ${image.path}");
-                                        setState(() => _isUploading=true,);
-                                        Apis.sendGroupImage(groupModel!,File(image.path));
-                                        setState(() => _isUploading=false,);
-                                      }
-                                    },
-                                    child: Icon(Icons.camera_alt_outlined)),
-                              ),
-                            ),
-                          ]
-                      ),
-                    )
-
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5.0,),
-            Padding(
-              padding: const EdgeInsets.only(right: 220.0),
-              child: Text("groupName",style: TextStyle(fontSize: 20,fontWeight:
-              FontWeight.w400),textAlign: TextAlign.start,),
-            ),
-
-            Expanded(
-
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5.0,right: 5.0,),
-                child: TextFieldContainerWidget(
-                  controller: _groupnameController,
-                  keyboardType: TextInputType.text,
-                  prefixIcon: Icons.person,
-                  hintText: "groupName..",
-                  borderRadius: 0.0,
-                  //  color: Colors.white,
-                  iconClickEvent: () {
-                    setState(() {});
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 1,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 205.0,),
-              child: InkWell(
-                onTap: (){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>AllUsersScreen( groupName: '',)));
-                },
-                child: Text("Add Group Members",style: TextStyle(fontSize: 20,fontWeight:
-                FontWeight.w400),),
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Column(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Container(
-                        height: 330,
-                        decoration:   BoxDecoration(borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200],),
-                        child:isEmpty==true?Center(child: InkWell(
-                            onTap: (){
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context)=>AllUsersScreen( groupName: '',)));
-                            },
-                            child: Text("Add Member"))):ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: widget.member.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 5),
-                          itemBuilder: (context, index) {
-                            var tpyeeee= widget.member[index].type;
-                            memberName.add(widget.member[index].name??"");
-                            for(int i =0; i<=widget.member.length;i++) {
-                              membersName = widget.member[index].name ?? '';
-                              print("mmmmmmmmmmmmmmmmmmbers  ${membersName}");
-
-                              membersId= (widget.member[index].id ?? 0) ;
-                              // List<int> Ids = memberId;
-                            }
-                            return ListTile(leading:
-                            CachedNetworkImage(
-                              width: mq.height * .050,
-                              height: mq.height * .050,
-                              imageUrl: "${widget.member[index].image}",
-                              errorWidget: (context, url, error) =>
-                                  CircleAvatar(
-                                    child: Icon(CupertinoIcons.person),
-                                  ),
-                            ),
-                              title: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("${widget.member[index].name}"),
-                                  ),
-                                ],
-                              ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text("${widget.member[index].type}"),
-                              ),
-                            );
-                          },
-                        ),
-
-                      )),
-                ],
-              ),
-            ),
-            Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 85,vertical: 0),
               child: Container(
-                margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 20),
-                height: 60,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(160),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.3),
-                        blurRadius: 2,
-                        spreadRadius: 1,
-                        offset: Offset(0, 0.50))
-                  ],
-                ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF005373),
-                    padding: EdgeInsets.all(20.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+
+                  child:   CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage("assets/personn.jpg"),
+                    child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: CircleAvatar(
+                              radius: 14,
+                              backgroundColor: Color(0xFF775FAF),
+                              child: InkWell(
+                                  onTap: ()async{
+
+                                    final ImagePicker picker=ImagePicker();
+                                    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                                    if(image!=null){
+                                      print("image path: ${image.path}");
+                                      setState(() => _isUploading=true,);
+                                      Apis.sendGroupImage(groupModel!,File(image.path));
+                                      setState(() => _isUploading=false,);
+                                    }
+                                  },
+                                  child: Icon(Icons.camera_alt_outlined)),
+                            ),
+                          ),
+                        ]
                     ),
+                  )
+
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5.0,),
+          Padding(
+            padding: const EdgeInsets.only(right: 220.0),
+            child: Text("groupName",style: TextStyle(fontSize: 20,fontWeight:
+            FontWeight.w400),textAlign: TextAlign.start,),
+          ),
+
+          Expanded(
+
+            child: Padding(
+              padding: const EdgeInsets.only(left: 5.0,right: 5.0,),
+              child: TextFieldContainerWidget(
+                controller: _groupnameController,
+                keyboardType: TextInputType.text,
+                prefixIcon: Icons.person,
+                hintText: "groupName..",
+                borderRadius: 0.0,
+                //  color: Colors.white,
+                iconClickEvent: () {
+                  setState(() {});
+                },
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 205.0,),
+            child: InkWell(
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=>AllUsersScreen( groupName: '',)));
+              },
+
+
+              child: Text("Add Members",style: TextStyle(fontSize: 20,fontWeight:
+              FontWeight.w400),),
+            ),
+          ),
+          Column(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Container(
+                      height: 330,
+                      decoration:   BoxDecoration(borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey[200],),
+                      child:
+                      ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: widget.member.length,
+                        separatorBuilder: (context, index) => const SizedBox(height: 5),
+                        itemBuilder: (context, index) {
+                          print("lennnnnnnnnnnnn${widget.member}");
+                          var tpyeeee= widget.member[index].type;
+                          memberName.add(widget.member[index].name??"");
+                          //for(int i =0; i<=widget.member.length;i++) {
+                            membersName = widget.member[index].name ?? '';
+                            print("mmmmmmmmmmmmmmmmmmbers  ${membersName}");
+
+                            // memberId.add(widget.member[index].id ?? 0);
+                            // List<int> Ids = memberId;
+                          //}
+                          return ListTile(leading:
+                          CachedNetworkImage(
+                            width: mq.height * .050,
+                            height: mq.height * .050,
+                            imageUrl: "${widget.member[index].image}",
+                            errorWidget: (context, url, error) =>
+                                CircleAvatar(
+                                  child: Icon(CupertinoIcons.person),
+                                ),
+                          ),
+                            title: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("${widget.member[index].name}"),
+                                ),
+                              ],
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text("${widget.member[index].type}"),
+                            ),
+                          );
+                        },
+                      ),
+                    )),
+
+                Container(
+                  margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 20),
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(160),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(.3),
+                          blurRadius: 2,
+                          spreadRadius: 1,
+                          offset: Offset(0, 0.50))
+                    ],
                   ),
-                  onPressed: ()async {
-                    if(_groupnameController.text==""||memberName.isEmpty ||_groupnameController.text.isEmpty){
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF005373),
+                      padding: EdgeInsets.all(20.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    onPressed: ()async {
+
+                      UserData user = UserData();
+                      if(_groupnameController.text==""||memberName.isEmpty ||_groupnameController.text.isEmpty){
                       Fluttertoast.showToast(
-                        msg: "Please Enter Group Data", // message
-                        toastLength: Toast.LENGTH_LONG, // length
-                        gravity: ToastGravity.CENTER, // location
-                        timeInSecForIosWeb: 4,
+                      msg: "Please Enter Group Data", // message
+                      toastLength: Toast.LENGTH_LONG, // length
+                      gravity: ToastGravity.CENTER, // location
+                      timeInSecForIosWeb: 4,
                       );
                       // Navigator.of(context).pop();
-                    }else{
+                      }else{
                       groupName = _groupnameController.text;
+
+
+                      setState(() {
+                        _isUploading = true;
+                      });
+
                       print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh ${userName}");
                       createGroup("${userName}",
-                        id.toString(), groupName,
-                        membersName,
+                          id.toString(), groupName,
+                          membersName
                       )
                           .whenComplete(() {
                         setState(() {
@@ -314,41 +313,41 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
 
                     }},
 
-                  child: Text("Create New group",
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0,left: 5.0),
-                  child: Text(
-                    ' By Clicking Creat New Group , '
-                        'you agree to the ',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.grey[400]),
+                    child: Text("Create New group",
+                        style: TextStyle(color: Colors.white, fontSize: 16)),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0,left: 5.0),
-                  child: Text(
-                    'Privact Policy',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF005373)),
-                  ),
-                )
-              ],
-            )
-          ]),
-        ),]
-      ),
 
-    );
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0,left: 5.0),
+                      child: Text(
+                        ' By Clicking Creat New Group , '
+                            'you agree to the ',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0,left: 5.0),
+                      child: Text(
+                        'Privact Policy',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF005373)),
+                      ),
+                    )
+                  ],
+                )
+              ]),
+        ],
+        ),
+      ),
+    ]),);
 
   }
 

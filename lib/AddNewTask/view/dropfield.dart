@@ -9,7 +9,6 @@ class MultiSelect extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MultiSelectState();
 }
-
 class _MultiSelectState extends State<MultiSelect> {
   // this variable holds the selected items
   final List<String> _selectedItems = [];

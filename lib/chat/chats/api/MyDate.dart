@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MyDate {
   // for getting formatted send & receive time of msgs
@@ -12,8 +13,9 @@ class MyDate {
 
 
   // to get last msg send time
-  static String getLastMsgTime({required BuildContext context,required String time,bool showyear=false}){
-    final DateTime sent=DateTime.fromMillisecondsSinceEpoch(int .parse(time));
+  static String getLastMsgTime({required BuildContext
+  context,required String time,bool showyear=false}){
+    final DateTime sent=DateTime.parse(time);
     final DateTime now=DateTime.now();
 
     if(now.day==sent.day && now.month==sent.month && now.year==sent.year){
@@ -21,6 +23,29 @@ class MyDate {
     }
 
     return showyear?'${sent.day} ${_getMonth(sent)} ${sent.year}':'${sent.day} ${_getMonth(sent)}';
+  }
+
+
+  ///////////message time///////////////
+
+
+  static String readTimestamp(String timestamp) {
+    var now = new DateTime.now();
+    var format = new DateFormat( 'K:m'' ''a');
+    var date = DateTime.parse(timestamp);
+    var diff = date.difference(now);
+    var time = '';
+
+    if (diff.inDays == 1) {
+      time = (diff.inDays/360).toString() + 'DAY AGO';
+    } else {
+      time = (diff.inDays/360).toString() + 'DAYS AGO';
+    }
+    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
+      time = format.format(date);
+    }
+
+    return time;
   }
   // for getting formatted time for sent & read
   static String getMessageTime(

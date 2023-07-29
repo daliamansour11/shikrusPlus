@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskmanger/apiService/DioClient.dart';
 import 'package:taskmanger/apiService/DioClient.dart';
+import 'package:taskmanger/apiService/DioClient.dart';
+import 'package:taskmanger/apiService/DioClient.dart';
 import 'package:taskmanger/core/Constants.dart';
 import 'package:taskmanger/core/SharedPreferenceInfo.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -21,12 +23,16 @@ import '../Notification/model/Notificationcountmodel.dart';
 import '../Notification/model/Notifications.dart';
 import '../chat/chats/model/UsersModel.dart';
 import '../clender/Provider/SubTaskProvider.dart';
+import '../clender/Repository/SubtTaskRepo.dart';
+import '../clender/model/AllMainTaskModel.dart';
 import '../reports/model/reportsresponse.dart';
 part'DioClient.g.dart';
 @JsonSerializable()
 class DioClient {
   final Dio _dio = Dio();
   final _baseUrl = 'https://management-system.webautobazaar.com/api/';
+
+
   Future LoggingIn(String email, String password) async {
     final loginData = FormData.fromMap({
       "email": email,
@@ -63,8 +69,9 @@ class DioClient {
       }
     }
   }
+  //////project main task/////////////////////
 
-  Future<TasksModel?> getEmployeeMainTasks() async {
+  Future<TasksModel?> getEmployeeMainTasks(int project_id) async {
     TasksModel? tasksModel;
     try {
       SharedPreferences shared = await SharedPreferences.getInstance();
@@ -72,7 +79,7 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       Response userData = await _dio.get(
-           'https://management-system.webautobazaar.com/api/employee/tasks/9',
+           'https://management-system.webautobazaar.com/api/employee/tasks/${project_id}',
           options: Options(
         headers: {
           "Content-Type": CONTENT_TYPE,
@@ -97,9 +104,44 @@ class DioClient {
     }
     return tasksModel;
   }
-  Future<TasksModel?> getEmployeeSubTasks(int main_task_id) async {
-    TasksModel? tasksModel;
 
+  ////all maintasks///
+  Future<AllMainTaskModel?> getAllEmployeeMainTasks() async {
+    AllMainTaskModel? allTasksModel;
+    try {
+      SharedPreferences shared = await SharedPreferences.getInstance();
+      final String? token = shared.getString(
+          '${SharedPreferencesInfo.userTokenKey}');
+      print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
+      Response userData = await _dio.get(
+           'https://management-system.webautobazaar.com/api/employee/main-tasks',
+          options: Options(
+        headers: {
+          "Content-Type": CONTENT_TYPE,
+          "lang": 'ar',
+          'Authorization': 'Bearer $token'
+        },
+      ));
+      print('allmainTask Info: ${userData.statusCode}');
+      print('allmainTask Info: ${userData.data}');
+      allTasksModel = AllMainTaskModel.fromJson(userData.data);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print('Dio error!');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('HEADERS: ${e.response?.headers}');
+      } else {
+        // Error due to setting up or sending the request
+        print('Error sending request!');
+        print(e.message);
+      }
+    }
+    return allTasksModel;
+  }
+
+  Future<TasksModel?> getEmployeeSubTasks( int main_task_id ) async {
+    TasksModel? tasksModel;
     try {
       SharedPreferences shared = await SharedPreferences.getInstance();
       final String? token = shared.getString(
@@ -191,8 +233,6 @@ class DioClient {
       debugPrint("faildddddddddddddddddddddddddddddddddd");
     }
     print(response.data);
-
-
     return notificationCountsmodel;
   }
 
@@ -210,11 +250,9 @@ class DioClient {
           "Authorization": "Bearer $token",
           'Accept': 'application/json',
           'lang': 'ar'
-        },
-        )
+        },)
     );
     Notifications notificationsmodel = Notifications.fromJson(response.data);
-
     if (response.statusCode == 200) {
       debugPrint("${response}  sucessssssssssssssssssssssssssssss");
     }
@@ -222,12 +260,8 @@ class DioClient {
       debugPrint("faildddddddddddddddddddddddddddddddddd");
     }
     print(response.data);
-
-
     return notificationsmodel;
   }
-
-
   Future<ReportResponse> getReport() async {
     List<ReportResponse>reportlist = [];
     SharedPreferences shared = await SharedPreferences.getInstance();
@@ -423,7 +457,7 @@ class DioClient {
         '${SharedPreferencesInfo.userTokenKey}');
 
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/employee/projects',
+        'https://management-system.webautobazaar.com/api/employee/projects',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
@@ -564,6 +598,12 @@ class DioClient {
 
     return response;}
   }
+class MyParmaters {
+  final int?  project_id;
+  final int? main_task_id;
+
+  MyParmaters({this.project_id, this.main_task_id});
+}
 
 
 

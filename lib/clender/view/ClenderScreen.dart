@@ -15,7 +15,8 @@ import 'package:taskmanger/core/utils.dart';
 import '../../core/Color.dart';
 import '../../popMenuItem/TaskMenuItems.dart';
 import '../../widgets/TextFieldWidget.dart';
-import '../Provider/ClenderMainTaskProvider.dart';
+import '../Provider/AllMainTaskProvider.dart';
+import '../../home/provider/MainTaskProvider.dart';
 
 class Calendarpage extends ConsumerStatefulWidget {
   @override
@@ -30,9 +31,9 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
       Future.delayed(Duration(seconds: 1));
 
       if (_selectedDate == DateTime.now()) {
-        ref.refresh(MainTasksProvider);
+        ref.refresh(AllMainTaskProvider);
         return await Future.delayed(Duration(milliseconds: 300),
-                () => ref.read(MainTasksProvider.future));
+                () => ref.read(AllMainTaskProvider));
       }
     });
   }
@@ -48,12 +49,10 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
   }
 
   DateTime _selectedDate = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
     DatePickerController _datePickerController = DatePickerController();
-    final userTask = ref.watch(MainTasksProvider);
-
+    final userTask = ref.watch(AllMainTaskProvider);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF005373),
@@ -69,29 +68,30 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
           const EdgeInsets.only(top: 10, bottom: 15, right: 3, left: 10),
           child: Column(children: [
             Expanded(
-              child: Container(
-                height: 100.h,
-                decoration: BoxDecoration(),
-                child: DateTimeLine(
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  color: Color(0xFF005373),
-                  hintText: " task today",
-                  onSelected: (value) {
-                    setState(
-                          () {
-                        _selectedDate = value;
-                        setState(() {
-                          _selectedDate;
-                        });
+              child:
+                  Container(
+                    height: 100.h,
+                    decoration: BoxDecoration(),
+                    child: DateTimeLine(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      color: Color(0xFF005373),
+                      hintText: "today task",
+                      onSelected: (value) {
+                        setState(
+                              () {
+                            _selectedDate = value;
+                            setState(() {
+                              _selectedDate;
+                            });
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
               ),
-            ),
             SizedBox(
               height: 10,
             ),
@@ -141,13 +141,13 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
   }
 
   _listEmployeeTask(BuildContext context) {
-    final userTask = ref.watch(MainTasksProvider);
+    final userTask = ref.watch(AllMainTasksProvider);
     return RefreshIndicator(
         backgroundColor: context.appTheme.bottomAppBarColor,
         onRefresh: () async {
-          ref.refresh(MainTasksProvider);
+          ref.refresh(AllMainTaskProvider);
           return Future.delayed(Duration(milliseconds: 300),
-                  () => ref.read(MainTasksProvider.future));},
+                  () => ref.read(AllMainTaskProvider.notifier));},
         child: userTask.when(
             data: (data) =>
                 ListView.builder(
@@ -156,13 +156,13 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                       final empTask = data.data[index];
                             print("taskkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk$empTask");
                       var expectedExpiryDate = DateTime(
-                          empTask.expectedExpiryDate?.year ?? 0,
-                          empTask.expectedExpiryDate?.month ?? 0,
-                          empTask.expectedExpiryDate?.day ?? 0);
+                          empTask.expectedExpiryDate.year ?? 0,
+                          empTask.expectedExpiryDate.month ?? 0,
+                          empTask.expectedExpiryDate.day ?? 0);
                       var startDate = DateTime(
-                          empTask.startingDate?.year ?? 0,
-                          empTask.startingDate?.month ?? 0,
-                          empTask.startingDate?.day ?? 0);
+                          empTask.startingDate.year ?? 0,
+                          empTask.startingDate.month ?? 0,
+                          empTask.startingDate.day ?? 0);
                       List<DateTime> taskRange =
                       getDaysInBetween(startDate, expectedExpiryDate);
                       print(empTask.toJson());
@@ -254,14 +254,12 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                               builder: (context) =>
                                                   SubTasksScreen(
                                                     project_id: int.parse(
-                                                        '${data.data[index]
-                                                            .projectId}'),
+                                                        '${data.data[index].project.id}'),
                                                     main_task_id:
                                                     data.data[index].id,
                                                   )));
                                       print("idddddd${data.data[index].id}");
-                                      print("idddddd${data.data[index]
-                                          .projectId}");
+                                      print("idddddd${data.data[index].project.id}");
                                     },
                                     child: Container(
                                       // width: 90,

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+
+  String type="";
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
+
   onStatusChang(String key) {
     if (key == "DONE") {
       return Itemcolors[0];
@@ -159,7 +171,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
+               type=="admin"? Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: TextFieldTitleWidget(
+                   title: "My Projects",
+                   size: 16.sp,
+                 ),
+               ): Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFieldTitleWidget(
                     title: "My Task",
@@ -426,10 +444,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
+                                    CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
                                   SizedBox(height: 5.h,),
                                     Text(
-                                        "No Projects Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                                        "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
                                   ],
                                 ),
                               ],
@@ -804,6 +822,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     getToken();
+    gettingUserType();
     Future.delayed(Duration(milliseconds: 40), () async {
       postDeviceToken();
     });

@@ -118,36 +118,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
             ),
             centerTitle: true,
             automaticallyImplyLeading: true,
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: Container(
-                  height: 180,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomePage()));
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image(
-                        image: AssetImage("assets/personn.jpg"),
-                        width: 50,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                color: Colors.black,
-              ),
-              SizedBox(
-                width: 20,
-                height: 10,
-              )
-            ]),
+        ),
         body: Container(
           height: double.infinity,
           width: double.infinity,

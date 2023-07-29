@@ -49,14 +49,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                         color: Color(0xFF005373),
                         size: 30,
                       )),
-                ]),
-                Row(children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage("assets/personn.jpg"),
-                    radius: 30,
-                  )
-                ]),
-              ],
+                ]),],
             ),
           ),
           SizedBox(

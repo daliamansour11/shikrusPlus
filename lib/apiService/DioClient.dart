@@ -174,7 +174,7 @@ class DioClient {
     return tasksModel;
   }
 
-  Future<GetStatisticsResponse> gettaskstatistics() async {
+  Future<GetStatisticsResponse> askstatistics() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString(
         '${SharedPreferencesInfo.userTokenKey}');
@@ -204,7 +204,36 @@ class DioClient {
 
     return statisticsmodel;
   }
+  Future<GetStatisticsResponse> askstatisticsadmin() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+    print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
+    var response = await Dio().get(
+        'https://management-system.webautobazaar.com/api/employee/statistics',
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    GetStatisticsResponse statisticsmodel = GetStatisticsResponse.fromJson(
+        response.data);
+    if (response.statusCode == 200) {
+      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(response.data);
+
+
+    return statisticsmodel;
+  }
   ////////////////////////update task Status/////////////////////\
   Future<NotificationCount> getnotificationscount() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
@@ -548,30 +577,18 @@ class DioClient {
   Future<ReportResponse?> addNewReport(String report, String reason,
   File  file, int project_id) async {
     ReportResponse? response;
-    // FilePickerResult? result = await FilePicker.platform.pickFiles(
-    //   // type: FileType.custom,
-    //   allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'mp4', 'mkv'],
-    // );
-    // if (result != null) {
-    //   print(file.path);
-    //
-    //   var multipartFile = await MultipartFile.fromFile(file.path ?? '',contentType: mime.MediaType("text", "plain")
-    //   );
-
-
-      final data = FormData.fromMap({
+    final data = FormData.fromMap({
         "report": report,
         "reason": reason,
         'files': [
           await MultipartFile.fromFile(file.path, filename: ''),],
       });
-
       try {
         SharedPreferences shared = await SharedPreferences.getInstance();
         final String? token = shared.getString(
             '${SharedPreferencesInfo.userTokenKey}');
         var response = await _dio.post(
-            'https://shapi.webautobazaar.com/api/employee/report/1',
+            'https://shapi.webautobazaar.com/api/employee/report/$project_id',
             data: data,
             onSendProgress: (int sent,int total){
             print("$sent,$total");

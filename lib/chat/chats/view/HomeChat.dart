@@ -72,15 +72,6 @@ class _HomeChatState extends ConsumerState<HomeChat> {
   }
   int idt = 0;
 String type="";
-
-  gettingUserData() async {
-    await SharedPreferencesInfo.getUserIdFromSF().then((value) {
-      setState(() {
-        idt = value!;
-        print("nameeeeeeeeeeeeee$idt");
-      });
-    });
-  }
   gettingUserType() async {
     await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
       setState(() {
@@ -89,6 +80,15 @@ String type="";
       });
     });
   }
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserIdFromSF().then((value) {
+      setState(() {
+        idt = value!;
+        print("nameeeeeeeeeeeeee$idt");
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -198,8 +198,6 @@ String type="";
                 visible: false,
                 child: IconButton(
                   onPressed: ()async {
-
-
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -211,32 +209,6 @@ String type="";
               )
             ],
 
-            leading: _isSearch == true
-                ? Visibility(
-                    // hiding the child widget
-                    visible: false,
-                    child: Text(
-                      "",
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 4),
-                    child: InkWell(
-                      onTap: () {
-                      //  print("${Apis.ik}proo");
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Profilescreen()));
-                      },
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          "assets/personn.jpg",
-                        ),
-                        radius: 20,
-                      ),
-                    ),
-                  ),
             bottom: TabBar(
               labelColor: Colors.white,
               unselectedLabelColor: Colors.grey[500],
@@ -355,12 +327,10 @@ String type="";
                                                                     user: userdatalist[index],
                                                                   )));
                                                     },
-                                                    // profile pic + list of chat users
                                                     child: ListTile(
 
                                                       leading: InkWell(
                                                         onTap: () {
-                                                          // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
                                                         },
                                                         child: ClipRRect(
                                                           borderRadius:
@@ -464,12 +434,9 @@ String type="";
                                               user: userdata[index],
                                             )));
                               },
-                              // profile pic + list of chat users
                               child: ListTile(
-
                                 leading: InkWell(
                                   onTap: () {
-                                    // showDialog(context: context, builder: (_)=>DialogProfile(user: widget.user));
                                   },
                                   child: ClipRRect(
                                     borderRadius:

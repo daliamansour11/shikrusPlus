@@ -192,8 +192,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                                         Padding(
                                           padding: EdgeInsets.only(
                                               right: mq.width * .029991, top: 10, left: .07),
-                                          child:
-                                          Text( "${MyDate.readTimestamp("${data['recentMessageTime']==null?null: (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
+                                        //  child:
+                                         // Text( "${MyDate.readTimestamp("${data['recentMessageTime']==null?null: (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
                                         )                                    )
                                 );
                               },

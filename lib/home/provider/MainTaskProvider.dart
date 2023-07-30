@@ -16,9 +16,13 @@ final MainTaskProvider = ChangeNotifierProvider<EmployeeMainTaskNotifier>((
 
 
 ////mainTask////////////////
-final MainTasksProvider= FutureProvider.family<TasksModel,int>((ref,project_id) =>
-    ref.read(TasksRepoProvider).getEmployeeMainTasks(project_id)
+final MainTasksProvider= FutureProvider.family<TasksModel,int>((ref,project_id) {
+
+   return ref.read(TasksRepoProvider).getEmployeeMainTasks(project_id);
+}
 );
+
+
 
 
 

@@ -83,6 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final projects = ref.watch(proProvider);
     final adminprjects = ref.watch(AdminprojectsProvider);
     final statitic = ref.watch(statisticProvider);
+    final statiticadmin = ref.watch(statisticadminProvider);
+
     final notificationcount = ref.watch(not_countProvider);
 
     return Scaffold(
@@ -177,7 +179,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                    title: "My Projects",
                    size: 16.sp,
                  ),
-               ): Padding(
+               ):
+               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFieldTitleWidget(
                     title: "My Task",
@@ -186,7 +189,122 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 )
               ],
             ),
-            Container(
+            type=="admin"?Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0xFFDDE3E5)),
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 3.8,
+              width: double.infinity,
+              child: statiticadmin.when(
+                  data: (data) =>
+                      CustomScrollView(
+                        primary: false,
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, bottom: 10, top: 10),
+                            sliver: SliverGrid.count(
+                              childAspectRatio: (1 / .5),
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              crossAxisCount: 2,
+                              children: List.generate(data.data.length,
+                                      (index) {
+                                    return Container(
+                                      height: 100,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: Itemcolor[index]),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProjectsProgress()));
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 3.0, top: 15, right: 50),
+                                              child: Text(data.data[index].key,
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white)),
+                                            ),
+                                            // SizedBox(height: 7,),
+
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 5, top: 7, right: 30),
+                                                  child: Text(
+                                                      "${data.data[index]
+                                                          .count} projects ",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.white)),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      right: 8.0),
+                                                  child: Icon(Icons.arrow_forward,
+                                                      color: Colors.white),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        ],
+                      ),
+                  error: (err, _) {  Center(child: Text("${err}"));
+                  print("${err}errrr");},
+                  // Center(
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       Row(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           TextFieldTitleWidget(
+                  //             title: "Oops!! \n"
+                  //                 "Connection Lost!",
+                  //             fontWeight: FontWeight.bold,
+                  //             size: 18.sp,
+                  //           ),
+                  //           SizedBox(width: 5.sp),
+                  //           CircleAvatar(
+                  //             backgroundImage: AssetImage(
+                  //               "assets/sad.jpg",
+                  //             ),
+                  //             radius: 18.sp,
+                  //             backgroundColor: Colors.grey,
+                  //             foregroundColor: Colors.grey,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  loading: () => Center(child: CircularProgressIndicator())),
+            ): Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFFDDE3E5)),
@@ -197,80 +315,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: double.infinity,
               child: statitic.when(
                   data: (data) =>
-                  // data.data.isEmpty?CustomScrollView(
-                  //   primary: false,
-                  //   slivers: <Widget>[
-                  //     SliverPadding(
-                  //       padding: const EdgeInsets.only(
-                  //           left: 10, right: 10, bottom: 10, top: 10),
-                  //       sliver: SliverGrid.count(
-                  //         childAspectRatio: (1 / .5),
-                  //         crossAxisSpacing: 10,
-                  //         mainAxisSpacing: 10,
-                  //         crossAxisCount: 2,
-                  //         children: List.generate(statistic.length,
-                  //                 (index) {
-                  //               return Container(
-                  //                 height: 100,
-                  //                 width: 180,
-                  //                 decoration: BoxDecoration(
-                  //                     borderRadius: BorderRadius.circular(20),
-                  //                     color: onStatusChang(
-                  //                         "${Itemcolor[index]}")),
-                  //                 child: InkWell(
-                  //                   onTap: () {
-                  //                     Navigator.push(
-                  //                         context,
-                  //                         MaterialPageRoute(
-                  //                             builder: (context) =>
-                  //                                 ProjectsProgress()));
-                  //                   },
-                  //                   child: Column(
-                  //                     children: [
-                  //                       Padding(
-                  //                         padding: const EdgeInsets.only(
-                  //                             left: 3.0, top: 15, right: 50),
-                  //                         child: Text(listname[index],
-                  //                             style: TextStyle(
-                  //                                 fontSize: 15,
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 color: Colors.white)),
-                  //                       ),
-                  //                       // SizedBox(height: 7,),
-                  //
-                  //                       Row(
-                  //                         mainAxisAlignment:
-                  //                         MainAxisAlignment.center,
-                  //                         children: [
-                  //                           Padding(
-                  //                             padding: const EdgeInsets.only(
-                  //                                 left: 5, top: 7, right: 30),
-                  //                             child: Text(
-                  //                                 "${0} projects ",
-                  //                                 style: TextStyle(
-                  //                                     fontSize: 13,
-                  //                                     fontWeight:
-                  //                                     FontWeight.bold,
-                  //                                     color: Colors.white)),
-                  //                           ),
-                  //                           Padding(
-                  //                             padding: const EdgeInsets.only(
-                  //                                 right: 8.0),
-                  //                             child: Icon(Icons.arrow_forward,
-                  //                                 color: Colors.white),
-                  //                           )
-                  //                         ],
-                  //                       ),
-                  //                     ],
-                  //                   ),
-                  //                 ),
-                  //               );
-                  //             }),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ):
-                  CustomScrollView(
+                 CustomScrollView(
                     primary: false,
                     slivers: <Widget>[
                       SliverPadding(

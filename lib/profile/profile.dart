@@ -1,19 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskmanger/Authentication/login/view/Login.dart';
 import 'package:taskmanger/core/SharedPreferenceInfo.dart';
 
+import '../Authentication/login/provider/logoutprovider.dart';
 import '../main.dart';
 import 'EditProfileScreen.dart';
 
-class Profilescreen extends StatefulWidget {
+class Profilescreen extends ConsumerStatefulWidget {
   @override
-  State<Profilescreen> createState() => _ProfilescreenState();
+  ConsumerState<Profilescreen> createState() => _ProfilescreenState();
 }
 
-class _ProfilescreenState extends State<Profilescreen> {
+class _ProfilescreenState extends ConsumerState<Profilescreen> {
   String userName = '';
   String logedInuseType = '';
 
@@ -40,6 +42,7 @@ class _ProfilescreenState extends State<Profilescreen> {
 
   @override
   Widget build(BuildContext context) {
+    final logout=ref.watch(logedoutProvider);
     return Scaffold(
         backgroundColor: Color(0xFFEFEDED),
         appBar: AppBar(
@@ -149,11 +152,13 @@ class _ProfilescreenState extends State<Profilescreen> {
                                                 SharedPreferences prefrences = await SharedPreferences
                                                     .getInstance();
                                                 setState(() {
-                                                  prefrences.remove(
-                                                      SharedPreferencesInfo
-                                                          .userTokenKey);
-                                                  prefrences.clear();
-                                                  Navigator.pop(context);
+                                                var res=  ref.read(logedoutProvider);
+
+                                                  // prefrences.remove(
+                                                  //     SharedPreferencesInfo
+                                                  //         .userTokenKey);
+                                                  // prefrences.clear();
+                                                  // Navigator.pop(context);
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>

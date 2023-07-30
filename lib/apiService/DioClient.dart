@@ -19,12 +19,14 @@ import 'package:taskmanger/home/model/statisticsmodel.dart';
 import 'package:taskmanger/clender/model/TasksModel.dart';
 
 import '../Admin_projects/model/Admin_ProjectModel.dart';
+import '../Authentication/login/model/logoutmodel.dart';
 import '../Notification/model/Notificationcountmodel.dart';
 import '../Notification/model/Notifications.dart';
 import '../chat/chats/model/UsersModel.dart';
 import '../clender/Provider/SubTaskProvider.dart';
 import '../clender/Repository/SubtTaskRepo.dart';
 import '../clender/model/AllMainTaskModel.dart';
+import '../home/model/statisticsadminmodel.dart';
 import '../reports/model/reportsresponse.dart';
 part'DioClient.g.dart';
 @JsonSerializable()
@@ -79,7 +81,7 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       Response userData = await _dio.get(
-           'https://management-system.webautobazaar.com/api/employee/tasks/${project_id}',
+           'https://shapi.webautobazaar.com/api/employee/tasks/${project_id}',
           options: Options(
         headers: {
           "Content-Type": CONTENT_TYPE,
@@ -138,6 +140,40 @@ class DioClient {
       }
     }
     return allTasksModel;
+  }
+  //logout//////////
+  Future<Logoutresponse?> getlogout() async {
+    Logoutresponse? logoutresponse;
+    try {
+      SharedPreferences shared = await SharedPreferences.getInstance();
+      final String? token = shared.getString(
+          '${SharedPreferencesInfo.userTokenKey}');
+      print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
+      Response userData = await _dio.get(
+          'https://management-system.webautobazaar.com/api/logout',
+          options: Options(
+            headers: {
+              "Content-Type": CONTENT_TYPE,
+              "lang": 'ar',
+              'Authorization': 'Bearer $token'
+            },
+          ));
+      print('allmainTask Info: ${userData.statusCode}');
+      print('allmainTask Info: ${userData.data}');
+      logoutresponse = Logoutresponse.fromJson(userData.data);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print('Dio error!');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('HEADERS: ${e.response?.headers}');
+      } else {
+        // Error due to setting up or sending the request
+        print('Error sending request!');
+        print(e.message);
+      }
+    }
+    return logoutresponse;
   }
 
   Future<TasksModel?> getEmployeeSubTasks( int main_task_id ) async {
@@ -204,14 +240,14 @@ class DioClient {
 
     return statisticsmodel;
   }
-  Future<GetStatisticsResponse> askstatisticsadmin() async {
+  Future<GetStatisticsAdminResponse> askstatisticsadmin() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString(
         '${SharedPreferencesInfo.userTokenKey}');
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
     var response = await Dio().get(
-        'https://management-system.webautobazaar.com/api/employee/statistics',
+        'https://management-system.webautobazaar.com/api/admin/projects-statistics',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
@@ -221,7 +257,7 @@ class DioClient {
         },
         )
     );
-    GetStatisticsResponse statisticsmodel = GetStatisticsResponse.fromJson(
+    GetStatisticsAdminResponse statisticsmodel = GetStatisticsAdminResponse.fromJson(
         response.data);
     if (response.statusCode == 200) {
       debugPrint("${response}  sucessssssssssssssssssssssssssssss");

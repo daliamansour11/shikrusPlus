@@ -77,34 +77,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
               notificationcount.when(
                 data: (data) =>
                     Center(child: Text("you have ${data.data} notifications ")),
-                error: (err, _) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextFieldTitleWidget(
-                            title: "Oops!! \n"
-                                "Connection Lost!",
-                            fontWeight: FontWeight.bold,
-                            size: 18.sp,
-                          ),
-                          SizedBox(width: 5.sp),
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/sad.jpg",
-                            ),
-                            radius: 18.sp,
-                            backgroundColor: Colors.grey,
-                            foregroundColor: Colors.grey,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    error: (err, _) =>Text("you have 0 notifications"),
                 loading: () => Center(child: CircularProgressIndicator()),
               ),
               Center(

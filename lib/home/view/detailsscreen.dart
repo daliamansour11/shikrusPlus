@@ -37,6 +37,7 @@ class Detailsscreen extends ConsumerStatefulWidget {
 }
 
 class _DetailsscreenState extends ConsumerState<Detailsscreen> {
+
   onStatusChang(String status) {
     if (status == "done") {
       return Itemcolors[0];
@@ -52,6 +53,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
   @override
   Widget build(BuildContext context) {
     final userTask = ref.watch(MainTasksProvider(widget.project_id));
+
+    final tasks=ref.watch(MainTasksProvider(widget.project_id));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF005373),
@@ -342,7 +345,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                 ],
               ),
 
-              userTask.when(
+              tasks.when(
                   data: (data) => Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,

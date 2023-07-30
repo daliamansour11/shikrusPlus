@@ -1,18 +1,35 @@
+// To parse this JSON data, do
+//
+//     final notifications = notificationsFromJson(jsonString);
 
 import 'dart:convert';
 
+
+
 class Notifications {
+  bool status;
+  String errNum;
+  String msg;
   List<Datum> data;
 
   Notifications({
+    required this.status,
+    required this.errNum,
+    required this.msg,
     required this.data,
   });
 
   factory Notifications.fromJson(Map<String, dynamic> json) => Notifications(
+    status: json["status"],
+    errNum: json["errNum"],
+    msg: json["msg"],
     data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
+    "status": status,
+    "errNum": errNum,
+    "msg": msg,
     "data": List<dynamic>.from(data.map((x) => x.toJson())),
   };
 }
@@ -23,9 +40,9 @@ class Datum {
   String bodyEn;
   String titleAr;
   String bodyAr;
-  int read;
+  String read;
   dynamic sender;
-  String createdAt;
+  DateTime createdAt;
 
   Datum({
     required this.id,
@@ -46,7 +63,7 @@ class Datum {
     bodyAr: json["body_ar"],
     read: json["read"],
     sender: json["sender"],
-    createdAt: json["created_at"],
+    createdAt: DateTime.parse(json["created_at"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -57,6 +74,6 @@ class Datum {
     "body_ar": bodyAr,
     "read": read,
     "sender": sender,
-    "created_at": createdAt,
+    "created_at": createdAt.toIso8601String(),
   };
 }

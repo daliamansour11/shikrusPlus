@@ -69,7 +69,100 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String formatter = DateFormat('d-M-y').format(DateTime.now());
   late SharedPreferences sf;
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  void handlemessagenotifiction() async {
+    navigatorkey.currentState
+        ?.push(MaterialPageRoute(builder: (context) => NotificationScreen()));
+  }
 
+  Future _firebasemessagingbackgroundHandler(RemoteMessage? message) async {
+    debugPrint("Handling Background Message ${message}");
+  }
+
+  void requestpermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then(_firebasemessagingbackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(_firebasemessagingbackgroundHandler);
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      debugPrint("user granted permission");
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        PushNotification pushnotification = PushNotification(
+            title: message.notification?.title,
+            body: message.notification?.body);
+        setState(() {
+          // notificationInfo = pushnotification;
+        });
+        // if (notificationInfo != null) {
+        //   showSimpleNotification(
+        //       Text(notificationInfo?.title??" "),
+        //       leading: Notificationpage(totalnotification:totalnotification ,),
+        //       duration: Duration(seconds: 2),
+        //       subtitle: Text(notificationInfo?.title ?? " "),
+        //       background: Colors.green.shade500);
+      }
+        //   });
+        // } else if (settings.authorizationStatus ==
+        //     AuthorizationStatus.provisional) {
+        //   debugPrint("user provisional permission");
+        // } else {
+        //   debugPrint("user declined or has accepted permission");
+
+      );
+    }
+  }
+
+  void getToken() async {
+    // await FirebaseMessaging.instance.getInitialMessage().then(handlemessagenotification);
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+        alert: true, badge: true, sound: true);
+    await FirebaseMessaging.instance.getToken().then((value) async {
+      setState(() {
+        device_token = value ?? " ";
+        SharedPreferencesInfo.saveDeviceIdSF(device_token);
+        var response = ref.read(deviceTokenProvider).postDeviceToken(value!);
+        print("{devicetokennnnnnnnnnnnnnnnnnnnn+${value}");
+        savetoken(value);
+        debugPrint("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn**:${value}:***");
+      });
+    });
+  }
+
+  void savetoken(String token) async {
+    await FirebaseFirestore.instance
+        .collection("usertoken")
+        .doc("users")
+        .set({'token': token});
+  }
+
+  @override
+  void initState() {
+    getToken();
+    gettingUserType();
+
+    postDeviceToken();
+    // Future.delayed(Duration(milliseconds: 40), () async {
+    //   postDeviceToken();
+    // });
+  }
+
+  postDeviceToken() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token =
+    shared.getString('${SharedPreferencesInfo.deviceTokenKey}');
+
+
+  }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery
@@ -789,98 +882,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ));
   }
 
-  void handlemessagenotifiction() async {
-    navigatorkey.currentState
-        ?.push(MaterialPageRoute(builder: (context) => NotificationScreen()));
-  }
 
-  Future _firebasemessagingbackgroundHandler(RemoteMessage? message) async {
-    debugPrint("Handling Background Message ${message}");
-  }
-
-  void requestpermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then(_firebasemessagingbackgroundHandler);
-    FirebaseMessaging.onBackgroundMessage(_firebasemessagingbackgroundHandler);
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint("user granted permission");
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        PushNotification pushnotification = PushNotification(
-            title: message.notification?.title,
-            body: message.notification?.body);
-        setState(() {
-          // notificationInfo = pushnotification;
-        });
-        // if (notificationInfo != null) {
-        //   showSimpleNotification(
-        //       Text(notificationInfo?.title??" "),
-        //       leading: Notificationpage(totalnotification:totalnotification ,),
-        //       duration: Duration(seconds: 2),
-        //       subtitle: Text(notificationInfo?.title ?? " "),
-        //       background: Colors.green.shade500);
-      }
-        //   });
-        // } else if (settings.authorizationStatus ==
-        //     AuthorizationStatus.provisional) {
-        //   debugPrint("user provisional permission");
-        // } else {
-        //   debugPrint("user declined or has accepted permission");
-
-      );
-    }
-  }
-
-  void getToken() async {
-    // await FirebaseMessaging.instance.getInitialMessage().then(handlemessagenotification);
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-        alert: true, badge: true, sound: true);
-    await FirebaseMessaging.instance.getToken().then((value) async {
-      setState(() {
-        device_token = value ?? " ";
-        SharedPreferencesInfo.saveDeviceIdSF(device_token);
-
-        savetoken(value!);
-        debugPrint("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn**:${value}:***");
-      });
-    });
-  }
-
-  void savetoken(String token) async {
-    await FirebaseFirestore.instance
-        .collection("usertoken")
-        .doc("users")
-        .set({'token': token});
-  }
-
-  @override
-  void initState() {
-    getToken();
-    gettingUserType();
-    Future.delayed(Duration(milliseconds: 40), () async {
-      postDeviceToken();
-    });
-  }
-
-  postDeviceToken() async {
-    SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token =
-    shared.getString('${SharedPreferencesInfo.deviceTokenKey}');
-
-    var response = ref.read(deviceTokenProvider).postDeviceToken(token!);
-    print("{tokennnnnnnnnnnnnnnnnnnnn+${response}");
-  }
 }
 
 class PushNotification {

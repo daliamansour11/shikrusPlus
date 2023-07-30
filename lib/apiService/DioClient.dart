@@ -128,6 +128,7 @@ class DioClient {
       print('allmainTask Info: ${userData.data}');
       allTasksModel = AllMainTaskModel.fromJson(userData.data);
     } on DioError catch (e) {
+
       if (e.response != null) {
         print('Dio error!');
         print('STATUS: ${e.response?.statusCode}');
@@ -583,7 +584,7 @@ class DioClient {
       final String? token = shared.getString(
           '${SharedPreferencesInfo.userTokenKey}');
       var response = await _dio.post(
-          'https://shapi.webautobazaar.com/api/employee/device-toked',
+          'https://management-system.webautobazaar.com/api/employee/device-toked',
           data: data,
           options: Options(
             headers: {

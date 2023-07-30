@@ -200,11 +200,15 @@ class _AddNewReportsScreenState extends  ConsumerState<AddNewReportsScreen> {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[200],
                     ),
-                    height: 180,
+                    height: 200,
                     child: image != null?
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Image.file(File(image!.path),width: double.infinity/2,height: double.infinity/2,fit: BoxFit.cover,
+                      child: SizedBox(
+                      width: double.infinity,
+
+                        child: Image.file(File(image!.path),fit: BoxFit.fill,
+                        ),
                       ),
                     ):Text("Please Select An Image")
                 ),

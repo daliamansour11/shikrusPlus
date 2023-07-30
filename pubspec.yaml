@@ -55,6 +55,7 @@ dependencies:
   fluttertoast: ^8.1.1
   emoji_picker_flutter: ^1.5.4
   shared_preferences: ^2.1.0
+  flutter_rating_bar:
   # syncfusion_flutter_calendar: ^20.4.54
   smooth_page_indicator:
   date_field: ^3.0.2

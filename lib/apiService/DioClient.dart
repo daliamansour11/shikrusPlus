@@ -353,11 +353,8 @@ class DioClient {
       debugPrint("faildddddddddddddddddddddddddddddddddd");
     }
     print(reportlist);
-
-
     return reportmodel;
   }
-
   upDateEmployeeTasksStatus(String status, int? id) async {
     final data = FormData.fromMap({
       "task_id": id,
@@ -369,7 +366,7 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       // print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       Response userData = await _dio.post(
-          "https://shapi.webautobazaar.com/api/employee/change-status",
+          "https://management-system.webautobazaar.com/api/employee/change-status",
           data: data,
           options: Options(
             headers: {

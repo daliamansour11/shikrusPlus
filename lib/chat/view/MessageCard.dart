@@ -11,8 +11,6 @@ import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
 import '../chats/model/chat_msg.dart';
 
-
-
 class MessageCard extends StatefulWidget {
   final Messages messages;
   const MessageCard({super.key, required this.messages});
@@ -20,7 +18,6 @@ class MessageCard extends StatefulWidget {
   @override
   State<MessageCard> createState() => _MessageCardState();
 }
-
 class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {

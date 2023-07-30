@@ -155,14 +155,16 @@ class _AllUsersScreenState extends ConsumerState<AllUsersScreen> {
                       Navigator.push(context, MaterialPageRoute(builder:
                           (context)=>CreateNewGroup(member: selectedUsersList)));
                     });},
-                  child: const Icon(Icons.check))],),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: const Icon(Icons.check),
+                  ))],),
           body:  RefreshIndicator(
             backgroundColor: context.appTheme.bottomAppBarColor,
             onRefresh: ()  async{
               print("we are hereeeeeeeeeeeeeeeee222222222222222200002111111100${ref.read(AllUserProvider).getAllUsers()}");
               var data1= ref.refresh(AllUserProvider).getAllUsers();
               print("we are hereeeeeeeeeeeeeeeee2222222222222222000000data1${data1}");//
-
               return Future.delayed(Duration(milliseconds: 300) , () =>   ref.read(AllUserProvider.notifier).getAllUsers());
             },
             child:ListView(

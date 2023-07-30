@@ -7,35 +7,24 @@ class MyDate {
     final date=DateTime.fromMicrosecondsSinceEpoch(int.parse(time !=null?time:""));
     print(time);
     return TimeOfDay.fromDateTime(date).format(context);
-
-
   }
-
-
   // to get last msg send time
   static String getLastMsgTime({required BuildContext
   context,required String time,bool showyear=false}){
     final DateTime sent=DateTime.parse(time);
     final DateTime now=DateTime.now();
-
     if(now.day==sent.day && now.month==sent.month && now.year==sent.year){
       return TimeOfDay.fromDateTime(sent).format(context);
     }
-
     return showyear?'${sent.day} ${_getMonth(sent)} ${sent.year}':'${sent.day} ${_getMonth(sent)}';
   }
-
-
-  ///////////message time///////////////
-
-
+  //////////message time///////////////
   static String readTimestamp(String timestamp) {
     var now = new DateTime.now();
-    var format = new DateFormat( 'K:m'' ''a');
+    var format = new DateFormat( 'KK:mm'' ''a');
     var date = DateTime.parse(timestamp);
     var diff = date.difference(now);
     var time = '';
-
     if (diff.inDays == 1) {
       time = (diff.inDays/360).toString() + 'DAY AGO';
     } else {
@@ -44,7 +33,6 @@ class MyDate {
     if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
       time = format.format(date);
     }
-
     return time;
   }
   // for getting formatted time for sent & read
@@ -59,7 +47,6 @@ class MyDate {
         now.year == sent.year) {
       return formattedTime;
     }
-
     return now.year == sent.year
         ? '$formattedTime - ${sent.day} ${_getMonth(sent)}'
         : '$formattedTime - ${sent.day} ${_getMonth(sent)} ${sent.year}';

@@ -34,13 +34,12 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
   String getId(String s) {
     return s.substring(0, s.indexOf('_'));
   }
-  GroupModel? user ;
+  GroupModel? ge ;
 
   String? userLogedInType="admin" ;
   String? type = ""  ;
   String logedInUser = '';
   int logedInUserId = 0;
-
   gettingUserData() async {
     await SharedPreferencesInfo.getUserNameFromSF().then((value) {
       setState(() {
@@ -59,6 +58,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
       print("nameeeeeeeeeeeeee22222222222${type}");
     });
   }
+  UserData? user1;
   GroupMessageTile? message;
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    GroupModel? groupModel;
+
     return Scaffold(
         floatingActionButton:type==userLogedInType?
         FloatingActionButton(
@@ -93,8 +93,6 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
 
           ),
         ),
-
-
         body: Container(
           child: Column(
             children: [
@@ -184,18 +182,16 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                                             "${message != null ? message!.type == Type.image ? 'Photo' : message!.message :data["recentMessage"]}"),
                                         // trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
                                         // last msg mess
-                                        //
-                                        // age
-
-                                        trailing:
-                                        // show send time for read msg
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              right: mq.width * .029991, top: 10, left: .07),
-                                        //  child:
-                                         // Text( "${MyDate.readTimestamp("${data['recentMessageTime']==null?null: (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
-                                        )                                    )
-                                );
+                                       //  // age
+                                       //  trailing:
+                                       //  // show send time for read msg
+                                       //  Padding(
+                                       //    padding: EdgeInsets.only(
+                                       //        right: mq.width * .029991, top: 10, left: .07),
+                                       //    child:
+                                       // //   Text( "${MyDate.readTimestamp("${data['recentMessageTime']== ""?"": (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
+                                       //  )
+                                    ));
                               },
                               // separatorBuilder: (BuildContext context, int index) {
                               //   return Divider(thickness: 0.5,);

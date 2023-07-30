@@ -17,6 +17,7 @@ class Profilescreen extends ConsumerStatefulWidget {
 
 class _ProfilescreenState extends ConsumerState<Profilescreen> {
   String userName = '';
+  String userEmail = '';
   String logedInuseType = '';
 
   gettingUserData() async {
@@ -31,10 +32,13 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
         logedInuseType = usertype ?? "0";
       });
       print("nameeeeeeeeeeeeee22222222222 ${logedInuseType}");
+    });await SharedPreferencesInfo.getUserEmailFromSF().then((useremail) {
+      setState(() {
+        userEmail = useremail ?? "0";
+      });
+      print("nameeeeeeeeeeeeee22222222222 ${userEmail}");
     });
   }
-
-
   @override
   void initState() {
     gettingUserData();
@@ -127,9 +131,16 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 5,
+                                        height: 10,
                                       ),
                                       Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 70.0, right: 45),
+                                        child: Text(userEmail,
+                                          style: TextStyle(fontSize: 20,
+                                              color: Colors.grey[700]),
+                                        ),
+                                      ), Padding(
                                         padding: const EdgeInsets.only(
                                             left: 70.0, right: 45),
                                         child: Text(logedInuseType,
@@ -138,7 +149,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 30,
+                                        height: 60,
                                       ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment
@@ -153,7 +164,6 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                                     .getInstance();
                                                 setState(() {
                                                 var res=  ref.read(logedoutProvider);
-
                                                   // prefrences.remove(
                                                   //     SharedPreferencesInfo
                                                   //         .userTokenKey);

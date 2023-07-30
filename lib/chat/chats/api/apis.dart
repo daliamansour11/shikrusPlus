@@ -327,6 +327,22 @@ static List<String>ids=[];
     });
     final imageUrl = await ref.getDownloadURL();
     await sendMessage(chatUser, imageUrl, Type.image);
+
+  }
+
+  static Future<void> groupIcon(File file) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    final ext = file.path
+        .split('.')
+        .last;
+    final ref = storage.ref().child
+      ('groupImages/${DateTime.now()
+        .millisecondsSinceEpoch}.$ext');
+    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
+        p0) {
+      print('data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    final imageUrl = await ref.getDownloadURL();
   }
 
 // for adding an user to my user when first message is send

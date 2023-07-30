@@ -77,7 +77,8 @@ class _ListViewCardState extends State<ListViewCard> {
                       decoration: BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(10)),
                     ):
                     // show send time for read msg
-                    Text(MyDate.getLastMsgTime(context: context, time: _messages!.send),style: TextStyle(color: Colors.black54),)
+                    Text(MyDate.readTimestamp(_messages!.send)
+                      ,style: TextStyle(color: Colors.black54),)
                 );
               }
 

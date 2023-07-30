@@ -221,7 +221,6 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                           bottomLeft: Radius.circular(30))),
                                   child: Column(
                                       children: [
-
                                         Text(
                                           logedInUser.toUpperCase(),
                                           textAlign: TextAlign.center,
@@ -259,7 +258,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                         ),
 
 
-                                        ]),
+                                      ]),
                                 ),
 
                               ]
@@ -485,16 +484,16 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
 
   String readTimestamp(String timestamp) {
     var now = new DateTime.now();
-    var format = new DateFormat( 'K:m'' ''a');
+    var format = new DateFormat( 'KK:mm'' ''a');
     var date = DateTime.parse(timestamp);
     var diff = date.difference(now);
     var time = '';
 
-      if (diff.inDays == 1) {
-        time = (diff.inDays/360).toString() + 'DAY AGO';
-      } else {
-        time = (diff.inDays/360).toString() + 'DAYS AGO';
-      }
+    if (diff.inDays == 1) {
+      time = (diff.inDays/360).toString() + 'DAY AGO';
+    } else {
+      time = (diff.inDays/360).toString() + 'DAYS AGO';
+    }
     if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
       time = format.format(date);
     }

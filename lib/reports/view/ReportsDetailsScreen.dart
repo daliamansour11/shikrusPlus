@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -38,10 +39,19 @@ class ReportsDetailsScreen extends ConsumerStatefulWidget {
 
 class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
   String? isEmpty;
-
   @override
   Widget build(BuildContext context) {
     String finalD = '';
+    double rat=0.0;
+
+
+    if(widget.rate==null||widget.rate=="null"){
+      rat=0.0;
+    }
+    else{
+      rat=  double.parse(widget.rate??"${0.0}")/100.0;
+    }
+
     // double percentage;
     // final rate =  double.parse("${widget.rate}");
     // percentage =  rate/100;
@@ -275,41 +285,25 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                         ),
                       ))
                 ]),
-                Column(
-                  children: [
-                    Container(
-                        child: Padding(
-                          padding:
-                          const EdgeInsets.only(left: 8.0, right: 39, top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextFieldTitleWidget(
-                                title: "Progress",
 
-                                    fontWeight: FontWeight.w600,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 95.0),
-                                child: TextFieldTitle2Widget(
-                                 title: "${widget.rate}%" ?? " ",
-                                    colors:  Color(0xFF005373),
-                                      fontWeight: FontWeight.w600
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    LinearPercentIndicator(
-                        width: 360.0,
-                        lineHeight: 8.0,
-                        percent: 0.45,
-                        progressColor:  Color(0xFF005373),
-                        linearStrokeCap: LinearStrokeCap.round),
-                  ],
+                RatingBar.builder(
+                  itemSize: 30,
+                  // itemPadding:
+                  //     EdgeInsets.all(20),
+                  minRating:widget.rate=="null"?0.0: rat,
+                  itemBuilder: (context, _) {
+                    return Icon(
+                      Icons.star,
+                      color: Color(0xFF005373),
+                    );
+                  }, onRatingUpdate: (double value) {
+                   // value=rat;
+                },
+                  // onRatingUpdate: (double value) {
+                  //   setState(() {
+                  //     rate = value;
+                  //   });
+                  // },
                 )
               ],
             ),

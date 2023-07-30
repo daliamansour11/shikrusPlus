@@ -139,7 +139,7 @@ String type="";
                       padding: const EdgeInsets.only(top: 12.0),
                       child: Center(
                         child: TextFieldHeaderWidget(
-                            title: "Home", colors: Colors.white),
+                            title: "Contact", colors: Colors.white),
                       ),
                     ),
                   ),

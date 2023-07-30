@@ -20,7 +20,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: 30,
+            height: 50,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -128,6 +128,7 @@ class DioClient {
       print('allmainTask Info: ${userData.data}');
       allTasksModel = AllMainTaskModel.fromJson(userData.data);
     } on DioError catch (e) {
+
       if (e.response != null) {
         print('Dio error!');
         print('STATUS: ${e.response?.statusCode}');
@@ -308,7 +309,7 @@ class DioClient {
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/secretary/notifications',
+        'https://shapi.webautobazaar.com/api/employee/notifications',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
@@ -566,21 +567,18 @@ class DioClient {
     print(response.data);
     return projectmodel;
   }
-
-
-
   ////////////////////////////upload DeviceToken//////////////
 
-  Future  PostDeviceToken(String device_token, ) async {
+  Future  PostDeviceToken(String device_token ) async {
     final data = FormData.fromMap({
-      "fcm_token": device_token,
+      "token": device_token,
     });
     try {
       SharedPreferences shared = await SharedPreferences.getInstance();
       final String? token = shared.getString(
           '${SharedPreferencesInfo.userTokenKey}');
       var response = await _dio.post(
-          'https://shapi.webautobazaar.com/api/employee/device-toked',
+          'https://management-system.webautobazaar.com/api/device-toked',
           data: data,
           options: Options(
             headers: {
@@ -602,9 +600,6 @@ class DioClient {
       }
     }
   }
-
-
-
   //////////UploadReport////////////////////////////////
 
   Future<ReportResponse?> addNewReport(String report, String reason,

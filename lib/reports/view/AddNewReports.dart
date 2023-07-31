@@ -7,10 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:taskmanger/reports/view/projects_reports_screen.dart';
 
 import '../../AddNewTask/provider/AddNewTaskProvider.dart';
 import '../../screens/bottomnavigation.dart';
 import '../provider/ReportsProvider.dart';
+import 'Reports.dart';
 
 class AddNewReportsScreen extends ConsumerStatefulWidget {
   int project_id;
@@ -281,7 +283,7 @@ class _AddNewReportsScreenState extends  ConsumerState<AddNewReportsScreen> {
                       //012809796921
 
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+                          MaterialPageRoute(builder: (context)=>ReportsPorject()));
                     }
                     print("${File(image?.path??"").path}thhhhh");
                   },

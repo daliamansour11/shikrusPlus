@@ -268,7 +268,7 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                 ),
                 Column(children: [
                   Container(
-                      margin: EdgeInsets.all(8.0),
+                      margin: EdgeInsets.symmetric(horizontal: 40.0,vertical: 10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color:  Color(0xFF005373),
@@ -277,33 +277,36 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                       width: MediaQuery.of(context).size.width,
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
-                        child: isEmpty == ""
-                            ? Image.network("assets/NoData.jpg")
+                        child: widget.image ==""
+                            ? Image.asset("assets/reporr.png",fit: BoxFit.fill,)
                             : Image.network(
                           widget.image,
                           fit: BoxFit.cover,
                         ),
                       ))
                 ]),
-
-                RatingBar.builder(
-                  itemSize: 30,
-                  // itemPadding:
-                  //     EdgeInsets.all(20),
-                  minRating:widget.rate=="null"?0.0: rat,
-                  itemBuilder: (context, _) {
-                    return Icon(
-                      Icons.star,
-                      color: Color(0xFF005373),
-                    );
-                  }, onRatingUpdate: (double value) {
-                   // value=rat;
-                },
-                  // onRatingUpdate: (double value) {
-                  //   setState(() {
-                  //     rate = value;
-                  //   });
-                  // },
+             SizedBox(height: 10.h,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RatingBar.builder(
+                    itemSize: 30,
+                    // itemPadding:
+                    //     EdgeInsets.all(20),
+                    minRating:widget.rate=="null"?0.2: rat,
+                    itemBuilder: (context, _) {
+                      return Icon(
+                        Icons.star,
+                        color: Color(0xFF005373),
+                      );
+                    }, onRatingUpdate: (double value) {
+                      value=.2;
+                  },
+                    // onRatingUpdate: (double value) {
+                    //   setState(() {
+                    //     rate = value;
+                    //   });
+                    // },
+                  ),
                 )
               ],
             ),

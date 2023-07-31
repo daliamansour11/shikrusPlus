@@ -48,7 +48,7 @@ class _ReportsState extends ConsumerState<Reports> {
 
   String? emptyimage;
 
-  double ratting = 0;
+  double ratting = .01;
 
   @override
   Widget build(BuildContext context) {
@@ -144,78 +144,90 @@ class _ReportsState extends ConsumerState<Reports> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "${data.data[index].report}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16.sp),
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10.0),
+                                            child: Text(
+                                              "${data.data[index].report}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16.sp),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 15.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          "${data.data[index].reason}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 13.sp),
-                                        ),
+                                      SizedBox(
+                                        height: 15.h,
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10.h,
-                                  ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 10.0),
+                                            child: Text(
+                                              "${data.data[index].reason}",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 13.sp),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
 
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 4.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Column(
+                                              children: [
 
-                                            RatingBar.builder(
-                                              itemSize: 30,
-                                              // itemPadding:
-                                              //     EdgeInsets.all(20),
-                                              minRating: rate,
-                                              itemBuilder: (context, _) {
-                                                return Icon(
-                                                  Icons.star,
-                                                  color: Color(0xFF005373),
-                                                );
-                                              },
-                                              onRatingUpdate: (double value) {
-                                                setState(() {
-                                                  rate = value;
-                                                });
-                                              },
-                                            )
+                                                RatingBar.builder(
+                                                  itemSize: 30,
+                                                  // itemPadding:
+                                                  //     EdgeInsets.all(20),
+                                                  minRating: rate,
+                                                  itemBuilder: (context, _) {
+                                                    return Icon(
+                                                      Icons.star,
+                                                      color: Color(0xFF005373),
+                                                    );
+                                                  },
+                                                  onRatingUpdate: (double value) {
+                                                    setState(() {
+                                                      rate = value;
+                                                    });
+                                                  },
+                                                )
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                    CircleAvatar(backgroundImage: AssetImage("assets/reporr.png",),radius: 25.sp,)
+                                  ],)
                                 ],
                               ),
                             ),

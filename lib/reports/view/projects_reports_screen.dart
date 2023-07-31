@@ -174,7 +174,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                                               lineHeight: 8.0,
                                               percent: 0.45,
                                               progressColor:
-                                              Colors.blue,
+                                              Color(0xFF005373),
                                               linearStrokeCap:
                                               LinearStrokeCap
                                                   .round),
@@ -194,7 +194,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                                                     Icons
                                                         .access_time_filled,
                                                     color:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                   ),
                                                 ),
                                                 Padding(

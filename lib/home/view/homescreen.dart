@@ -786,7 +786,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                         lineHeight: 8.0,
                                                         percent: 0.45,
                                                         progressColor:
-                                                        Colors.blue,
+                                                        Color(0xFF005373),
                                                         linearStrokeCap:
                                                         LinearStrokeCap
                                                             .round),
@@ -806,7 +806,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                               Icons
                                                                   .access_time_filled,
                                                               color:
-                                                              Colors.blue,
+                                                              Color(0xFF005373),
                                                             ),
                                                           ),
                                                           Padding(

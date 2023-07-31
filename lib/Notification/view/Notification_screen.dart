@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -131,35 +132,40 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Card(
                             color: Colors.grey[200],
-                            child: Row(children: [
-                              Column(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.grey,
-                                    backgroundImage:
-                                        AssetImage("assets/personn.jpg"),
-                                    radius: 40,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "${data.data[index].titleEn}",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    "${data.data[index].bodyEn}",
-                                    style: TextStyle(),
-                                  ),
-                                ],
-                              )
-                            ]),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(children: [
+                                Column(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 30,
+                                      backgroundColor: Colors
+                                          .white,
+                                      child: Icon(
+                                        size:30,
+                                        CupertinoIcons.person_alt,
+                                        color: Colors.grey,),),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${data.data[index].titleEn}",
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "${data.data[index].bodyEn}",
+                                      style: TextStyle(),
+                                    ),
+                                  ],
+                                )
+                              ]),
+                            ),
                           ),
                         );
                       },

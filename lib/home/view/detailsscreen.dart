@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
 
 import '../provider/MainTaskProvider.dart';
@@ -345,260 +346,271 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                 ],
               ),
 
-              tasks.when(
-                  data: (data) => Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                        itemCount: data.data.where((element) =>element.projectId==widget.project_id.toString()).toList().length,
-                        itemBuilder: (context, index) {
-                          List<Datum>tasks=data.data.where((element) =>element.projectId==widget.project_id.toString()).toList();
-                          var status = tasks[index].status;
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 1.0),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SubTasksScreen(
-                                              project_id: int.parse(
-                                                  '${tasks[index].projectId}'),
-                                              main_task_id:
-                                              tasks[index].id,
-                                            )));
-                                print("idddddd${tasks[index].id}");
-                                print("idddddd${tasks[index].projectId}");
-                              },
-                              child: Container(
-                                  margin: EdgeInsets.only(left: 8, top: 5),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: onStatusChang(status!)),
-                                  height: 90.h,
-                                  width: 90.w,
-                                  child: ListTile(
-                                    title: Row(
+            RefreshIndicator(
+              backgroundColor: context.appTheme.bottomAppBarColor,
+              onRefresh: ()  async{
+                ref.refresh(MainTasksProvider(widget.project_id));
+                return Future.delayed(Duration(milliseconds: 300) , () =>   ref.read(MainTasksProvider(widget.project_id).future));
+              },
+
+              child:
+              Container(
+                  child:
+                 tasks.when(
+                    data: (data) => Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                          itemCount: data.data.where((element) =>element.projectId==widget.project_id.toString()).toList().length,
+                          itemBuilder: (context, index) {
+                            List<Datum>tasks=data.data.where((element) =>element.projectId==widget.project_id.toString()).toList();
+                            var status = tasks[index].status;
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 1.0),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SubTasksScreen(
+                                                project_id: int.parse(
+                                                    '${tasks[index].projectId}'),
+                                                main_task_id:
+                                                tasks[index].id,
+                                              )));
+                                  print("idddddd${tasks[index].id}");
+                                  print("idddddd${tasks[index].projectId}");
+                                },
+                                child: Container(
+                                    margin: EdgeInsets.only(left: 8, top: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: onStatusChang(status!)),
+                                    height: 90.h,
+                                    width: 90.w,
+                                    child: ListTile(
+                                      title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextFieldTitleWidget(
+                                              title: "${tasks[index].name}",
+                                              fontWeight: FontWeight.bold,
+                                              size: 15.sp,
+                                            ),
+                                            PopupMenuButton<PopMenuItems>(
+                                                shape: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                itemBuilder: (context) => [
+                                                      ...TaskMenuItems.taskFirst
+                                                          .map((buildItem))
+                                                          .toList(),
+                                                    ],
+                                                onSelected:
+                                                    (PopMenuItems item) async {
+                                                  final updateTask = ref
+                                                      .read(updateTaskProvider);
+                                                  // final  empTaskProvider =ref.read(userTaskProvider);
+
+                                                  switch (item) {
+                                                    case TaskMenuItems
+                                                        .taskComplete:
+                                                      print(item.text);
+                                                      String status = item.text;
+                                                      updateTask
+                                                          .updateTaskStatus(
+                                                              status,
+                                                              data.data[index]
+                                                                  .id);
+                                                      // empTaskProvider.EmployeeTask();
+                                                      break;
+
+                                                    case TaskMenuItems
+                                                        .taskInProcess:
+                                                      updateTask
+                                                          .updateTaskStatus(
+                                                              item.text,
+                                                              data.data[index]
+                                                                  .id);
+                                                      // empTaskProvider.EmployeeTask();
+                                                      break;
+                                                  }
+                                                })
+                                          ]),
+                                      subtitle: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          TextFieldTitleWidget(
-                                            title: "${tasks[index].name}",
-                                            fontWeight: FontWeight.bold,
-                                            size: 15.sp,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            child: TextFieldTitle2Widget(
+                                                title: "${tasks[index].status}",
+                                                size: 12.sp,
+                                                fontWeight: FontWeight.w400,
+                                                colors: Colors.white),
                                           ),
-                                          PopupMenuButton<PopMenuItems>(
-                                              shape: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              itemBuilder: (context) => [
-                                                    ...TaskMenuItems.taskFirst
-                                                        .map((buildItem))
-                                                        .toList(),
-                                                  ],
-                                              onSelected:
-                                                  (PopMenuItems item) async {
-                                                final updateTask = ref
-                                                    .read(updateTaskProvider);
-                                                // final  empTaskProvider =ref.read(userTaskProvider);
-
-                                                switch (item) {
-                                                  case TaskMenuItems
-                                                      .taskComplete:
-                                                    print(item.text);
-                                                    String status = item.text;
-                                                    updateTask
-                                                        .updateTaskStatus(
-                                                            status,
-                                                            data.data[index]
-                                                                .id);
-                                                    // empTaskProvider.EmployeeTask();
-                                                    break;
-
-                                                  case TaskMenuItems
-                                                      .taskInProcess:
-                                                    updateTask
-                                                        .updateTaskStatus(
-                                                            item.text,
-                                                            data.data[index]
-                                                                .id);
-                                                    // empTaskProvider.EmployeeTask();
-                                                    break;
-                                                }
-                                              })
-                                        ]),
-                                    subtitle: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          child: TextFieldTitle2Widget(
-                                              title: "${tasks[index].status}",
-                                              size: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                              colors: Colors.white),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 30, top: 5),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 1.0,
-                                                        right: 4,
-                                                        top: 4,
-                                                        bottom: 20),
-                                                child: CircleAvatar(
-                                                    backgroundImage:
-                                                        AssetImage(
-                                                      "assets/personn.jpg",
-                                                    ),
-                                                    radius: 10,
-                                                    backgroundColor:
-                                                        Colors.white60),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 1.0,
-                                                        right: 4,
-                                                        top: 4,
-                                                        bottom: 20),
-                                                child: CircleAvatar(
-                                                    backgroundImage:
-                                                        AssetImage(
-                                                      "assets/ppr.jpg",
-                                                    ),
-                                                    radius: 10,
-                                                    backgroundColor:
-                                                        Colors.white60),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 1.0,
-                                                        right: 4,
-                                                        top: 4,
-                                                        bottom: 20),
-                                                child: CircleAvatar(
-                                                    backgroundImage:
-                                                        AssetImage(
-                                                      "assets/ppr.jpg",
-                                                    ),
-                                                    radius: 10,
-                                                    backgroundColor:
-                                                        Colors.white60),
-                                              ),
-                                              SizedBox(
-                                                width: 34,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 1.0,
-                                                        right: 4,
-                                                        top: 0,
-                                                        bottom: 20),
-                                                child: Icon(
-                                                  Icons.access_time_filled,
-                                                  color: Colors.white,
-                                                  size: 12.sp,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 1.0,
-                                                        top: 4,
-                                                        bottom: 20),
-                                                child: TextFieldTitle2Widget(
-                                                    title:
-                                                        "${tasks[index].timeFrom}",
-                                                    size: 9.sp,
-                                                    fontWeight:
-                                                        FontWeight.bold,
-                                                    colors: Colors.white),
-                                              ),
-                                              Padding(
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 30, top: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 2.0,
+                                                          left: 1.0,
+                                                          right: 4,
                                                           top: 4,
                                                           bottom: 20),
-                                                  child:
-                                                      TextFieldTitle2Widget(
-                                                          title: "_",
-                                                          size: 9.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          colors:
-                                                              Colors.white)),
-                                              Padding(
+                                                  child: CircleAvatar(
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        "assets/personn.jpg",
+                                                      ),
+                                                      radius: 10,
+                                                      backgroundColor:
+                                                          Colors.white60),
+                                                ),
+                                                Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          left: 5.0,
-                                                          right: 1,
+                                                          left: 1.0,
+                                                          right: 4,
+                                                          top: 4,
+                                                          bottom: 20),
+                                                  child: CircleAvatar(
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        "assets/ppr.jpg",
+                                                      ),
+                                                      radius: 10,
+                                                      backgroundColor:
+                                                          Colors.white60),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 1.0,
+                                                          right: 4,
+                                                          top: 4,
+                                                          bottom: 20),
+                                                  child: CircleAvatar(
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                        "assets/ppr.jpg",
+                                                      ),
+                                                      radius: 10,
+                                                      backgroundColor:
+                                                          Colors.white60),
+                                                ),
+                                                SizedBox(
+                                                  width: 34,
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 1.0,
+                                                          right: 4,
+                                                          top: 0,
+                                                          bottom: 20),
+                                                  child: Icon(
+                                                    Icons.access_time_filled,
+                                                    color: Colors.white,
+                                                    size: 12.sp,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 1.0,
                                                           top: 4,
                                                           bottom: 20),
                                                   child: TextFieldTitle2Widget(
                                                       title:
-                                                          "${tasks[index].timeTo}",
+                                                          "${tasks[index].timeFrom}",
                                                       size: 9.sp,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      colors: Colors.white)),
-                                            ],
+                                                      colors: Colors.white),
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 2.0,
+                                                            top: 4,
+                                                            bottom: 20),
+                                                    child:
+                                                        TextFieldTitle2Widget(
+                                                            title: "_",
+                                                            size: 9.sp,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            colors:
+                                                                Colors.white)),
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5.0,
+                                                            right: 1,
+                                                            top: 4,
+                                                            bottom: 20),
+                                                    child: TextFieldTitle2Widget(
+                                                        title:
+                                                            "${tasks[index].timeTo}",
+                                                        size: 9.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        colors: Colors.white)),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ),
-                          );
-                        }),
-                  ),
-                  error: (err, _) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextFieldTitleWidget(
-                                  title: "Oops!! \n"
-                                      "Connection Lost!",
-                                  fontWeight: FontWeight.bold,
-                                  size: 18.sp,
-                                ),
-                                SizedBox(width: 5.sp),
-                                CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    "assets/sad.jpg",
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                            );
+                          }),
+                    ),
+                    error: (err, _) => Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TextFieldTitleWidget(
+                                    title: "Oops!! \n"
+                                        "Connection Lost!",
+                                    fontWeight: FontWeight.bold,
+                                    size: 18.sp,
                                   ),
-                                  radius: 18.sp,
-                                  backgroundColor: Colors.grey,
-                                  foregroundColor: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
+                                  SizedBox(width: 5.sp),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                      "assets/sad.jpg",
+                                    ),
+                                    radius: 18.sp,
+                                    backgroundColor: Colors.grey,
+                                    foregroundColor: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                  loading: () => Center(
-                        child: CircularProgressIndicator(),
-                      ))
-            ],
+                    loading: () => Center(
+                          child: CircularProgressIndicator(),
+                        )),
+              )
+            )],
           ),
         ),
       ),

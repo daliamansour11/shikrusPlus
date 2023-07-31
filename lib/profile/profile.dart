@@ -36,9 +36,11 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
       setState(() {
         userEmail = useremail ?? "0";
       });
-      print("nameeeeeeeeeeeeee22222222222 ${userEmail}");
+      print("nameeeeeeeeeeeeee22222222222 ${logedInuseType}");
     });
   }
+
+
   @override
   void initState() {
     gettingUserData();
@@ -90,7 +92,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 70, right: 30),
+                                            left: 50, right: 30),
                                         child: Container(
 
                                           child: ClipRRect(
@@ -122,7 +124,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 70.0, right: 45),
+                                            left: 50.0, right: 45),
                                         child: Text(userName,
                                           style: TextStyle(
                                               fontSize: 25,
@@ -131,25 +133,31 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 70.0, right: 45),
+                                            left: 50.0, right: 45),
                                         child: Text(userEmail,
-                                          style: TextStyle(fontSize: 20,
-                                              color: Colors.grey[700]),
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.indigo),
                                         ),
-                                      ), Padding(
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 70.0, right: 45),
+                                            left: 50.0, right: 45),
                                         child: Text(logedInuseType,
-                                          style: TextStyle(fontSize: 20,
+                                          style: TextStyle(fontSize: 15,
                                               color: Colors.grey[700]),
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 60,
+                                        height: 80,
                                       ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment
@@ -157,13 +165,14 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 46.0, right: 10),
+                                                left: 46.0, right: 30),
                                             child: InkWell(
                                               onTap: () async {
                                                 SharedPreferences prefrences = await SharedPreferences
                                                     .getInstance();
                                                 setState(() {
                                                 var res=  ref.read(logedoutProvider);
+
                                                   // prefrences.remove(
                                                   //     SharedPreferencesInfo
                                                   //         .userTokenKey);

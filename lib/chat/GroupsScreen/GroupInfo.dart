@@ -136,7 +136,7 @@ class _GroupInfoState extends State<GroupInfo> {
                         child: ListTile(
                           leading: CircleAvatar(
                             radius: 30,
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: Color(0xFF91C7DC),
                             child: Text(getName(snapshot.data['members'][index]).substring(0,1).toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
                           ),
                           title: Text(getName(snapshot.data['members'][index])),

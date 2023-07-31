@@ -214,7 +214,8 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                           .width * .02),
                                   margin: EdgeInsets.symmetric(
                                       vertical: mq.height * .02, horizontal: mq.width * .03),
-                                  decoration: BoxDecoration(color: Color.fromARGB(255, 130, 223, 135),
+                                  decoration: BoxDecoration(color: Color.fromARGB(
+                                      255, 148, 208, 151),
                                       border: Border.all(color: Colors.green),
                                       borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
                                           topRight: Radius.circular(30),

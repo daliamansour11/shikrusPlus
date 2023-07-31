@@ -612,21 +612,22 @@ class DioClient {
         "report": report,
         "reason": reason,
         'files': [
-          await MultipartFile.fromFile(file.path, filename: ''),],
+          await MultipartFile.fromFile(file.path, filename: 'reportimg'),],
       });
       try {
         SharedPreferences shared = await SharedPreferences.getInstance();
         final String? token = shared.getString(
             '${SharedPreferencesInfo.userTokenKey}');
         var response = await _dio.post(
-            'https://shapi.webautobazaar.com/api/employee/report/$project_id',
+
+            'https://management-system.webautobazaar.com/api/employee/report/$project_id',
             data: data,
             onSendProgress: (int sent,int total){
             print("$sent,$total");
             },
             options: Options(
               headers: {
-                "Content-Type": ACCEPT,
+                "Content-Type": 'application/json',
                 "lang": 'ar',
                 'Authorization': 'Bearer $token'},));
         print('report Info: ${response.statusCode}');

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/Dialogs.dart';
+import '../../core/SharedPreferenceInfo.dart';
 import '../../main.dart';
 import '../chats/api/MyDate.dart';
 import '../chats/api/apis.dart';
@@ -19,29 +20,63 @@ class MessageCard extends StatefulWidget {
   State<MessageCard> createState() => _MessageCardState();
 }
 class _MessageCardState extends State<MessageCard> {
+  String type="";
+  int idt = 0;
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
+  gettingUserData() async {
+    await SharedPreferencesInfo.getUserIdFromSF().then((value) {
+      setState(() {
+        idt = value!;
+        print("nameeeeeeeeeeeeee$idt");
+      });
+    });
+  }
+  @override
+  void initState() {
+    gettingUserType();
+    gettingUserData();
+    print("${idt}yyyyyyyyyyyyyyyy");
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
-    bool isMe=Apis.user==widget.messages.fromId;
+    bool isMe=idt==widget.messages.fromId;
+if(idt==widget.messages.fromId){
     return InkWell(
       onLongPress: () {
+        print("${widget.messages.fromId}idddt");
         _showbottomsheet(isMe);
       },
-      child: isMe?_greenMessage():_redMessage(),
-    );
+      child:_greenMessage(),
+    );}
+else{
+  return InkWell(
+    onLongPress: () {
+      print("${widget.messages.fromId}idddt");
+      _showbottomsheet(isMe);
+    },
+    child:_redMessage(),
+  );
+}
   }
   // sender msgs
   Widget _redMessage(){
-
+print("${widget.messages.fromId}iddt");
     // update the read msg status when sender sends a msg
     if(widget.messages.read.isEmpty){
       Apis.updateMessageReadstatus(widget.messages);
       // print('msg updated');
     }
     return Row(
-      //
-      // mainAxisAlignment: MainAxisAlignment.end,
-      // crossAxisAlignment: CrossAxisAlignment
-      // .start,
+
       children: [
         Flexible(
           child: Container(
@@ -287,7 +322,6 @@ class _MessageCardState extends State<MessageCard> {
           ],
         ));
   }
-
 
 }
 

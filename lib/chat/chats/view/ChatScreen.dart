@@ -38,14 +38,22 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Messages> _list=[];
   // _ private var
   final _textcontroller =TextEditingController();
-
+  String type="";
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
   @override
   void initState() {
-
+    gettingUserType();
     gettingUserData();
   } // emoji var           image uploading
   bool _showEmoji=false,_isUploading=false;
-   int idt=0;
+  int idt=0;
   gettingUserData() async {
     await SharedPreferencesInfo.getUserIdFromSF().then((value){
       setState(() {
@@ -57,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.red));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.red));
 
     return GestureDetector(
       onTap: ()=> FocusScope.of(context).unfocus(),
@@ -103,13 +111,13 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
             body: Column(
               children: [
-                Expanded(
+                type=="admin"?Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream:
                     //Apis.getAllMessages(widget.user),
                     FirebaseFirestore.instance.collection('chat/${Apis.getsendConversionId(widget.user.id.toString(),idt??0)}/messages')
-                       .orderBy('send', descending: true)
-                       .snapshots(),
+                        .orderBy('send', descending: true)
+                        .snapshots(),
                     builder:(context, AsyncSnapshot snapshot){
                       switch (snapshot.connectionState) {
                       // if data is loading
@@ -125,7 +133,46 @@ class _ChatScreenState extends State<ChatScreen> {
 
                           if(_list.isNotEmpty){
                             return ListView.builder(
-                                // last msg to show 1st
+                              // last msg to show 1st
+                                reverse: true,
+                                physics: BouncingScrollPhysics(),
+                                padding: EdgeInsets.only(top: mq.height *.01),
+                                itemCount:_list.length,
+                                itemBuilder: (context,index){
+                                  return MessageCard(messages: _list[index],);
+                                  // return Text("msgs:${_list[index]}");
+                                });
+                          }
+
+                          else {
+                            return Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),);
+                          }
+                      }
+                    },
+                  ),
+                ): Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream:
+                    //Apis.getAllMessages(widget.user),
+                    FirebaseFirestore.instance.collection('chat/${Apis.getsenduserConversionId(idt??0,widget.user.id.toString())}/messages')
+                        .orderBy('send', descending: true)
+                        .snapshots(),
+                    builder:(context, AsyncSnapshot snapshot){
+                      switch (snapshot.connectionState) {
+                      // if data is loading
+                        case  ConnectionState.waiting:
+                        case  ConnectionState.none:
+                          return SizedBox();
+
+                        case  ConnectionState.active:
+                        case  ConnectionState.done:
+                          final data=snapshot.data?.docs;
+
+                          _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
+
+                          if(_list.isNotEmpty){
+                            return ListView.builder(
+                              // last msg to show 1st
                                 reverse: true,
                                 physics: BouncingScrollPhysics(),
                                 padding: EdgeInsets.only(top: mq.height *.01),
@@ -154,16 +201,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 // emoji select window
                 if(_showEmoji)
 
-                SizedBox(
-                  height: mq.height *.35,
-                  child: EmojiPicker(
-                    textEditingController: _textcontroller,
-                    config: Config(
-                      columns: 8,
-                      emojiSizeMax: 32 * (Platform.isIOS?1.3:1.0),
+                  SizedBox(
+                    height: mq.height *.35,
+                    child: EmojiPicker(
+                      textEditingController: _textcontroller,
+                      config: Config(
+                        columns: 8,
+                        emojiSizeMax: 32 * (Platform.isIOS?1.3:1.0),
+                      ),
                     ),
-                  ),
-                )
+                  )
               ],
             ) ,
           ),
@@ -248,11 +295,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 // on 1st msg add the user
                 print("${_list.isEmpty}emptyy");
                 Apis.sendusersMessage(widget.user);
-                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
-
+                type=="admin"?Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }else{
                 print("${_list.isEmpty} ${widget.user.id}emptyy");
-                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
+                type=="admin"? Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }
             }
             _textcontroller.text='';
@@ -269,50 +315,50 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
-  // chat screen  custom appbar
-  // Widget _appBar(){
-  //   return InkWell(
-  //       onTap: (){
-  //         Navigator.push(context, MaterialPageRoute(builder: (_)=>ViewProfile(user: widget.user)));
-  //       },
-  //       child: StreamBuilder(stream: Apis.getUserInfo(widget.user),builder: (context, snapshot) {
-  //         final data=snapshot.data?.docs;
-  //         final list=data?.map((e) => ChatUser.fromJson(e.data())).toList()?? [];
-  //         return Row(
-  //           children: [
-  //             IconButton(onPressed: (){
-  //               Navigator.pop(context);
-  //             },
-  //                 icon: Icon(Icons.arrow_back_ios,color: Colors.white,)),
-  //             ClipRRect(
-  //               // profile pic
-  //               borderRadius: BorderRadius.circular(mq.height *.3),
-  //               child: CachedNetworkImage(
-  //                 width: mq.height * .045,
-  //                 height: mq.height *.045,
-  //                 imageUrl:list.isNotEmpty?list[0].image:widget.user.image,
-  //                 errorWidget: (context, url, error) => CircleAvatar(child: Icon(CupertinoIcons.person),),
-  //               ),
-  //             ),
-  //             SizedBox(width: mq.width * .03,),
-  //             Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 // user name
-  //                 Text(list.isNotEmpty?list[0].name:widget.user.name,style: GoogleFonts.balooBhai2(
-  //                     color: Colors.white,fontSize: 20,fontWeight: FontWeight.w300),),
-  //                 // SizedBox(height: .005,),
-  //                 // last seen status
-  //                 Text(list.isNotEmpty?list[0].isOnline?'Online':
-  //                 MyDate.getLastActiveTime(context: context, lastActive: list[0].lastActive):
-  //                 MyDate.getLastActiveTime(context: context, lastActive: widget.user.lastActive),
-  //                   style: GoogleFonts.balooBhai2(color: Colors.white,fontSize: 13),)
-  //
-  //               ],)
-  //           ],
-  //         );
-  //       },)
-  //   );
-  // }
+// chat screen  custom appbar
+// Widget _appBar(){
+//   return InkWell(
+//       onTap: (){
+//         Navigator.push(context, MaterialPageRoute(builder: (_)=>ViewProfile(user: widget.user)));
+//       },
+//       child: StreamBuilder(stream: Apis.getUserInfo(widget.user),builder: (context, snapshot) {
+//         final data=snapshot.data?.docs;
+//         final list=data?.map((e) => ChatUser.fromJson(e.data())).toList()?? [];
+//         return Row(
+//           children: [
+//             IconButton(onPressed: (){
+//               Navigator.pop(context);
+//             },
+//                 icon: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+//             ClipRRect(
+//               // profile pic
+//               borderRadius: BorderRadius.circular(mq.height *.3),
+//               child: CachedNetworkImage(
+//                 width: mq.height * .045,
+//                 height: mq.height *.045,
+//                 imageUrl:list.isNotEmpty?list[0].image:widget.user.image,
+//                 errorWidget: (context, url, error) => CircleAvatar(child: Icon(CupertinoIcons.person),),
+//               ),
+//             ),
+//             SizedBox(width: mq.width * .03,),
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // user name
+//                 Text(list.isNotEmpty?list[0].name:widget.user.name,style: GoogleFonts.balooBhai2(
+//                     color: Colors.white,fontSize: 20,fontWeight: FontWeight.w300),),
+//                 // SizedBox(height: .005,),
+//                 // last seen status
+//                 Text(list.isNotEmpty?list[0].isOnline?'Online':
+//                 MyDate.getLastActiveTime(context: context, lastActive: list[0].lastActive):
+//                 MyDate.getLastActiveTime(context: context, lastActive: widget.user.lastActive),
+//                   style: GoogleFonts.balooBhai2(color: Colors.white,fontSize: 13),)
+//
+//               ],)
+//           ],
+//         );
+//       },)
+//   );
+// }
 }

@@ -55,7 +55,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
   List<UsersModel> allUsers = [];
   String? Auth = FirebaseAuth.instance.currentUser?.email;
   CollectionReference groupCollection =
-      FirebaseFirestore.instance.collection('groups ');
+  FirebaseFirestore.instance.collection('groups ');
   String groupName = '';
 
   getUserGroups() async {
@@ -71,7 +71,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
     searchTextController.dispose();
   }
   int idt = 0;
-String type="";
+  String type="";
   gettingUserType() async {
     await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
       setState(() {
@@ -132,50 +132,50 @@ String type="";
         appBar: AppBar(
             elevation: 0.0,
             backgroundColor:
-                _isSearch == true ? Colors.transparent : Color(0xFF005373),
+            _isSearch == true ? Colors.transparent : Color(0xFF005373),
             title: Container(
-                    width: screenWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12.0),
-                      child: Center(
-                        child: TextFieldHeaderWidget(
-                            title: "Contact", colors: Colors.white),
-                      ),
-                    ),
-                  ),
+              width: screenWidth,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12.0),
+                child: Center(
+                  child: TextFieldHeaderWidget(
+                      title: "Contact", colors: Colors.white),
+                ),
+              ),
+            ),
             centerTitle: true,
             flexibleSpace: _isSearch == true
                 ? Container(
-                    margin: EdgeInsets.only(top: 25),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(.3),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            offset: Offset(0, 0.50))
-                      ],
-                    ),
-                    child: TextFieldContainerWidget(
-                      // focusNode: focusNode,
-                      controller: searchTextController,
-                      keyboardType: TextInputType.text,
-                      prefixIcon: Icons.arrow_back,
-                      hintText: "Search here..",
-                      borderRadius: 0.0,
-                      color: Colors.white,
-                      iconClickEvent: () {
-                        setState(() {
-                          _isSearch = !_isSearch;
-                        });
-                      },
-                      onChanged: (val) {},
-                    ),
-                  )
+              margin: EdgeInsets.only(top: 25),
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.3),
+                      blurRadius: 2,
+                      spreadRadius: 1,
+                      offset: Offset(0, 0.50))
+                ],
+              ),
+              child: TextFieldContainerWidget(
+                // focusNode: focusNode,
+                controller: searchTextController,
+                keyboardType: TextInputType.text,
+                prefixIcon: Icons.arrow_back,
+                hintText: "Search here..",
+                borderRadius: 0.0,
+                color: Colors.white,
+                iconClickEvent: () {
+                  setState(() {
+                    _isSearch = !_isSearch;
+                  });
+                },
+                onChanged: (val) {},
+              ),
+            )
                 : _emptyContainer(),
             // leading:
             actions: [
@@ -261,11 +261,11 @@ String type="";
                                 List<int>id = [];
 
 
-                                if (listt[0] != idt) {
+                                if (listt[0] != idt||listt[0] !="null") {
                                   id.add(listt[0]);
                                 }
                                 else {
-                                  if (listt[1] != idt) {
+                                  if (listt[1] != idt||listt[1] !="null") {
                                     id.add(listt[1]);
                                   }
                                 }
@@ -399,73 +399,73 @@ String type="";
                   userslist.when(data:(datax)=> ListView.builder(
                     itemBuilder: (context,index){
                       List<UserData>userdata=datax.data.where((element) => element.type=="admin").toList();
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Card(
-                          margin: EdgeInsets
-                              .symmetric(
-                              horizontal: mq.width *
-                                  .03,
-                              vertical: 5),
-                          color: Colors.grey[300],
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(
-                                  20)),
-                          elevation: 2,
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (
-                                            _) =>
-                                            ChatScreen(
-                                              userId:
-                                              '${userdata[index]
-                                                  .id}',
-                                              userImage:
-                                              '${userdata[index]
-                                                  .image}',
-                                              UserName:
-                                              '${
-                                                  userdata[index]
-                                                      .name}',
-                                              user: userdata[index],
-                                            )));
-                              },
-                              child: ListTile(
-                                leading: InkWell(
-                                  onTap: () {
-                                  },
-                                  child: ClipRRect(
-                                    borderRadius:
-                                    BorderRadius
-                                        .circular(
-                                        mq.height *
-                                            .3),
-                                    child: CachedNetworkImage(
-                                      width: mq.height * .050,
-                                      height: mq.height * .050,
-                                      imageUrl:userdata[index].image??"",
-                                      errorWidget: (context, url, error) =>
-                                          CircleAvatar(
-                                            child: Icon(CupertinoIcons.person),
-                                          ),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Card(
+                            margin: EdgeInsets
+                                .symmetric(
+                                horizontal: mq.width *
+                                    .03,
+                                vertical: 5),
+                            color: Colors.grey[300],
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(
+                                    20)),
+                            elevation: 2,
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (
+                                              _) =>
+                                              ChatScreen(
+                                                userId:
+                                                '${userdata[index]
+                                                    .id}',
+                                                userImage:
+                                                '${userdata[index]
+                                                    .image}',
+                                                UserName:
+                                                '${
+                                                    userdata[index]
+                                                        .name}',
+                                                user: userdata[index],
+                                              )));
+                                },
+                                child: ListTile(
+                                  leading: InkWell(
+                                    onTap: () {
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius
+                                          .circular(
+                                          mq.height *
+                                              .3),
+                                      child: CachedNetworkImage(
+                                        width: mq.height * .050,
+                                        height: mq.height * .050,
+                                        imageUrl:userdata[index].image??"",
+                                        errorWidget: (context, url, error) =>
+                                            CircleAvatar(
+                                              child: Icon(CupertinoIcons.person),
+                                            ),
+                                      ),
                                     ),
                                   ),
-                                ),
 
-                                title: TextFieldTitleWidget(
-                                  title: "${userdata[index].name}" ??
-                                      "",
-                                  fontWeight:
-                                  FontWeight.bold,
-                                ),
+                                  title: TextFieldTitleWidget(
+                                    title: "${userdata[index].name}" ??
+                                        "",
+                                    fontWeight:
+                                    FontWeight.bold,
+                                  ),
 
-                              ))),
-                    );
-                  },itemCount:datax.data.where((element) => element.type=="admin").toList().length ,), error: (err, _) => Center(
+                                ))),
+                      );
+                    },itemCount:datax.data.where((element) => element.type=="admin").toList().length ,), error: (err, _) => Center(
                     child: Row(
                       mainAxisAlignment:
                       MainAxisAlignment.center,
@@ -493,8 +493,8 @@ String type="";
             ),
             Center(
                 child: GroupListScreen(
-              time: time,
-            )),
+                  time: time,
+                )),
           ],
         ),
       ),

@@ -281,13 +281,13 @@ String type="";
                                     data: (dataapi) => ListView.builder(
                                         shrinkWrap: true,
                                         physics: ClampingScrollPhysics(),
-                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).toList().length,
+                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList().length,
                                         padding: EdgeInsets.only(
                                             top: mq.height * .01),
                                         //   physics: const BouncingScrollPhysics(),
                                         itemBuilder: (context, index) {
 
-                                          List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).toList();
+                                          List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList();
                                           // List<UserData>userdatalistclient=dataapi.data.where((element) => element.type=="admin").toList();
 
                                           print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");

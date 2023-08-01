@@ -383,12 +383,9 @@ String type="";
                                       ),
                                     ),
                                     loading: () => Center(
-                                        child: CircularProgressIndicator(
-                                        )
+                                        child: Text(""),
                                     ));
                               },itemCount: snapshot.data.docs.length,);
-
-
                         }
                       }):
                   userslist.when(data:(datax)=> ListView.builder(
@@ -482,8 +479,7 @@ String type="";
                     ),
                   ),
                       loading: () => Center(
-                          child: CircularProgressIndicator(
-                          )
+                          child: Text("")
                       ))),
             ),
             Center(

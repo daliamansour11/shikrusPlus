@@ -256,11 +256,8 @@ String type="";
                                 addd.add(snapshot.data.docs[indexx]["ids"] );
                                 print("${addd}listt");
                                 // }
-
                                 List<dynamic>listt = snapshot.data.docs[indexx]["ids"] ?? [];
                                 List<int>id = [];
-
-
                                 if (listt[0] != idt||listt[0] !="null") {
                                   id.add(listt[0]);
                                 }
@@ -286,10 +283,8 @@ String type="";
                                             top: mq.height * .01),
                                         //   physics: const BouncingScrollPhysics(),
                                         itemBuilder: (context, index) {
-
                                           List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList();
                                           // List<UserData>userdatalistclient=dataapi.data.where((element) => element.type=="admin").toList();
-
                                           print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");
                                           print("${id}iddd*");
                                           return Padding(

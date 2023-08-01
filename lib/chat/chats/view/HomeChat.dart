@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:taskmanger/chat/chats/model/UsersModel.dart';
 import 'package:taskmanger/chat/chats/view/users.dart';
-import 'package:taskmanger/chat/view/ListViewCard.dart';
 import '../../../Authentication/login/model/Users.dart';
 import '../../../TextFiledContainerWidget.dart';
 import '../../../core/SharedPreferenceInfo.dart';
@@ -184,13 +183,10 @@ String type="";
                 visible: true,
                 child: IconButton(
                   onPressed: ()async {
-
-
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => SearchUser()));
-
                   },
                   icon: Icon(Icons.search_sharp),
                 ),
@@ -258,11 +254,11 @@ String type="";
                                 // }
                                 List<dynamic>listt = snapshot.data.docs[indexx]["ids"] ?? [];
                                 List<int>id = [];
-                                if (listt[0] != idt||listt[0] !="null") {
+                                if (listt[0] != idt&&listt[0] !="null"&&listt[0] !=null) {
                                   id.add(listt[0]);
                                 }
                                 else {
-                                  if (listt[1] != idt||listt[1] !="null") {
+                                  if (listt[1] != idt && listt[1] !="null" && listt[1] !=null ) {
                                     id.add(listt[1]);
                                   }
                                 }
@@ -271,14 +267,14 @@ String type="";
                                 //     .get().then((DocumentSnapshot) =>
                                 //     print("${DocumentSnapshot.data()?.length}docccc")
                                 // );
-                                List<int>id2=[];
-                                id2.add(id.single);
-                                print("${id2.toSet().toList()}insidestream");
+                                // List<int>id2=[];
+                                // id2.add(id.single);
+                                // print("${id2.toSet().toList()}insidestream");
                                 return   userslist.when(
                                     data: (dataapi) => ListView.builder(
                                         shrinkWrap: true,
                                         physics: ClampingScrollPhysics(),
-                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList().length,
+                                        itemCount:id.isNotEmpty? dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList().length:0,
                                         padding: EdgeInsets.only(
                                             top: mq.height * .01),
                                         //   physics: const BouncingScrollPhysics(),
@@ -287,7 +283,8 @@ String type="";
                                           // List<UserData>userdatalistclient=dataapi.data.where((element) => element.type=="admin").toList();
                                           print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");
                                           print("${id}iddd*");
-                                          return Padding(
+                                          return id.isNotEmpty?
+                                          Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 5.0),
                                             child: Card(
                                                 margin: EdgeInsets
@@ -358,7 +355,7 @@ String type="";
                                                       //   colors: Colors.grey,
                                                       // ),
                                                     ))),
-                                          );
+                                          ):Text("");
 
                                         }),
                                     error: (err, _) => Center(

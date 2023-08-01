@@ -261,11 +261,11 @@ String type="";
                                 List<int>id = [];
 
 
-                                if (listt[0] != idt) {
+                                if (listt[0] != idt||listt[0] !="null") {
                                   id.add(listt[0]);
                                 }
                                 else {
-                                  if (listt[1] != idt) {
+                                  if (listt[1] != idt||listt[1] !="null") {
                                     id.add(listt[1]);
                                   }
                                 }

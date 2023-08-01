@@ -38,10 +38,18 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Messages> _list=[];
   // _ private var
   final _textcontroller =TextEditingController();
-
+  String type="";
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
   @override
   void initState() {
-
+    gettingUserType();
     gettingUserData();
   } // emoji var           image uploading
   bool _showEmoji=false,_isUploading=false;
@@ -103,11 +111,50 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
             body: Column(
               children: [
-                Expanded(
+               type=="admin"?Expanded(
+                 child: StreamBuilder<QuerySnapshot>(
+                   stream:
+                   //Apis.getAllMessages(widget.user),
+                   FirebaseFirestore.instance.collection('chat/${Apis.getsendConversionId(widget.user.id.toString(),idt??0)}/messages')
+                       .orderBy('send', descending: true)
+                       .snapshots(),
+                   builder:(context, AsyncSnapshot snapshot){
+                     switch (snapshot.connectionState) {
+                     // if data is loading
+                       case  ConnectionState.waiting:
+                       case  ConnectionState.none:
+                         return SizedBox();
+
+                       case  ConnectionState.active:
+                       case  ConnectionState.done:
+                         final data=snapshot.data?.docs;
+
+                         _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
+
+                         if(_list.isNotEmpty){
+                           return ListView.builder(
+                             // last msg to show 1st
+                               reverse: true,
+                               physics: BouncingScrollPhysics(),
+                               padding: EdgeInsets.only(top: mq.height *.01),
+                               itemCount:_list.length,
+                               itemBuilder: (context,index){
+                                 return MessageCard(messages: _list[index],);
+                                 // return Text("msgs:${_list[index]}");
+                               });
+                         }
+
+                         else {
+                           return Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),);
+                         }
+                     }
+                   },
+                 ),
+               ): Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                     stream:
                     //Apis.getAllMessages(widget.user),
-                    FirebaseFirestore.instance.collection('chat/${Apis.getsendConversionId(widget.user.id.toString(),idt??0)}/messages')
+                    FirebaseFirestore.instance.collection('chat/${Apis.getsenduserConversionId(idt??0,widget.user.id.toString())}/messages')
                        .orderBy('send', descending: true)
                        .snapshots(),
                     builder:(context, AsyncSnapshot snapshot){
@@ -248,11 +295,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 // on 1st msg add the user
                 print("${_list.isEmpty}emptyy");
                 Apis.sendusersMessage(widget.user);
-                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
-
+                type=="admin"?Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }else{
                 print("${_list.isEmpty} ${widget.user.id}emptyy");
-                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
+               type=="admin"? Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }
             }
             _textcontroller.text='';

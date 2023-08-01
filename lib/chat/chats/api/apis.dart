@@ -197,10 +197,13 @@ static int?idduserr;
         : '${id}_${ auth.currentUser?.uid}';
   }
   static String getsendConversionId(String id,int idd) {
-    return user.hashCode <= id.hashCode ? '${ idd}_$id'
+    return user.hashCode <= id.hashCode ? '${idd}_$id'
         : '${id}_${ idduserr}';
   }
-
+  static String getsenduserConversionId(int idd,String id) {
+    return user.hashCode <= id.hashCode ? '${id}_${idd}'
+        : '${idduserr}_${ id}';
+  }
   // to get all msgs from firestore database for a particular conversionId
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMesages(
       UserData user,int idUser){
@@ -236,7 +239,7 @@ static List<String>ids=[];
       );
   }
 // for sending msgs
-  static Future<void> sendMessage(UserData chatuser, String msg, Type type) async {
+  static Future<void> sendAdminMessage(UserData chatuser, String msg, Type type) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     int iduserr=sf.getInt("USERIDKEY")??0;
 
@@ -287,6 +290,38 @@ static List<String>ids=[];
    });
 
         // sendPushNotification(chatuser, type == Type.text ? msg : 'Image'));
+  }
+  static Future<void> sendMessage(UserData chatuser, String msg, Type type) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    int iduserr=sf.getInt("USERIDKEY")??0;
+
+    final time = DateTime
+        .now()
+        .millisecondsSinceEpoch
+        .toString();
+    final Messages message = Messages(
+        msg: msg,
+        toId: chatuser.id.toString(),
+        read: 'false',
+        receiverimg: chatuser.image??"",
+        type: type,
+        receivername:chatuser.name.toString() ,
+
+        send:  "${DateTime.now(). millisecondsSinceEpoch}",
+        fromId: idduserr.toString()??"");
+    final ref = firestore.collection('chat/${getsenduserConversionId(iduserr,chatuser.id.toString())}/messages');
+    final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
+    final doc = await userDocRef.get();
+
+    await
+    await ref.doc(time).set(message.toJson()).then((value) {
+      value;
+      ids.add(getsendConversionId(chatuser.id.toString(),iduserr));
+      print("${ids}ooooooooo");
+      print("${ik}doccccccccccccccccc");
+    });
+
+    // sendPushNotification(chatuser, type == Type.text ? msg : 'Image'));
   }
 //static List<String>ikid=[];
 

@@ -50,7 +50,7 @@ dependencies:
   flutter_native_splash: ^2.2.9
   modal_progress_hud_nsn: ^0.3.0
   animated_splash_screen:
-
+  readmore:
   curved_navigation_bar:
   fluttertoast: ^8.1.1
   emoji_picker_flutter: ^1.5.4

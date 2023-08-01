@@ -256,11 +256,8 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                                 addd.add(snapshot.data.docs[indexx]["ids"] );
                                 print("${addd}listt");
                                 // }
-
                                 List<dynamic>listt = snapshot.data.docs[indexx]["ids"] ?? [];
                                 List<int>id = [];
-
-
                                 if (listt[0] != idt||listt[0] !="null") {
                                   id.add(listt[0]);
                                 }
@@ -281,15 +278,13 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                                     data: (dataapi) => ListView.builder(
                                         shrinkWrap: true,
                                         physics: ClampingScrollPhysics(),
-                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).toList().length,
+                                        itemCount: dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList().length,
                                         padding: EdgeInsets.only(
                                             top: mq.height * .01),
                                         //   physics: const BouncingScrollPhysics(),
                                         itemBuilder: (context, index) {
-
-                                          List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).toList();
+                                          List<UserData>userdatalist=dataapi.data.where((element) =>element.id==id[0]).where((element) => element.type !="admin").toList();
                                           // List<UserData>userdatalistclient=dataapi.data.where((element) => element.type=="admin").toList();
-
                                           print("${dataapi.data.where((element) =>element.id==id[0]).toList().length}iddd");
                                           print("${id}iddd*");
                                           return Padding(
@@ -388,12 +383,9 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                                       ),
                                     ),
                                     loading: () => Center(
-                                        child: CircularProgressIndicator(
-                                        )
+                                        child: Text(""),
                                     ));
                               },itemCount: snapshot.data.docs.length,);
-
-
                         }
                       }):
                   userslist.when(data:(datax)=> ListView.builder(
@@ -487,8 +479,7 @@ class _HomeChatState extends ConsumerState<HomeChat> {
                     ),
                   ),
                       loading: () => Center(
-                          child: CircularProgressIndicator(
-                          )
+                          child: Text("")
                       ))),
             ),
             Center(

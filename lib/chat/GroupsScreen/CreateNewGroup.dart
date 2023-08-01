@@ -63,13 +63,13 @@ class _CreateNewGroupState extends State<CreateNewGroup> {
         userName = value ??"";
         print("nameeeeeeeeeeeeee22222222222 ${userName}");
       });
-    });await SharedPreferencesInfo.getUserIdFromSF().then((value){
+    });
+    await SharedPreferencesInfo.getUserIdFromSF().then((value){
       setState(() {
         id = value??0;
         print("nameeeeeeeeeeeeeeIddddd  ${id}");
       });
     });
-
   }
   List<String> memberName = [];
   String? uid='';

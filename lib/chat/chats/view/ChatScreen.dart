@@ -16,15 +16,15 @@ import '../api/apis.dart';
 import '../model/UsersModel.dart';
 import '../model/chat_msg.dart';
 
-
-
-
 class ChatScreen extends StatefulWidget {
   final String UserName;
   final String userId;
   final String userImage;
   final UserData user;
-  const ChatScreen({super.key, required this.user,
+
+  const ChatScreen({
+    super.key,
+    required this.user,
     required this.userId,
     required this.userImage,
     required this.UserName,
@@ -35,10 +35,12 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<Messages> _list=[];
+  List<Messages> _list = [];
+
   // _ private var
-  final _textcontroller =TextEditingController();
-  String type="";
+  final _textcontroller = TextEditingController();
+  String type = "";
+
   gettingUserType() async {
     await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
       setState(() {
@@ -47,15 +49,18 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     });
   }
+
   @override
   void initState() {
     gettingUserType();
     gettingUserData();
   } // emoji var           image uploading
-  bool _showEmoji=false,_isUploading=false;
-  int idt=0;
+
+  bool _showEmoji = false, _isUploading = false;
+  int idt = 0;
+
   gettingUserData() async {
-    await SharedPreferencesInfo.getUserIdFromSF().then((value){
+    await SharedPreferencesInfo.getUserIdFromSF().then((value) {
       setState(() {
         idt = value!;
         print("nameeeeeeeeeeeeee$idt");
@@ -65,256 +70,340 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.red));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.red));
 
     return GestureDetector(
-      onTap: ()=> FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
         // backbutton -> emoji win off
         child: WillPopScope(
-          onWillPop: (){
+          onWillPop: () {
             if (_showEmoji) {
               setState(() {
-                _showEmoji=!_showEmoji;
+                _showEmoji = !_showEmoji;
               });
               return Future.value(false);
-            }else{
+            } else {
               return Future.value(true);
             }
           },
-
           child: Scaffold(
-            backgroundColor: Colors.teal[50],  appBar: AppBar(
-            backgroundColor: Colors.grey[300],
-            title: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.grey[400],
-                  radius: 21.0,
-                  backgroundImage: NetworkImage('${widget.userImage}'),
-                ),
-                SizedBox(
-                  width: 3,
-                ),
-                Column(
-                  children: [
-                    Text("  ${widget.UserName}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,)),
-
-                  ],
-                ),
-              ],
+            backgroundColor: Colors.teal[50],
+            appBar: AppBar(
+              backgroundColor: Colors.grey[300],
+              title: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey[400],
+                    radius: 21.0,
+                    backgroundImage: NetworkImage('${widget.userImage}'),
+                  ),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Column(
+                    children: [
+                      Text("  ${widget.UserName}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
             body: Column(
               children: [
-                type=="admin"?Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream:
-                    //Apis.getAllMessages(widget.user),
-                    FirebaseFirestore.instance.collection('chat/${Apis.getsendConversionId(widget.user.id.toString(),idt??0)}/messages')
-                        .orderBy('send', descending: true)
-                        .snapshots(),
-                    builder:(context, AsyncSnapshot snapshot){
-                      switch (snapshot.connectionState) {
-                      // if data is loading
-                        case  ConnectionState.waiting:
-                        case  ConnectionState.none:
-                          return SizedBox();
+                type == "admin"
+                    ? Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream:
+                              //Apis.getAllMessages(widget.user),
+                              FirebaseFirestore.instance
+                                  .collection(
+                                      'chat/${Apis.getsendConversionId(widget.user.id.toString(), idt ?? 0)}/messages')
+                                  .orderBy('send', descending: true)
+                                  .snapshots(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            switch (snapshot.connectionState) {
+                              // if data is loading
+                              case ConnectionState.waiting:
+                              case ConnectionState.none:
+                                return SizedBox();
 
-                        case  ConnectionState.active:
-                        case  ConnectionState.done:
-                          final data=snapshot.data?.docs;
+                              case ConnectionState.active:
+                              case ConnectionState.done:
+                                final data = snapshot.data?.docs;
 
-                          _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
+                                _list = data
+                                        ?.map(
+                                            (e) => Messages.fromJson(e.data()))
+                                        .toList()
+                                        .cast<Messages>() ??
+                                    [];
 
-                          if(_list.isNotEmpty){
-                            return ListView.builder(
-                              // last msg to show 1st
-                                reverse: true,
-                                physics: BouncingScrollPhysics(),
-                                padding: EdgeInsets.only(top: mq.height *.01),
-                                itemCount:_list.length,
-                                itemBuilder: (context,index){
-                                  return MessageCard(messages: _list[index],);
-                                  // return Text("msgs:${_list[index]}");
-                                });
-                          }
+                                if (_list.isNotEmpty) {
+                                  return ListView.builder(
+                                      // last msg to show 1st
+                                      reverse: true,
+                                      physics: BouncingScrollPhysics(),
+                                      padding:
+                                          EdgeInsets.only(top: mq.height * .01),
+                                      itemCount: _list.length,
+                                      itemBuilder: (context, index) {
+                                        return MessageCard(
+                                          messages: _list[index],
+                                        );
+                                        // return Text("msgs:${_list[index]}");
+                                      });
+                                } else {
+                                  return Center(
+                                    child: Text(
+                                      "Say Hii!!👋",
+                                      style:
+                                          GoogleFonts.balooBhai2(fontSize: 30),
+                                    ),
+                                  );
+                                }
+                            }
+                          },
+                        ),
+                      )
+                    : Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream:
+                              //Apis.getAllMessages(widget.user),
+                              FirebaseFirestore.instance
+                                  .collection(
+                                      'chat/${Apis.getsenduserConversionId(idt ?? 0, widget.user.id.toString())}/messages')
+                                  .orderBy('send', descending: true)
+                                  .snapshots(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            switch (snapshot.connectionState) {
+                              // if data is loading
+                              case ConnectionState.waiting:
+                              case ConnectionState.none:
+                                return SizedBox();
 
-                          else {
-                            return Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),);
-                          }
-                      }
-                    },
-                  ),
-                ): Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream:
-                    //Apis.getAllMessages(widget.user),
-                    FirebaseFirestore.instance.collection('chat/${Apis.getsenduserConversionId(idt??0,widget.user.id.toString())}/messages')
-                        .orderBy('send', descending: true)
-                        .snapshots(),
-                    builder:(context, AsyncSnapshot snapshot){
-                      switch (snapshot.connectionState) {
-                      // if data is loading
-                        case  ConnectionState.waiting:
-                        case  ConnectionState.none:
-                          return SizedBox();
+                              case ConnectionState.active:
+                              case ConnectionState.done:
+                                final data = snapshot.data?.docs;
 
-                        case  ConnectionState.active:
-                        case  ConnectionState.done:
-                          final data=snapshot.data?.docs;
+                                _list = data
+                                        ?.map(
+                                            (e) => Messages.fromJson(e.data()))
+                                        .toList()
+                                        .cast<Messages>() ??
+                                    [];
 
-                          _list=data?.map((e) => Messages.fromJson(e.data())).toList().cast<Messages>()?? [];
-
-                          if(_list.isNotEmpty){
-                            return ListView.builder(
-                              // last msg to show 1st
-                                reverse: true,
-                                physics: BouncingScrollPhysics(),
-                                padding: EdgeInsets.only(top: mq.height *.01),
-                                itemCount:_list.length,
-                                itemBuilder: (context,index){
-                                  return MessageCard(messages: _list[index],);
-                                  // return Text("msgs:${_list[index]}");
-                                });
-                          }
-
-                          else {
-                            return Center(child: Text("Say Hii!!👋",style: GoogleFonts.balooBhai2(fontSize: 30),),);
-                          }
-                      }
-                    },
-                  ),
-                ),
-                if(_isUploading)
-                  Align(alignment: Alignment.centerRight,
+                                if (_list.isNotEmpty) {
+                                  return ListView.builder(
+                                      // last msg to show 1st
+                                      reverse: true,
+                                      physics: BouncingScrollPhysics(),
+                                      padding:
+                                          EdgeInsets.only(top: mq.height * .01),
+                                      itemCount: _list.length,
+                                      itemBuilder: (context, index) {
+                                        return MessageCard(
+                                          messages: _list[index],
+                                        );
+                                        // return Text("msgs:${_list[index]}");
+                                      });
+                                } else {
+                                  return Center(
+                                    child: Text(
+                                      "Say Hii!!👋",
+                                      style:
+                                          GoogleFonts.balooBhai2(fontSize: 30),
+                                    ),
+                                  );
+                                }
+                            }
+                          },
+                        ),
+                      ),
+                if (_isUploading)
+                  Align(
+                      alignment: Alignment.centerRight,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal:15.0,vertical: 5),
-                        child: CircularProgressIndicator(strokeWidth: 2,),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 5),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
                       )),
                 _chatInput(),
 
                 // emoji select window
-                if(_showEmoji)
-
+                if (_showEmoji)
                   SizedBox(
-                    height: mq.height *.35,
+                    height: mq.height * .35,
                     child: EmojiPicker(
                       textEditingController: _textcontroller,
                       config: Config(
                         columns: 8,
-                        emojiSizeMax: 32 * (Platform.isIOS?1.3:1.0),
+                        emojiSizeMax: 32 * (Platform.isIOS ? 1.3 : 1.0),
                       ),
                     ),
                   )
               ],
-            ) ,
+            ),
           ),
         ),
       ),
     );
   }
+
 // input keyboard + send button
-  Widget _chatInput(){
+  Widget _chatInput() {
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: mq.height * .01,horizontal: mq.width * .02),
+      padding: EdgeInsets.symmetric(
+          vertical: mq.height * .01, horizontal: mq.width * .02),
       child: Row(
         children: [
           Expanded(
             child: Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               child: Row(
                 children: [
                   // emoji func
-                  IconButton(onPressed: (){
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      _showEmoji=!_showEmoji;
-                    });
-                  },
-                      icon: Icon(Icons.emoji_emotions,color: Colors.blue,size: 28,)),
+                  IconButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        setState(() {
+                          _showEmoji = !_showEmoji;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.emoji_emotions,
+                        color: Colors.blue,
+                        size: 28,
+                      )),
                   Expanded(
-                      child:TextField(
-                        controller: _textcontroller,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        onTap: (){
-                          if(_showEmoji)
-                            setState(() {
-                              _showEmoji=!_showEmoji;
-                            });
-                        },
-                        decoration: InputDecoration(
-                            hintText: 'Start Chatting....',hintStyle: TextStyle(fontSize: 18),border: InputBorder.none
-                        ),
-                      ) ),
+                      child: TextField(
+                    controller: _textcontroller,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    onTap: () {
+                      if (_showEmoji)
+                        setState(() {
+                          _showEmoji = !_showEmoji;
+                        });
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Start Chatting....',
+                        hintStyle: TextStyle(fontSize: 18),
+                        border: InputBorder.none),
+                  )),
                   //  select gallery multiple images
                   IconButton(
                       onPressed: () async {
-                        final ImagePicker picker=ImagePicker();
-                        final List<XFile> images = await picker.pickMultiImage();
-                        for(var i in images){
-                          setState(() => _isUploading=true,);
-                          await Apis.sendChatImage(widget.user,File(i.path));
-                          setState(() => _isUploading=false,);
-
+                        final ImagePicker picker = ImagePicker();
+                        final List<XFile> images =
+                            await picker.pickMultiImage();
+                        for (var i in images) {
+                          setState(
+                            () => _isUploading = true,
+                          );
+                          if (_list.isEmpty) {
+                            // on 1st msg add the user
+                            print("${_list.isEmpty}emptyy");
+                            Apis.sendusersMessage(widget.user);
+                            await Apis.sendChatImage(widget.user, File(i.path));
+                          } else {
+                            await Apis.sendChatImage(widget.user, File(i.path));
+                          }
+                          setState(
+                            () => _isUploading = false,
+                          );
                         }
-
                       },
-
-                      icon: Icon(Icons.image,color: Colors.blue,size: 30,)),
+                      icon: Icon(
+                        Icons.image,
+                        color: Colors.blue,
+                        size: 30,
+                      )),
 
                   //  camera button
                   IconButton(
                       onPressed: () async {
-                        final ImagePicker picker=ImagePicker();
-                        final XFile? image = await picker.pickImage(source: ImageSource.camera);
-                        if(image!=null){
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image =
+                            await picker.pickImage(source: ImageSource.camera);
+                        if (image != null) {
                           print("image path: ${image.path}");
-                          setState(() => _isUploading=true,);
-
-                          Apis.sendChatImage(widget.user,File(image.path));
-                          setState(() => _isUploading=false,);
-
+                          setState(
+                            () => _isUploading = true,
+                          );
+                          if (_list.isEmpty) {
+                            // on 1st msg add the user
+                            print("${_list.isEmpty}emptyy");
+                            Apis.sendusersMessage(widget.user);
+                            Apis.sendChatImage(widget.user, File(image.path));
+                          } else {
+                            Apis.sendChatImage(widget.user, File(image.path));
+                          }
+                          setState(
+                            () => _isUploading = false,
+                          );
                         }
                       },
-                      icon: Icon(Icons.camera_alt_rounded,color: Colors.blue,size: 30,)),
-                  SizedBox(width: mq.width * .01,)
+                      icon: Icon(
+                        Icons.camera_alt_rounded,
+                        color: Colors.blue,
+                        size: 30,
+                      )),
+                  SizedBox(
+                    width: mq.width * .01,
+                  )
                 ],
               ),
             ),
           ),
           // click to send msgs
-          MaterialButton(onPressed: ()async{
-            if(_textcontroller.text.isNotEmpty){
-              if(_list.isEmpty){
-                // on 1st msg add the user
-                print("${_list.isEmpty}emptyy");
-                Apis.sendusersMessage(widget.user);
-                type=="admin"?Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
-              }else{
-                print("${_list.isEmpty} ${widget.user.id}emptyy");
-                type=="admin"? Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):
-                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
+          MaterialButton(
+            onPressed: () async {
+              if (_textcontroller.text.isNotEmpty) {
+                if (_list.isEmpty) {
+                  // on 1st msg add the user
+                  print("${_list.isEmpty}emptyy");
+                  Apis.sendusersMessage(widget.user);
+                  type == "admin"
+                      ? Apis.sendAdminMessage(
+                          widget.user, _textcontroller.text, Type.text)
+                      : Apis.sendMessage(
+                          widget.user, _textcontroller.text, Type.text);
+                } else {
+                  print("${_list.isEmpty} ${widget.user.id}emptyy");
+                  type == "admin"
+                      ? Apis.sendAdminMessage(
+                          widget.user, _textcontroller.text, Type.text)
+                      : Apis.sendMessage(
+                          widget.user, _textcontroller.text, Type.text);
+                }
               }
-            }
-            _textcontroller.text='';
-            _textcontroller.clear();
-          },
+              _textcontroller.text = '';
+              _textcontroller.clear();
+            },
             shape: CircleBorder(),
             minWidth: 0,
-            padding: EdgeInsets.only(top: 10,bottom: 10,left: 10,right: 5),
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 5),
             color: Colors.redAccent,
-            child: Icon(Icons.send,color: Colors.white,size: 28,),)
+            child: Icon(
+              Icons.send,
+              color: Colors.white,
+              size: 28,
+            ),
+          )
         ],
       ),
     );
   }
-
 
 // chat screen  custom appbar
 // Widget _appBar(){

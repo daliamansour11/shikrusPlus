@@ -15,7 +15,7 @@ class Messages {
   late final String receivername;
   late final String receiverimg;
   late final Type type;
-  late final String send;
+  late final DateTime send;
   late final String fromId;
   
   Messages.fromJson(Map<String, dynamic> json){
@@ -23,7 +23,7 @@ class Messages {
     toId = json['toId'].toString();
     read = json['read'].toString();
     type = json['type'].toString()==Type.image.name?Type.image:Type.text;
-    send = json['send'].toString();
+    send = json['send'].toDate();
     receiverimg=json['receiverimg'].toString();
     fromId = json['fromId'].toString();
     receivername=json['receivername'].toString();

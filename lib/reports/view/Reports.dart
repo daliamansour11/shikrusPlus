@@ -126,9 +126,8 @@ class _ReportsState extends ConsumerState<Reports> {
                                               '${data.data[index].projectId}',
                                           user_id: '${data.data[index].userId}',
                                           created_At:
-                                              '${data.data[index].createdAt}',
-                                          updated_At:
-                                              '${data.data[index].updatedAt}',
+                                              data.data[index].createdAt,
+                                          updated_At: data.data[index].updatedAt,
                                           project_name:
                                               '${data.data[index].project.nameEn}',
                                         )));

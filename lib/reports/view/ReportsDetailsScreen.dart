@@ -16,8 +16,8 @@ class ReportsDetailsScreen extends ConsumerStatefulWidget {
   String image;
   String project_id;
   String user_id;
-  String created_At;
-  String updated_At;
+  DateTime created_At;
+  DateTime updated_At;
   String project_name;
 
   ReportsDetailsScreen({
@@ -137,7 +137,7 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        TextFieldTitle2Widget(title:formattedDate(widget.created_At),
+                                        TextFieldTitle2Widget(title:formattedDate(widget.updated_At),
                                             fontWeight: FontWeight.bold, size: 12.sp,
                                             colors:  Color(0xFF005373)
 

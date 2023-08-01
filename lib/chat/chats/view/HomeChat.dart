@@ -285,13 +285,13 @@ String type="";
                                           print("${id}iddd*");
                                           return id.isNotEmpty?
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                            padding: const EdgeInsets.symmetric(vertical: 0.0),
                                             child: Card(
                                                 margin: EdgeInsets
                                                     .symmetric(
                                                     horizontal: mq.width *
                                                         .03,
-                                                    vertical: 5),
+                                                    vertical: 3),
                                                 color: Colors.grey[300],
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:

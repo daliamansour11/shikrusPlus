@@ -181,19 +181,16 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                                         subtitle: Text(
                                             "${message != null ? message!.type == Type.image ?
                                             'Photo' : message!.message :data["recentMessage"]}",
-                                            maxLines: 2
+                                            maxLines: 1
                                         ),
-                                        // trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
-                                        // last msg mess
-                                       //  // age
-                                       //  trailing:
-                                       //  // show send time for read msg
-                                       //  Padding(
-                                       //    padding: EdgeInsets.only(
-                                       //        right: mq.width * .029991, top: 10, left: .07),
-                                       //    child:
-                                       // //   Text( "${MyDate.readTimestamp("${data['recentMessageTime']== ""?"": (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
-                                       //  )
+
+                                        trailing:
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              right: mq.width * .029991, top: 10, left: .07),
+                                          child:
+                                         Text( "${MyDate.readTimestamp("${data['recentMessageTime']== null?DateTime.now(): (data['recentMessageTime']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
+                                        )
                                     ));
                               },
                               // separatorBuilder: (BuildContext context, int index) {

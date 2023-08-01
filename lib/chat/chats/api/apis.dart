@@ -193,7 +193,7 @@ static int?idduserr;
 
   static String getConversionId(String id) {
 
-   return user.hashCode <= id.hashCode ? '${ auth.currentUser?.uid}_$id'
+   return user.hashCode <= id.hashCode ? '${auth.currentUser?.uid}_$id'
         : '${id}_${ auth.currentUser?.uid}';
   }
   static String getsendConversionId(String id,int idd) {
@@ -255,7 +255,7 @@ static List<String>ids=[];
         type: type,
         receivername:chatuser.name.toString() ,
 
-        send:  "${DateTime.now(). millisecondsSinceEpoch}",
+        send:  DateTime.now(),
         fromId: idduserr.toString()??"");
     final ref = firestore.collection('chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/messages');
    final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
@@ -307,7 +307,7 @@ static List<String>ids=[];
         type: type,
         receivername:chatuser.name.toString() ,
 
-        send:  "${DateTime.now(). millisecondsSinceEpoch}",
+        send:  DateTime.now(),
         fromId: idduserr.toString()??"");
     final ref = firestore.collection('chat/${getsenduserConversionId(iduserr,chatuser.id.toString())}/messages');
     final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
@@ -330,7 +330,7 @@ static List<String>ids=[];
     SharedPreferences sf = await SharedPreferences.getInstance();
     int iduserr=sf.getInt("USERIDKEY")??0;
     firestore.collection('chat/${getsendConversionId(messages.fromId,iduserr)}/messages')
-        .doc(messages.send)
+        .doc(messages.send.toString())
         .update({'read': DateTime
         .now()
         .millisecondsSinceEpoch
@@ -386,7 +386,7 @@ static List<String>ids=[];
     int iduserr=sf.getInt("USERIDKEY")??0;
     await firestore
         .collection('chat/${getsendConversionId(message.toId.toString(),iduserr)}/messages/')
-        .doc(message.send)
+        .doc(message.send.toString())
         .delete();
     if (message.type == Type.image) {
       //   final Reference storageReference = FirebaseStorage.instance
@@ -407,7 +407,7 @@ static List<String>ids=[];
     int iduserr=sf.getInt("USERIDKEY")??0;
     await firestore
         .collection('chat/${getsendConversionId(message.toId.toString() ,iduserr)}/messages/')
-        .doc(message.send)
+        .doc(message.send.toString())
         .update({'msg': updatedMsg});
   }
 
@@ -471,7 +471,8 @@ static List<String>ids=[];
         toId: groupModel!.groupId,
         read: '',
         type: type,
-        send: time,
+        send:  DateTime
+            .now(),
         fromId: groupModel.groupId);
     final ref = firestore.collection(
         'groups/${getGroupChatId(groupModel.groupId)}/messages');

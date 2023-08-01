@@ -48,8 +48,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
   bool _showEmoji = false;
 
   @override
-  CollectionReference groupCollection =
-      FirebaseFirestore.instance.collection('groups');
+  CollectionReference groupCollection = FirebaseFirestore.instance.collection('groups');
   List<GroupMessageTile> groupMessage = [];
 
   String admin = "";

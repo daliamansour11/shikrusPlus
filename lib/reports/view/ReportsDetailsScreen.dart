@@ -137,10 +137,10 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                                       mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        TextFieldTitle2Widget(title:formattedDate(widget.updated_At),
+                                        TextFieldTitle2Widget(
+                                            title:formattedDate(widget.updated_At),
                                             fontWeight: FontWeight.bold, size: 12.sp,
                                             colors:  Color(0xFF005373)
-
                                         ),
                                       ],
                                     )

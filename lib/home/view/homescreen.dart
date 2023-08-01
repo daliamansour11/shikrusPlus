@@ -615,14 +615,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                   notes:
                                                   data.data[index].notes ??
                                                       "",
-                                                  startDate: data.data[index]
-                                                      .startingDate
-                                                      .toString() ??
-                                                      "",
-                                                  endDate: data.data[index]
-                                                      .expectedExpiryDate
-                                                      .toString() ??
-                                                      '',
+                                                  startDate: usersData.startingDate,
+                                                  endDate: data.data[index].expectedExpiryDate,
                                                   status:
                                                   data.data[index].status ??
                                                       '',

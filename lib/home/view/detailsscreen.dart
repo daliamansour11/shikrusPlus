@@ -17,8 +17,8 @@ class Detailsscreen extends ConsumerStatefulWidget {
   String name;
   String subject;
   String notes;
-  String startDate;
-  String endDate;
+  DateTime? startDate;
+  DateTime? endDate;
   String status;
   int project_id;
 

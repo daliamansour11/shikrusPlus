@@ -208,58 +208,64 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                     // msg send time
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(
-                                      widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
-                                          .width * .02),
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: mq.height * .02, horizontal: mq.width * .03),
-                                  decoration: BoxDecoration(color: Color.fromARGB(
-                                      255, 148, 208, 151),
-                                      border: Border.all(color: Colors.green),
-                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                                          topRight: Radius.circular(30),
-                                          bottomLeft: Radius.circular(30))),
-                                  child: Column(
-                                      children: [
-                                        Text(
-                                          logedInUser.toUpperCase(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              letterSpacing: -0.5),
-                                        ),
-
-                                        // to send images
-                                        widget.groupMessageTile.type == Type.text
-                                            ? Text("${snapshot.data.docs[index]['message']}",
-                                          style: GoogleFonts.balooBhai2(fontSize: 20),) :
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(15),
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) =>
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: CircularProgressIndicator(strokeWidth: 2,),
-                                                ),
-                                            imageUrl: widget.groupMessageTile.message,
-                                            errorWidget: (context, url, error) => Icon(Icons.image),
+                                Flexible(
+                                  child: Container(
+                                    padding: EdgeInsets.all(
+                                        widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
+                                            .width * .04),
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: mq.height * .02, horizontal: mq.width * .03),
+                                    decoration: BoxDecoration(color: Color.fromARGB(
+                                        255, 148, 208, 151),
+                                        border: Border.all(color: Colors.green),
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                            topRight: Radius.circular(30),
+                                            bottomLeft: Radius.circular(30))),
+                                    child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Text(
+                                              logedInUser.toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  letterSpacing: -0.5),
+                                            ),
                                           ),
-                                        ),
+                                          // to send images
+                                          widget.groupMessageTile.type == Type.text
+                                              ? Text("${snapshot.data.docs[index]['message']}",
+                                            style: GoogleFonts.balooBhai2(fontSize: 20),) :
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(15),
+                                            child: CachedNetworkImage(
+                                              placeholder: (context, url) =>
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: CircularProgressIndicator(strokeWidth: 2,),
+                                                  ),
+                                              imageUrl: widget.groupMessageTile.message,
+                                              errorWidget: (context, url, error) => Icon(Icons.image),
+                                            ),
+                                          ),
 
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              right: mq.width * .029991, top: 10, left: .09),
-                                          child:
-                                          // formatted send time
-                                          //(message['timestamp'] == null) ? null : (message['timestamp'] as Timestamp).toDate(),
-                                          Text( "${readTimestamp("${snapshot.data.docs[index]['time']==null?null: (snapshot.data.docs[index]['time']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
-                                        ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                right: mq.width * .029991, top: 10, left: .09),
+                                            child:
+                                            // formatted send time
+                                            //(message['timestamp'] == null) ? null : (message['timestamp'] as Timestamp).toDate(),
+                                            Align(
+                                              alignment: Alignment.bottomRight,
+                                                child: Text( "${readTimestamp("${snapshot.data.docs[index]['time']==null?null: (snapshot.data.docs[index]['time']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),)),
+                                          ),
 
 
-                                      ]),
+                                        ]),
+                                  ),
                                 ),
 
                               ]
@@ -275,51 +281,55 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                       alignment: Alignment.centerLeft,
                       child:Row(
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(
-                                  widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
-                                      .width * .02),
-                              margin: EdgeInsets.symmetric(
-                                  vertical: mq.height * .01, horizontal: mq.width * .03),
-                              decoration: BoxDecoration(color: Colors.grey[400],
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                      bottomRight: Radius.circular(30))),
-                              child: Column(
-                                  children: [
-                                    Text(
-                                      "${snapshot.data.docs[index]['sender']}".toUpperCase(),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          letterSpacing: -0.5),
-                                    ),
-                                    widget.groupMessageTile.type == Type.text
-                                        ? Text("${snapshot.data.docs[index]['message']}",
-                                      style: GoogleFonts.balooBhai2(fontSize: 20),) :
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: CircularProgressIndicator(strokeWidth: 2,),
-                                            ),
-                                        imageUrl: widget.groupMessageTile.message,
-                                        errorWidget: (context, url, error) => Icon(Icons.image),
+                            Flexible(
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    widget.groupMessageTile.type == Type.image ? mq.width * .03 : mq
+                                        .width * .04),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: mq.height * .01, horizontal: mq.width * .03),
+                                decoration: BoxDecoration(color: Colors.grey[400],
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                        bottomRight: Radius.circular(30))),
+                                child: Column(
+                                    children: [
+                                      Text(
+                                        "${snapshot.data.docs[index]['sender']}".toUpperCase(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            letterSpacing: -0.5),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          right: mq.width * .029991, top: 10, left: .07),
-                                      child:
-                                      Text( "${readTimestamp("${snapshot.data.docs[index]['time']==null?null: (snapshot.data.docs[index]['time']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),),
+                                      widget.groupMessageTile.type == Type.text
+                                          ? Text("${snapshot.data.docs[index]['message']}",
+                                        style: GoogleFonts.balooBhai2(fontSize: 20),) :
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) =>
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: CircularProgressIndicator(strokeWidth: 2,),
+                                              ),
+                                          imageUrl: widget.groupMessageTile.message,
+                                          errorWidget: (context, url, error) => Icon(Icons.image),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            right: mq.width * .029991, top: 10, left: .07),
+                                        child:
+                                        Align(
+                                          alignment: Alignment.bottomRight,
+                                            child: Text( "${readTimestamp("${snapshot.data.docs[index]['time']==null?null: (snapshot.data.docs[index]['time']as Timestamp ).toDate()}")}",style: TextStyle(color: Colors.black54),)),
 
-                                    )
-                                  ]),
+                                      )
+                                    ]),
+                              ),
                             ),
                           ])
                   );

@@ -107,7 +107,8 @@ class _MessageCardState extends State<MessageCard> {
         ),
         Flexible(
           child: Container(
-            padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .03:mq.width * .05),margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
+            padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .03:mq.width * .05),
+            margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
             decoration: BoxDecoration(color: Color.fromARGB(255, 130, 223, 135),
                 border: Border.all(color: Colors.green),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),bottomLeft: Radius.circular(30))),

@@ -57,7 +57,7 @@ class Apis {
       String msg) async {
     try {
       final body = {
-        // "to": chatuser.pushToken,
+       // "to": chatuser.pushToken,
         "notification": {
           "title": me.name, //our name should be send
           "body": msg,
@@ -147,7 +147,7 @@ class Apis {
     print("ussssssssssssssssssssss$userIds");
     return await firestore.collection('users').where('uId',isNotEqualTo: user  )
     //because empty list throws an error
-        .where('email', isNotEqualTo:"mohmed112@gmail.com" )
+     .where('email', isNotEqualTo:"mohmed112@gmail.com" )
         .snapshots();
   }
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAdminUsers() {
@@ -179,13 +179,13 @@ class Apis {
 
   //                      chat msgs
   // for getting a conversaton id
-  static int?idduserr;
+static int?idduserr;
   static String? receivername;
   static getid()async
   {
     await SharedPreferencesInfo.getUserIdFromSF().then(( value){
       idduserr = value;
-      print("nameeeeeeeeeeeeee$idduserr");
+        print("nameeeeeeeeeeeeee$idduserr");
 
     });
   }
@@ -193,7 +193,7 @@ class Apis {
 
   static String getConversionId(String id) {
 
-    return user.hashCode <= id.hashCode ? '${ auth.currentUser?.uid}_$id'
+   return user.hashCode <= id.hashCode ? '${ auth.currentUser?.uid}_$id'
         : '${id}_${ auth.currentUser?.uid}';
   }
   static String getsendConversionId(String id,int idd) {
@@ -212,31 +212,31 @@ class Apis {
         .orderBy('send', descending: true)
         .snapshots();
   }
-  static List<String>ids=[];
-  static String ik="";
+static List<String>ids=[];
+ static String ik="";
 
-  static List <dynamic>listtt=[];
+ static List <dynamic>listtt=[];
 
   Widget methd(BuildContext context) {
 
     return  Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('usersid')
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return new Text("Loading");
-            }
-            var userDocument = snapshot.data?.docs[0]["ids"];
-            listtt.add(userDocument);
-            return Center();
+        width: double.infinity,
+        height: double.infinity,
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('usersid')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return new Text("Loading");
+              }
+              var userDocument = snapshot.data?.docs[0]["ids"];
+              listtt.add(userDocument);
+              return Center();
 
-          }
-      ),
-    );
+            }
+        ),
+      );
   }
 // for sending msgs
   static Future<void> sendAdminMessage(UserData chatuser, String msg, Type type) async {
@@ -258,23 +258,23 @@ class Apis {
         send:  "${DateTime.now(). millisecondsSinceEpoch}",
         fromId: idduserr.toString()??"");
     final ref = firestore.collection('chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/messages');
-    final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
-    final doc = await userDocRef.get();
-    //  await firestore.collection('usersid').doc().set({"ids":FieldValue.arrayUnion([chatuser.id,iduserr])});
-    //   await firestore.collection('usersid').doc().get().then((doc){
-    //    print("${doc.exists}doccccccccccc");
-    //   });
+   final  userDocRef = await firestore.collection('chat').doc('${getsendConversionId(chatuser.id.toString(),iduserr)}');
+     final doc = await userDocRef.get();
+  //  await firestore.collection('usersid').doc().set({"ids":FieldValue.arrayUnion([chatuser.id,iduserr])});
+  //   await firestore.collection('usersid').doc().get().then((doc){
+  //    print("${doc.exists}doccccccccccc");
+  //   });
     var query = FirebaseFirestore.instance
         .collection('usersid')
         .where('ids',arrayContains: FieldValue.arrayUnion([chatuser.id,iduserr]));
     query.get().then((QuerySnapshot snapshot) {
-      List l= snapshot.docs;
+     List l= snapshot.docs;
 
       // handle the results here
     });
 
     ik=doc.id;
-    print("${listtt}doccccccccccccccccc");
+     print("${listtt}doccccccccccccccccc");
     // if (!doc.exists ) {
     //     firestore.collection(
     //     'chat/${getsendConversionId(chatuser.id.toString(),iduserr)}/sender').add({"senderid":FieldValue.arrayUnion(["${doc}","${iduserr}"])});
@@ -282,14 +282,14 @@ class Apis {
 
     //FieldValue.arrayUnion(["${uid}_$userName"])
     await
-    await ref.doc(time).set(message.toJson()).then((value) {
-      value;
-      ids.add(getsendConversionId(chatuser.id.toString(),iduserr));
-      print("${ids}ooooooooo");
-      print("${ik}doccccccccccccccccc");
-    });
+   await ref.doc(time).set(message.toJson()).then((value) {
+     value;
+     ids.add(getsendConversionId(chatuser.id.toString(),iduserr));
+   print("${ids}ooooooooo");
+     print("${ik}doccccccccccccccccc");
+   });
 
-    // sendPushNotification(chatuser, type == Type.text ? msg : 'Image'));
+        // sendPushNotification(chatuser, type == Type.text ? msg : 'Image'));
   }
   static Future<void> sendMessage(UserData chatuser, String msg, Type type) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
@@ -362,6 +362,22 @@ class Apis {
     });
     final imageUrl = await ref.getDownloadURL();
     await sendMessage(chatUser, imageUrl, Type.image);
+
+  }
+
+  static Future<void> groupIcon(File file) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    final ext = file.path
+        .split('.')
+        .last;
+    final ref = storage.ref().child
+      ('groupImages/${DateTime.now()
+        .millisecondsSinceEpoch}.$ext');
+    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
+        p0) {
+      print('data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    final imageUrl = await ref.getDownloadURL();
   }
 
 // for adding an user to my user when first message is send
@@ -480,3 +496,4 @@ class Apis {
 
 
 }
+

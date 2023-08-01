@@ -298,7 +298,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 type=="admin"?Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }else{
                 print("${_list.isEmpty} ${widget.user.id}emptyy");
-                type=="admin"? Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
+                type=="admin"? Apis.sendAdminMessage(widget.user, _textcontroller.text,Type.text):
+                Apis.sendMessage(widget.user, _textcontroller.text,Type.text);
               }
             }
             _textcontroller.text='';

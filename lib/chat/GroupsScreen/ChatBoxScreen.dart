@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:readmore/readmore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,12 +94,27 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
         backgroundColor: Colors.grey[300],
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.grey[400],
-              radius: 21.0,
-              backgroundImage: NetworkImage('${widget.groupImage}'),
-            ),
-            SizedBox(
+            ClipRRect(
+              borderRadius:
+              BorderRadius.circular(
+                  mq.height * .3),
+              child: CachedNetworkImage(
+                width: mq.height * .051,
+                height: mq.height * .051,
+                // imageUrl: groupModel!.groupImage??"",
+                errorWidget: (context, url,
+                    error) =>
+                    CircleAvatar(
+                      radius: 21.0,
+                      backgroundColor: Colors
+                          .white,
+                      child: Icon(
+                        CupertinoIcons.person_3,
+                        color: Colors.grey,),),
+                imageUrl: '${widget.groupImage}',
+
+              ),
+            ),            SizedBox(
               width: 3,
             ),
             Column(
@@ -109,17 +125,9 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                 Text("  ${widget.groupName}",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 10,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     )),
-                // SizedBox(
-                //   height: 4,
-                // ),
-                // Text("  ${widget.groupId}",
-                //     style: TextStyle(
-                //         color: Colors.green,
-                //         fontSize: 14,
-                //         fontWeight: FontWeight.w600)),
               ],
             ),
           ],
@@ -199,198 +207,190 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                     if (groupMessageTile.sender == logedInUser) {
                       return Align(
                         alignment: Alignment.centerRight,
-                        child: Flexible(
-                          child: Column(
-                            children: [
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: mq.width * .04,
-                                        ),
-                                        // blue tick icon for read messages
-                                        if (widget
-                                            .groupMessageTile.read.isNotEmpty)
-                                          Icon(
-                                            Icons.done_all_rounded,
-                                            color: Colors.blue,
-                                            size: 20,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width -45,
+                          ),
+                          child: Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            color: Color(0xffdcf8c6),
+                            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0,top: 2),
+                                  child: Text(
+                                    logedInUser.toUpperCase(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[500],
+                                        letterSpacing: -0.5),
+                                  ),
+                                ),
+                                    // SizedBox(height:3),
+                                    widget.groupMessageTile.type == Type.text
+                                        ?Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10,
+                                            right: 30,
+                                            top: 20,
+                                            bottom: 20,
                                           ),
-                                        SizedBox(
-                                          width: mq.width * .01,
-                                        ),
-                                        // msg send time
-                                      ],
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(
-                                          widget.groupMessageTile.type ==
-                                                  Type.image
-                                              ? mq.width * .03
-                                              : mq.width * .02),
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: mq.height * .02,
-                                          horizontal: mq.width * .03),
-                                      decoration: BoxDecoration(
-                                          color: Color.fromARGB(
-                                              255, 130, 223, 135),
-                                          border:
-                                              Border.all(color: Colors.green),
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(30),
-                                              topRight: Radius.circular(30),
-                                              bottomLeft: Radius.circular(30))),
-                                      child: Column(children: [
-                                        Text(
-                                          logedInUser.toUpperCase(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              letterSpacing: -0.5),
-                                        ),
-
-                                        // to send images
-                                        widget.groupMessageTile.type ==
-                                                Type.text ?
-                                            Row(
-                                              children: [
-                                                Text("${snapshot.data.docs[index]['message']}",softWrap: true,maxLines: 6, overflow: TextOverflow.ellipsis,),
-                                              ],
-                                            )
-                                        // ReadMoreText(
-                                        //   "${snapshot.data.docs[index]['message']}",
-                                        //   trimLines: 3,
-                                        //   textAlign: TextAlign.justify,
-                                        //   trimMode: TrimMode.Line,
-                                        //   trimCollapsedText: " Show More ",
-                                        //   trimExpandedText: " Show Less ",
-                                        //   lessStyle: TextStyle(
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.green[700],
-                                        //   ),
-                                        //   moreStyle: TextStyle(
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.green[700],
-                                        //   ),
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     height: 2,
-                                        //   ),
-                                        // )
-
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                child: CachedNetworkImage(
-                                                  placeholder: (context, url) =>
-                                                      Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
-                                                  ),
-                                                  imageUrl: widget
-                                                      .groupMessageTile.message,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.image),
-                                                ),
+                                          child:  ReadMoreText(
+                                            '${snapshot.data.docs[index]['message']}',
+                                            trimLines: 2,
+                                            preDataText: "AMANDA",
+                                            preDataTextStyle: TextStyle(fontWeight: FontWeight.w500),
+                                            style: TextStyle(color: Colors.black),
+                                            colorClickableText: Colors.blue,
+                                            trimMode: TrimMode.Line,
+                                            trimCollapsedText: '...Show more',
+                                            trimExpandedText: ' show less',
+                                          ),
+                                        )
+                                        : ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
                                               ),
-
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              right: mq.width * .029991,
-                                              top: 10,
-                                              left: .09),
-                                          child:
-                                              // formatted send time
-                                              //(message['timestamp'] == null) ? null : (message['timestamp'] as Timestamp).toDate(),
-                                              Text(
-                                            "${readTimestamp("${snapshot.data.docs[index]['time'] == null ? null : (snapshot.data.docs[index]['time'] as Timestamp).toDate()}")}",
-                                            style: TextStyle(
-                                                color: Colors.black54),
-                                          ),
-                                        ),
-                                      ]),
+                                            ),
+                                        imageUrl:
+                                        widget.groupMessageTile.message,
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.image),
+                                      ),
                                     ),
-                                  ])
-                            ],
+                                Positioned(
+                                  bottom: 4,
+                                  right: 4,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+
+                                            top: 10,
+                                            left: .08),
+                                        child: Text(
+                                          "${readTimestamp("${snapshot.data.docs[index]['time'] == null ? null : (snapshot.data.docs[index]['time'] as Timestamp).toDate()}")}",
+                                          style: TextStyle( fontSize:12,color: Colors.black54),
+                                        ),
+                                      )
+                                      // SizedBox(
+                                      //   width: 5,
+                                      // ),
+                                      // Icon(
+                                      //   Icons.done_all,
+                                      //   size: 20,
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     } else {
                       return Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(children: [
-                            Container(
-                              padding: EdgeInsets.all(
-                                  widget.groupMessageTile.type == Type.image
-                                      ? mq.width * .03
-                                      : mq.width * .02),
-                              margin: EdgeInsets.symmetric(
-                                  vertical: mq.height * .01,
-                                  horizontal: mq.width * .03),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey[400],
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                      bottomRight: Radius.circular(30))),
-                              child: Column(children: [
-                                Text(
-                                  "${snapshot.data.docs[index]['sender']}"
-                                      .toUpperCase(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      letterSpacing: -0.5),
-                                ),
-                                widget.groupMessageTile.type == Type.text
-                                    ? Text(
-                                        "${snapshot.data.docs[index]['message']}",
-                                        style: GoogleFonts.balooBhai2(
-                                            fontSize: 20),
-                                      )
-                                    : ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: CachedNetworkImage(
-                                          placeholder: (context, url) =>
-                                              Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                            ),
-                                          ),
-                                          imageUrl:
-                                              widget.groupMessageTile.message,
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.image),
-                                        ),
-                                      ),
+                        alignment: Alignment.topLeft,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width-45 ,
+                          ),
+                          child: Card(
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            color: Color(0xffdcf8c6),
+                            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            child: Stack(
+                              children: [
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      right: mq.width * .029991,
-                                      top: 10,
-                                      left: .07),
+                                  padding: const EdgeInsets.only(left: 5.0,top: 2),
                                   child: Text(
-                                    "${readTimestamp("${snapshot.data.docs[index]['time'] == null ? null : (snapshot.data.docs[index]['time'] as Timestamp).toDate()}")}",
-                                    style: TextStyle(color: Colors.black54),
+                                   " ${snapshot.data.docs[index]['sender']}",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[500],
+                                        letterSpacing: -0.5),
                                   ),
+                                ),
+                                SizedBox(height: 4,),
+                                widget.groupMessageTile.type == Type.text
+                                    ?Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 30,
+                                    top: 20,
+                                    bottom: 20,
+                                  ),
+                                  child:
+                           ReadMoreText("${snapshot.data.docs[index]['message']}",
+                            trimLines: 2,
+                            preDataText: "AMANDA",
+                            preDataTextStyle: TextStyle(fontWeight: FontWeight.w500),
+                            style: TextStyle(color: Colors.black),
+                            colorClickableText: Colors.blue,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: '...Show more',
+                            trimExpandedText: ' show less',
+                          ),
+
                                 )
-                              ]),
+                                    : ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        ),
+                                    imageUrl:
+                                    widget.groupMessageTile.message,
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.image),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 4,
+                                  right: 4,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+
+                                            top: 10,
+                                            left: .08),
+                                        child: Text(
+                                          "${readTimestamp("${snapshot.data.docs[index]['time'] == null ? null : (snapshot.data.docs[index]['time'] as Timestamp).toDate()}")}",
+                                          style: TextStyle(fontSize: 13,color: Colors.black54),
+                                        ),
+                                      )
+                                      // SizedBox(
+                                      //   width: 5,
+                                      // ),
+                                      // Icon(
+                                      //   Icons.done_all,
+                                      //   size: 20,
+                                      // ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ]));
+                          ),
+                        ),
+                      );
                     }
                   })
               : Container(
@@ -405,6 +405,8 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
   }
 
   _inputMessagesTextField() {
+    GroupMessageTile groupMessageTile =GroupMessageTile(message: "", time: DateTime.now(), type: Type.image,
+        sender:logedInUser , senderId: logedInUserId.toString(), read: "");
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -474,8 +476,8 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                             () => _isUploading = true,
                           );
 
-                          Apis.sendGroupImage(
-                              widget.groupModel, File(image.path));
+                          // Apis.sendGroupImage(
+                          //     widget.groupModel, File(image.path));
                           setState(
                             () => _isUploading = false,
                           );
@@ -498,8 +500,8 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                           setState(
                             () => _isUploading = true,
                           );
-                          await Apis.sendGroupImage(
-                              widget.groupModel, File(i.path));
+                          await sendGroupImage(
+                              groupMessageTile, File(i.path));
                           setState(
                             () => _isUploading = false,
                           );
@@ -540,6 +542,26 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
       ),
     );
   }
+  static FirebaseStorage storage = FirebaseStorage.instance;
+
+
+   Future<void> sendGroupImage(GroupMessageTile gruopModel, File file) async {
+
+
+    final ext = file.path
+        .split('.')
+        .last;
+    final ref = storage.ref().child
+      ('groupImages/${(widget.groupId)}/${DateTime
+        .now()
+        .millisecondsSinceEpoch}.$ext');
+    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
+        p0) {
+      print('data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    final imageUrl = await ref.getDownloadURL();
+   // await setMessage( imageUrl, Type.image);
+  }
 
   setMessage() {
     if (_messageController.text.isNotEmpty) {
@@ -548,8 +570,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
         'sender': logedInUser,
         'senderId': logedInUserId,
         'time': widget.groupMessageTile.time,
-
-        // 'type': type,
+        //'type': type,
       });
       setMessages("${widget.groupId}", chatMessageMap);
       _messageController.clear();
@@ -572,7 +593,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
 
   String readTimestamp(String timestamp) {
     var now = new DateTime.now();
-    var format = new DateFormat('K:m' ' ' 'a');
+    var format = new DateFormat('KK:mm' ' ' 'a');
     var date = DateTime.parse(timestamp);
     var diff = date.difference(now);
     var time = '';
@@ -631,3 +652,81 @@ class GroupMessageTile {
 }
 
 enum Type { text, image }
+
+// class OwnMessageCard extends StatelessWidget {
+//   final String message;
+//   final String time;
+//
+//   const OwnMessageCard({required Key key, required this.message, required this.time}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Align(
+//       alignment: Alignment.centerRight,
+//       child: ConstrainedBox(
+//         constraints: BoxConstraints(
+//           maxWidth: MediaQuery.of(context).size.width - 45,
+//         ),
+//         child: Card(
+//           elevation: 1,
+//           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+//           color: Color(0xffdcf8c6),
+//           margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+//           child: Stack(
+//             children: [
+//               Text(
+//                 logedInUser.toUpperCase(),
+//                 textAlign: TextAlign.center,
+//                 style: TextStyle(
+//                     fontSize: 14,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white,
+//                     letterSpacing: -0.5),
+//               ),
+//
+//               Padding(
+//                 padding: const EdgeInsets.only(
+//                   left: 10,
+//                   right: 30,
+//                   top: 5,
+//                   bottom: 20,
+//                 ),
+//                 child: Text(
+//                   message,
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                   ),
+//                 ),
+//               ),
+//               Positioned(
+//                 bottom: 4,
+//                 right: 10,
+//                 child: Row(
+//                   children: [
+//                     Padding(
+//                       padding: EdgeInsets.only(
+//                           right: mq.width * .029991,
+//                           top: 10,
+//                           left: .07),
+//                       child: Text(
+//                         "${readTimestamp("${snapshot.data.docs[index]['time'] == null ? null : (snapshot.data.docs[index]['time'] as Timestamp).toDate()}")}",
+//                         style: TextStyle(color: Colors.black54),
+//                       ),
+//                     )
+//                     // SizedBox(
+//                     //   width: 5,
+//                     // ),
+//                     // Icon(
+//                     //   Icons.done_all,
+//                     //   size: 20,
+//                     // ),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

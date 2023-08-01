@@ -179,7 +179,10 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                                                 fontSize: 20)),
                                         // last msg show
                                         subtitle: Text(
-                                            "${message != null ? message!.type == Type.image ? 'Photo' : message!.message :data["recentMessage"]}"),
+                                            "${message != null ? message!.type == Type.image ?
+                                            'Photo' : message!.message :data["recentMessage"]}",
+                                            maxLines: 2
+                                        ),
                                         // trailing: Text("10:10 pm",style: TextStyle(color: Colors.black54),),
                                         // last msg mess
                                        //  // age

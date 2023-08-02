@@ -251,8 +251,29 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                             ),
                                           ),
                                               // SizedBox(height:3),
-                                          widget.groupMessageTile.type == Type.image
-                                              ? Container(
+
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 20,
+                                              right: 30,
+                                              top: 20,
+                                              bottom: 20,
+                                            ),
+                                            child:widget.groupMessageTile.type== Type.text?
+                                            ReadMoreText(
+                                              '${snapshot.data.docs[index]['message']}',
+                                              trimLines: 2,
+                                              preDataText: "",
+                                              preDataTextStyle: TextStyle(fontWeight: FontWeight.w500),
+                                              style: TextStyle(color: Colors.black,fontSize: 20),
+                                              colorClickableText: Colors.blue,
+                                              trimMode: TrimMode.Line,
+                                              trimCollapsedText: '...Show more',
+                                              trimExpandedText: ' show less',
+                                            ):
+                                            Container(
+                                              width: 200,
+                                            height: 200,
                                             padding: EdgeInsets.all(widget.groupMessageTile.type==Type.image?mq.width* .03:mq.width * .05),margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
                                             decoration: BoxDecoration(color: Color(0xD2D4CFB2),
                                                 border: Border.all(color: Colors.grey[100]!),
@@ -268,31 +289,12 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                                         strokeWidth: 2,
                                                       ),
                                                     ),
-                                                imageUrl: widget.groupMessageTile.message,
+                                                imageUrl:"${snapshot.data.docs[index]['message']}",
                                                 errorWidget: (context, url, error) =>
                                                     Icon(Icons.image),
                                               ),
                                             ),
-                                          ):
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 20,
-                                              right: 30,
-                                              top: 20,
-                                              bottom: 20,
-                                            ),
-                                            child:  ReadMoreText(
-                                              '${snapshot.data.docs[index]['message']}',
-                                              trimLines: 2,
-                                              preDataText: "",
-                                              preDataTextStyle: TextStyle(fontWeight: FontWeight.w500),
-                                              style: TextStyle(color: Colors.black,fontSize: 20),
-                                              colorClickableText: Colors.blue,
-                                              trimMode: TrimMode.Line,
-                                              trimCollapsedText: '...Show more',
-                                              trimExpandedText: ' show less',
-                                            ),
-                                            ),
+                                          )),
                                           Positioned(
                                             bottom: 4,
                                             right: 2,
@@ -509,6 +511,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                           setState(
                             () => _isUploading = true,
                           );
+                          await Apis. sendGroupImage(widget.groupModel ,File(image.path));
 
                           // Apis.sendGroupImage(
                           //     widget.groupModel, File(image.path));
@@ -534,8 +537,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                           setState(
                             () => _isUploading = true,
                           );
-                          await sendGroupImage(
-                              groupMessageTile, File(i.path));
+                          await Apis. sendGroupImage(widget.groupModel ,File(i.path));
                           setState(
                             () => _isUploading = false,
                           );
@@ -582,23 +584,23 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
 
 
 
-   Future<void> sendGroupImage(GroupMessageTile gruopModel, File file) async {
-     final ext = file.path
-         .split('.')
-         .last;
-     //String fileName = Uuid().v1();
-
-
-     final ref = storage.ref().child
-      ('groupImages/${(widget.groupId)}/${DateTime
-        .now()
-        .millisecondsSinceEpoch}.$ext');
-    await ref.putFile(file, SettableMetadata(contentType:
-    'image/$ext')).then((
-        p0) {
-      print('data transferred: ${p0.bytesTransferred / 1000} kb');
-    });
-
+   // Future<void> sendGroupImage(File file) async {
+   //   final ext = file.path
+   //       .split('.')
+   //       .last;
+   //   //String fileName = Uuid().v1();
+   //
+   //
+   //   final ref = storage.ref().child
+   //    ('groupImages/${(widget.groupId)}/${DateTime
+   //      .now()
+   //      .millisecondsSinceEpoch}.$ext');
+   //  await ref.putFile(file, SettableMetadata(contentType:
+   //  'image/$ext')).then((
+   //      p0) {
+   //    print('data transferred: ${p0.bytesTransferred / 1000} kb');
+   //  });
+/*
        final imageUrl = await ref.getDownloadURL();
      groupCollection.doc("${widget.groupId}")
          .collection("messages").doc(ext).set({
@@ -610,8 +612,9 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
      });
             setMessage( imageUrl,Type.image );
            print("imagggggggggggggggggggggggg$imageUrl");
+     setMessage(imageUrl,Type.)*/
 
-  }
+ // }
   setMessage(String massage,Type type) {
     if (_messageController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = ({
@@ -619,7 +622,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
         'sender': logedInUser,
         'senderId': logedInUserId,
         'time': widget.groupMessageTile.time,
-       ' type': "text",
+      // ' type': "text",
       });
       setMessages("${widget.groupId}", chatMessageMap);
       _messageController.clear();
@@ -635,7 +638,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
       "recentMessageSender": chatMessageData["sender"],
       "recentMessageSender": chatMessageData["senderId"],
       "recentMessageTime": chatMessageData["time"],
-      "recentMessageType": chatMessageData["type"].toString(),
+     // "recentMessageType": chatMessageData["type"].toString(),
     });
     SetOptions(merge: true);
   }

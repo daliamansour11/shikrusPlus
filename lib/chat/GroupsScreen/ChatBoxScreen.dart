@@ -390,7 +390,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                                                 !='' ?Image.network("${snapshot.data.docs[index]['message']}")
                                                 :CircularProgressIndicator()
                                             }",
-                                           
+
                                             errorWidget: (context, url, error) =>
                                                 Icon(Icons.image),
                                           ),

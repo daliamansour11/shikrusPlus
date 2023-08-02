@@ -14,13 +14,13 @@ import '../chats/model/chat_msg.dart';
 
 class MessageCard extends StatefulWidget {
   final Messages messages;
+final  String userId;
 
-  const MessageCard({super.key, required this.messages});
+  const MessageCard({super.key, required this.messages, required this.userId});
 
   @override
   State<MessageCard> createState() => _MessageCardState();
 }
-
 class _MessageCardState extends State<MessageCard> {
   String type = "";
   int idt = 0;
@@ -33,7 +33,7 @@ class _MessageCardState extends State<MessageCard> {
       });
     });
   }
-
+//child: widget.userid == widget.messages.fromId? _greenMessage():_redMessage(),
   gettingUserData() async{
     await SharedPreferencesInfo.getUserIdFromSF().then((value) {
       setState(() {
@@ -50,52 +50,45 @@ class _MessageCardState extends State<MessageCard> {
     print("${idt}yyyyyyyyyyyyyyyy");
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    bool isMe = idt == widget.messages.fromId;
+    bool isMe = widget.userId == widget.messages.fromId ;
+    print("IFFFFFFFFFFFFFFFFFF${widget.messages.fromId}");
+    print("IFFFFFFFFFFFFFFFFF2222222222222dddddddddddd$idt");
     // if (idt == widget.messages.fromId) {
-      return InkWell(
-        onLongPress: () {
-          print("${widget.messages.fromId}idddt");
-          _showbottomsheet(isMe);
-        },
-        child: isMe? Align(
-          alignment: Alignment.topRight,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width -45,
-            ),
-            child: Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              color: Color(0xD2D5D2DC),
-              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Stack(
-                children: [
-                  SizedBox(height:3),
-                  widget.messages.type == Type.text
-                      ? Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          right: 30,
-                          top: 20,
-                          bottom: 20,
-                        ),
-                        child: Text(
-                    widget.messages.msg,
-                    style: GoogleFonts.balooBhai2(fontSize: 20),
-                  ),
-                      )
-                      : Container(
-                    padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .03:mq.width * .05),margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
-                    decoration: BoxDecoration(color: Color(0xD2D4CFB2),
-                        border: Border.all(color: Colors.grey[100]!),
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),bottomLeft: Radius.circular(30))),
-
-                    child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
+      return
+        widget.userId == widget.messages.fromId?
+          Align(
+            alignment: Alignment.topLeft,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width -45,
+              ),
+              child: Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight:Radius.circular(8)
+                    ,topLeft: Radius.circular(8),bottomLeft: Radius.circular(8))),
+                color: Color(0xD2D5D2DC),
+                //0xD2D5D2DC
+                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Stack(
+                  children: [
+                    widget.messages.type == Type.text
+                        ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 30,
+                        top: 20,
+                        bottom: 20,),
+                      child: Text(
+                        widget.messages.msg,
+                        style: GoogleFonts.balooBhai2(fontSize: 20),
+                      ),
+                    )
+                    //
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
                         placeholder: (context, url) =>
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -106,109 +99,115 @@ class _MessageCardState extends State<MessageCard> {
                         imageUrl: widget.messages.msg,
                         errorWidget: (context, url, error) =>
                             Icon(Icons.image),
-                    ),
-                  ),
                       ),
-                  Positioned(
-                    bottom: 4,
-                    right: 4,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-
-                              top: 10,
-                              left: .08),
-                          child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
-                            style: TextStyle( fontSize:13,color: Colors.black54),
-                          ),
-                        )
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        // Icon(
-                        //   Icons.done_all,
-                        //   size: 20,
-                        // ),
-                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ): Align(
-          alignment: Alignment.topRight,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width -45,
-            ),
-            child: Card(
-              elevation: 1,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              color: Color(0xffdcf8c6),
-              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Stack(
-                children: [
-
-                  widget.messages.type == Type.text
-                      ? Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          right: 30,
-                          top: 20,
-                          bottom: 20,),
-                        child: Text(
-                    widget.messages.msg,
-                    style: GoogleFonts.balooBhai2(fontSize: 20),
-                  ),
-                      )
-                  //
-                      : ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      placeholder: (context, url) =>
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Row(
+                        children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                      imageUrl: widget.messages.msg,
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.image),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 4,
-                    right: 4,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
+                            padding: EdgeInsets.only(
 
-                              top: 10,
-                              left: .08),
-                          child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
-                            style: TextStyle( fontSize:13,color: Colors.black54),
-                          ),
-                        )
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        // Icon(
-                        //   Icons.done_all,
-                        //   size: 20,
-                        // ),
-                      ],
+                                top: 10,
+                                left: .08),
+                            child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
+                              style: TextStyle( fontSize:13,color: Colors.black54),
+                            ),
+                          )
+                          // SizedBox(
+                          //   width: 5,
+                          // ),
+                          // Icon(
+                          //   Icons.done_all,
+                          //   size: 20,
+                          // ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
-      );
+          ):Align(
+            alignment: Alignment.topRight,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width -45,
+              ),
+              child: Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight:Radius.circular(10)
+                    ,topLeft: Radius.circular(10),bottomRight: Radius.circular(10))),
+                color: Color(0xffdcf8c6),
+                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Stack(
+                  children: [
+                    SizedBox(height:3),
+                    widget.messages.type == Type.text
+                        ? Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 30,
+                            top: 20,
+                            bottom: 20,
+                          ),
+                          child: Text(
+                      widget.messages.msg,
+                      style: GoogleFonts.balooBhai2(fontSize: 20),
+                    ),
+                        )
+                        : Container(
+                      padding: EdgeInsets.all(widget.messages.type==Type.image?mq.width* .03:mq.width * .05),margin: EdgeInsets.symmetric(vertical: mq.height * .02,horizontal: mq.width *.03),
+                      decoration: BoxDecoration(color: Color(0xD2D4CFB2),
+                          border: Border.all(color: Colors.grey[100]!),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),bottomLeft: Radius.circular(30))),
+
+                      child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                          placeholder: (context, url) =>
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                          imageUrl: widget.messages.msg,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.image),
+                      ),
+                    ),
+                        ),
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+
+                                top: 10,
+                                left: .08),
+                            child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
+                              style: TextStyle( fontSize:13,color: Colors.black54),
+                            ),
+                          )
+                          // SizedBox(
+                          //   width: 5,
+                          // ),
+                          // Icon(
+                          //   Icons.done_all,
+                          //   size: 20,
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 
   // sender msgs

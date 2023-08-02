@@ -93,7 +93,7 @@ class _ProjectsTasksScreenState extends ConsumerState<ProjectsTasksScreen> {
                             onTap: () {
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(builder: (context) => Detailsscreen(name: "${data.data[index].name}",
-                                    subject: '${data.data[index].subject}', startDate: '${data.data[index].startingDate}', endDate: '${data.data[index].expectedExpiryDate}', status: '${data.data[index].status}', notes: '${data.data[index].notes}',)));
+                                    subject: '${data.data[index].subject}', startDate: data.data[index].startingDate, endDate: data.data[index].expectedExpiryDate, status: '${data.data[index].status}', notes: '${data.data[index].notes}',)));
                             },
                             child: Card(
                               elevation: 0,

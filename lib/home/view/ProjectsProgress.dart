@@ -103,7 +103,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                              Navigator.of(context).pushReplacement(
                                  MaterialPageRoute(
                                      builder: (context) =>
-                                         Detailsscreen(name: data.data[0].projects[index].nameEn, subject: data.data[0].projects[index].subject, notes: data.data[0].projects[index].notes, startDate: data.data[0].projects[index].startingDate.toString(), endDate: data.data[0].projects[index].expectedExpiryDate.toString(), status: '',)));
+                                         Detailsscreen(name: data.data[0].projects[index].nameEn, subject: data.data[0].projects[index].subject, notes: data.data[0].projects[index].notes, startDate: data.data[0].projects[index].startingDate, endDate: data.data[0].projects[index].expectedExpiryDate, status: '',)));
                            },
                            child: Container(
                              margin: EdgeInsets.only(bottom: 14),
@@ -301,7 +301,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[0].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[0].tasks[index].notes, startDate: data.data[0].tasks[index].startingDate.toString(), endDate: data.data[0].tasks[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[0].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[0].tasks[index].notes, startDate: data.data[0].tasks[index].startingDate, endDate: data.data[0].tasks[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -501,7 +501,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[1].projects[index].nameEn, subject: data.data[1].projects[index].subject, notes: data.data[1].projects[index].notes, startDate: data.data[1].projects[index].startingDate.toString(), endDate: data.data[1].projects[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[1].projects[index].nameEn, subject: data.data[1].projects[index].subject, notes: data.data[1].projects[index].notes, startDate: data.data[1].projects[index].startingDate, endDate: data.data[1].projects[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -697,7 +697,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[1].tasks[index].name, subject: data.data[1].tasks[index].subject, notes: data.data[1].tasks[index].notes, startDate: data.data[1].tasks[index].startingDate.toString(), endDate: data.data[1].tasks[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[1].tasks[index].name, subject: data.data[1].tasks[index].subject, notes: data.data[1].tasks[index].notes, startDate: data.data[1].tasks[index].startingDate, endDate: data.data[1].tasks[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -893,7 +893,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: todolist[index].nameEn, subject: todolist[index].subject, notes: todolist[index].notes, startDate: todolist[index].startingDate.toString(), endDate: todolist[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: todolist[index].nameEn, subject: todolist[index].subject, notes: todolist[index].notes, startDate: todolist[index].startingDate ,endDate: todolist[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -1091,7 +1091,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[2].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[2].tasks[index].notes, startDate: data.data[2].tasks[index].startingDate.toString(), endDate: data.data[2].tasks[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[2].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[2].tasks[index].notes, startDate: data.data[2].tasks[index].startingDate, endDate: data.data[2].tasks[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -1291,7 +1291,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[3].projects[index].nameEn, subject: data.data[3].projects[index].subject, notes: data.data[3].projects[index].notes, startDate: data.data[3].projects[index].startingDate.toString(), endDate: data.data[3].projects[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[3].projects[index].nameEn, subject: data.data[3].projects[index].subject, notes: data.data[3].projects[index].notes, startDate: data.data[3].projects[index].startingDate, endDate: data.data[3].projects[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -1486,7 +1486,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[3].tasks[index].name, subject: data.data[3].tasks[index].subject, notes: data.data[3].tasks[index].notes, startDate: data.data[3].tasks[index].startingDate.toString(), endDate: data.data[3].tasks[index].expectedExpiryDate.toString(), status: '',)));
+                                            Detailsscreen(name: data.data[3].tasks[index].name, subject: data.data[3].tasks[index].subject, notes: data.data[3].tasks[index].notes, startDate: data.data[3].tasks[index].startingDate, endDate: data.data[3].tasks[index].expectedExpiryDate, status: '',)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),

@@ -14,5 +14,5 @@ const noDataImage = "assets/yask.PNG";
   final formattedStr =DateTime.now();
   // var dateFromTimeStamp =
   // DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-  return DateFormat('yyyy-MM-dd').format(formattedStr);
+  return DateFormat('yyyy-MM-dd').format(timeStamp);
  }

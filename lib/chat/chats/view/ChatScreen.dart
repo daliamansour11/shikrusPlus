@@ -156,6 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       itemBuilder: (context, index) {
                                         return MessageCard(
                                           messages: _list[index],
+                                          userId: widget.userId,
                                         );
                                         // return Text("msgs:${_list[index]}");
                                       });
@@ -210,6 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       itemBuilder: (context, index) {
                                         return MessageCard(
                                           messages: _list[index],
+                                          userId: widget.userId,
                                         );
                                         // return Text("msgs:${_list[index]}");
                                       });

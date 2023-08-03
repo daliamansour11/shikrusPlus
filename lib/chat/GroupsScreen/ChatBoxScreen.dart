@@ -85,9 +85,10 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
   // {
   // _messageController.dispose();
   // }
-
+ScrollController scrollController=ScrollController();
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
     child: SafeArea(
@@ -218,6 +219,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
                   },
                   child: Stack(
                     children:[ ListView.builder(
+                      controller: scrollController,
                         itemCount: snapshot.data.docs.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
@@ -567,6 +569,7 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
               ),
               child: InkWell(
                 onTap: () {
+                  scrollController.animateTo(scrollController.position.maxScrollExtent, duration: Duration(milliseconds:100), curve: Curves.easeInOut);
                   setMessage(_messageController.text,Type.text);
                 },
                 child: Icon(

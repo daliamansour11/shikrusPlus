@@ -107,7 +107,7 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                   child: Center(
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: FirebaseFirestore.instance
-                            .collection('groups')
+                            .collection('groups').orderBy('recentMessageTime',descending: true)
                         // .where('member',arrayContains: '${FirebaseAuth.instance.currentUser?.uid}')
                             .snapshots(),
                         builder: (_, snapshot) {

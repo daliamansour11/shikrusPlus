@@ -357,8 +357,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
               Container(
                   child:
                  tasks.when(
-                    data: (data) => Expanded(
-                      child: ListView.builder(
+                    data: (data) => ListView.builder(
                         shrinkWrap: true,
                           itemCount: data.data.where((element) =>element.projectId==widget.project_id.toString()).toList().length,
                           itemBuilder: (context, index) {
@@ -577,34 +576,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                               ),
                             );
                           }),
-                    ),
                     error: (err, _) => Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TextFieldTitleWidget(
-                                    title: "Oops!! \n"
-                                        "Connection Lost!",
-                                    fontWeight: FontWeight.bold,
-                                    size: 18.sp,
-                                  ),
-                                  SizedBox(width: 5.sp),
-                                  CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                      "assets/sad.jpg",
-                                    ),
-                                    radius: 18.sp,
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.grey,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                          child: Text(""),
                         ),
                     loading: () => Center(
                           child: CircularProgressIndicator(),

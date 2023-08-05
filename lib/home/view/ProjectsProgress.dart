@@ -7,6 +7,7 @@ import 'package:taskmanger/home/provider/HomeProvider.dart';
 import 'package:taskmanger/home/view/detailsscreen.dart';
 import 'package:taskmanger/home/view/homescreen.dart';
 
+import '../../clender/view/SubTasksScreen.dart';
 import '../../core/SharedPreferenceInfo.dart';
 import '../../profile/profile.dart';
 import '../../screens/bottomnavigation.dart';
@@ -89,7 +90,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
               )),
           body: TabBarView(
             children: [
-           type=="admin"? Container(
+           type=="admin"?
+           Container(
              child: Padding(
                  padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                  child: statiticadmin.when(
@@ -287,7 +289,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                          )),
                      loading: () =>
                          Center(child: CircularProgressIndicator()))),
-           ):  Container(
+           ):
+           Container(
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statitic.when(
@@ -301,7 +304,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[0].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[0].tasks[index].notes, startDate: data.data[0].tasks[index].startingDate, endDate: data.data[0].tasks[index].expectedExpiryDate, status: '',)));
+                                            SubTasksScreen(taskname: data.data[0].tasks[index].name, description: data.data[0].tasks[index].subject, note: data.data[0].tasks[index].notes, startdate: data.data[0].tasks[index].startingDate, enddate: data.data[0].tasks[index].expectedExpiryDate, project_id: int.parse(data.data[0].tasks[index].projectId??""), main_task_id: data.data[0].tasks[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -486,7 +489,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
               ),
-              type=="admin"?Container(
+              type=="admin"?
+              Container(
                 child: Padding(
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
@@ -682,7 +686,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                         ),
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
-              ):   Container(
+              ):
+              Container(
                 child: Padding(
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
@@ -697,7 +702,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[1].tasks[index].name, subject: data.data[1].tasks[index].subject, notes: data.data[1].tasks[index].notes, startDate: data.data[1].tasks[index].startingDate, endDate: data.data[1].tasks[index].expectedExpiryDate, status: '',)));
+                                            SubTasksScreen(taskname: data.data[1].tasks[index].name, description: data.data[1].tasks[index].subject, note: data.data[1].tasks[index].notes, startdate: data.data[1].tasks[index].startingDate, enddate: data.data[1].tasks[index].expectedExpiryDate, project_id: int.parse(data.data[1].tasks[index].projectId??""), main_task_id: data.data[1].tasks[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -879,7 +884,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
               ),
-              type=="admin"? Container(
+              type=="admin"?
+              Container(
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12,bottom: 10),
                     child: statiticadmin.when(
@@ -1077,7 +1083,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             )),
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
-              ): Container(
+              ):
+              Container(
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12,bottom: 10),
                     child: statitic.when(
@@ -1091,7 +1098,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[2].tasks[index].name, subject: data.data[0].tasks[index].subject, notes: data.data[2].tasks[index].notes, startDate: data.data[2].tasks[index].startingDate, endDate: data.data[2].tasks[index].expectedExpiryDate, status: '',)));
+                                            SubTasksScreen(taskname: data.data[2].tasks[index].name, description: data.data[2].tasks[index].subject, note: data.data[2].tasks[index].notes, startdate: data.data[2].tasks[index].startingDate, enddate: data.data[2].tasks[index].expectedExpiryDate, project_id: int.parse(data.data[2].tasks[index].projectId??""), main_task_id: data.data[2].tasks[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -1276,7 +1283,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
               ),
-              type=="admin"? Container(
+              type=="admin"?
+              Container(
                 child: Padding(
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
@@ -1471,7 +1479,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                         ),
                         loading: () =>
                             Center(child: CircularProgressIndicator()))),
-              ): Container(
+              ):
+              Container(
                 child: Padding(
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
@@ -1486,7 +1495,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[3].tasks[index].name, subject: data.data[3].tasks[index].subject, notes: data.data[3].tasks[index].notes, startDate: data.data[3].tasks[index].startingDate, endDate: data.data[3].tasks[index].expectedExpiryDate, status: '',)));
+                                            SubTasksScreen(taskname: data.data[3].tasks[index].name, description: data.data[3].tasks[index].subject, note: data.data[3].tasks[index].notes, startdate: data.data[3].tasks[index].startingDate, enddate: data.data[3].tasks[index].expectedExpiryDate, project_id: int.parse(data.data[3].tasks[index].projectId??""), main_task_id: data.data[3].tasks[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),

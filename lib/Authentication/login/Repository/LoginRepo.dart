@@ -15,7 +15,7 @@ class LoginRepo {
 
   ///Login////////////////////////////////
 
-  Future<LoginModel> logIn(Users_model user,) async {
+  Future<LoginModel> logIn(Users_model user) async {
     var response = await apiService.logingIn(user, 'application/json');
     print(response.msg);
     print("the responseisssssssssssssssssssssssssssssssssssssssssssssssssssssssssss :${response.status}");

@@ -2,6 +2,8 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../clender/view/ClenderScreen.dart';
+import '../../clender/view/SubTasksScreen.dart';
 import '../../profile/profile.dart';
 import '../provider/AddNewTaskProvider.dart';
 
@@ -651,18 +653,18 @@ class _AddNewSubTaskState extends ConsumerState<AddNewSubTask> {
                             _formKey.currentState!.reset();
                           }
                           // final userTask = ref.read(MainTaskProvider).EmployeeMainTask();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("${response?.status== true ? "Done":"failed"}"),
-                              duration: const Duration(seconds: 4),
-                              backgroundColor: (response?.status == true)
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text("${response?.status== true ? "Done":"failed"}"),
+                          //     duration: const Duration(seconds: 4),
+                          //     backgroundColor: (response?.status == true)
+                          //         ? Colors.green
+                          //         : Colors.red,
+                          //   ),
+                          // );
                           //012809796921
-                          // Navigator.push(context,
-                          // MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+                          Navigator.push(context,
+                          MaterialPageRoute(builder: (context)=>Calendarpage()));
                         }
                       },
 

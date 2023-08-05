@@ -213,6 +213,10 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                               onTap:(){
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context)=>SubTasksScreen(
+                                      taskname:data.data[index].name ,
+                                      note:data.data[index].notes ,
+                                      description:data.data[index].subject ,
+                                      startdate:data.data[index].startingDate ,enddate: data.data[index].expectedExpiryDate,
                                       project_id:int.parse('${data.data[index].project.id}'), main_task_id: data.data[index].id,)));
                                 print("idddddd${data.data[index].id}");
                                 print("idddddd${data.data[index].project.id}");

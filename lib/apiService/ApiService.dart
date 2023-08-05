@@ -3,12 +3,9 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import 'package:taskmanger/Authentication/login/model/LoginModel.dart';
 import 'package:taskmanger/Authentication/login/model/Users.dart';
-
 import 'package:taskmanger/clender/model/TasksModel.dart';
-
 part 'ApiService.g.dart';
-
-@RestApi(baseUrl: "https://shapi.webautobazaar.com/api/")
+@RestApi(baseUrl: "https://management-system.webautobazaar.com/api/")
 
 abstract class ApiService {
 

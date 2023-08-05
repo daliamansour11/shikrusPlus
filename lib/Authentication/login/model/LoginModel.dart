@@ -57,9 +57,9 @@ class PersonalInformation {
   String name;
   String email;
   String type;
-  String status;
-  dynamic phone;
-  String image;
+  String? status;
+  dynamic ?phone;
+  String ? image;
 
 
   PersonalInformation({
@@ -67,9 +67,9 @@ class PersonalInformation {
     required this.name,
     required this.email,
     required this.type,
-    required this.status,
+   this.status,
     this.phone,
-    required this.image,
+     this.image,
 
   });
 

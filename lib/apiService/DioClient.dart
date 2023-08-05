@@ -46,7 +46,7 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       var response = await _dio.post(
-          _baseUrl + "app-login",
+           "https://management-system.webautobazaar.com/api/app-login",
           data: loginData,
           options: Options(
             headers: {
@@ -81,7 +81,7 @@ class DioClient {
           '${SharedPreferencesInfo.userTokenKey}');
       print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
       Response userData = await _dio.get(
-           'https://shapi.webautobazaar.com/api/employee/tasks/${project_id}',
+           'https://management-system.webautobazaar.com/api/employee/tasks/${project_id}',
           options: Options(
         headers: {
           "Content-Type": CONTENT_TYPE,
@@ -279,7 +279,7 @@ class DioClient {
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/secretary/unread-count-notification',
+        'https://management-system.webautobazaar.com/api/secretary/unread-count-notification',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
@@ -309,7 +309,7 @@ class DioClient {
     print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
 
     var response = await Dio().get(
-        'https://shapi.webautobazaar.com/api/employee/notifications',
+        'https://management-system.webautobazaar.com/api/employee/notifications',
         //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',

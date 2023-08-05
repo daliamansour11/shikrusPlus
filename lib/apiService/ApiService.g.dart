@@ -13,7 +13,7 @@ class _ApiService implements ApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://shapi.webautobazaar.com/api/';
+    baseUrl ??= 'https://management-system.webautobazaar.com/api/';
   }
 
   final Dio _dio;
@@ -51,7 +51,7 @@ class _ApiService implements ApiService {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': content_type};
+    final _headers = <String, dynamic>{'Content-Type': content_type};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(newUser.toJson());

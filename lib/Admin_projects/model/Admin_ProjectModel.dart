@@ -1,21 +1,37 @@
+// To parse this JSON data, do
+//
+//     final adminProjectModel = adminProjectModelFromJson(jsonString);
+
 import 'dart:convert';
 
-class AdminProjectModel {
+AdminProjectModel adminProjectModelFromJson(String str) => AdminProjectModel.fromJson(json.decode(str));
 
+String adminProjectModelToJson(AdminProjectModel data) => json.encode(data.toJson());
+
+class AdminProjectModel {
+  bool status;
+  String errNum;
+  String msg;
   List<Projects> data;
 
   AdminProjectModel({
-
+    required this.status,
+    required this.errNum,
+    required this.msg,
     required this.data,
   });
 
   factory AdminProjectModel.fromJson(Map<String, dynamic> json) => AdminProjectModel(
-
+    status: json["status"],
+    errNum: json["errNum"],
+    msg: json["msg"],
     data: List<Projects>.from(json["data"].map((x) => Projects.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-
+    "status": status,
+    "errNum": errNum,
+    "msg": msg,
     "data": List<dynamic>.from(data.map((x) => x.toJson())),
   };
 }
@@ -25,7 +41,7 @@ class Projects {
   String nameAr;
   String nameEn;
   String subject;
-  String? notes;
+  String notes;
   String status;
   DateTime startingDate;
   DateTime expectedExpiryDate;
@@ -42,7 +58,7 @@ class Projects {
     required this.nameAr,
     required this.nameEn,
     required this.subject,
-    this.notes,
+    required this.notes,
     required this.status,
     required this.startingDate,
     required this.expectedExpiryDate,
@@ -96,15 +112,15 @@ class EmployeeProject {
   int id;
   String name;
   String email;
-  String? phone;
+  String phone;
   String image;
   dynamic emailVerifiedAt;
   String password;
-  Type type;
-  Status status;
+  String type;
+  String status;
   String adminId;
   String specializationId;
-  String? fcmToken;
+  String fcmToken;
   dynamic rememberToken;
   DateTime createdAt;
   DateTime updatedAt;
@@ -114,7 +130,7 @@ class EmployeeProject {
     required this.id,
     required this.name,
     required this.email,
-    this.phone,
+    required this.phone,
     required this.image,
     this.emailVerifiedAt,
     required this.password,
@@ -122,7 +138,7 @@ class EmployeeProject {
     required this.status,
     required this.adminId,
     required this.specializationId,
-    this.fcmToken,
+    required this.fcmToken,
     this.rememberToken,
     required this.createdAt,
     required this.updatedAt,
@@ -137,8 +153,8 @@ class EmployeeProject {
     image: json["image"],
     emailVerifiedAt: json["email_verified_at"],
     password: json["password"],
-    type: typeValues.map[json["type"]]!,
-    status: statusValues.map[json["status"]]!,
+    type: json["type"],
+    status: json["status"],
     adminId: json["admin_id"],
     specializationId: json["specialization_id"],
     fcmToken: json["fcm_token"],
@@ -156,8 +172,8 @@ class EmployeeProject {
     "image": image,
     "email_verified_at": emailVerifiedAt,
     "password": password,
-    "type": typeValues.reverse[type],
-    "status": statusValues.reverse[status],
+    "type": type,
+    "status": status,
     "admin_id": adminId,
     "specialization_id": specializationId,
     "fcm_token": fcmToken,
@@ -186,29 +202,4 @@ class Pivot {
     "project_id": projectId,
     "user_id": userId,
   };
-}
-
-enum Status { UNBLOCKED, BLOCKED }
-
-final statusValues = EnumValues({
-  "blocked": Status.BLOCKED,
-  "unblocked": Status.UNBLOCKED
-});
-
-enum Type { EMPLOYEE }
-
-final typeValues = EnumValues({
-  "employee": Type.EMPLOYEE
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

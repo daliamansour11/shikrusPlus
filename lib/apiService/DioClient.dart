@@ -548,10 +548,9 @@ class DioClient {
 
     var response = await Dio().get(
         'https://management-system.webautobazaar.com/api/admin/project-employees/${project_id}',
-        //         options: Options(
         options: Options(headers: {
           'Content-Type': 'application/json',
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer$token",
           'Accept': 'application/json',
           'lang': 'ar'
         },
@@ -559,7 +558,7 @@ class DioClient {
     );
     AdminProjectModel projectmodel = AdminProjectModel.fromJson(response.data);
     if (response.statusCode == 200) {
-      debugPrint("${response}  sucessssssssssssssssssssssssssssss");
+      debugPrint("${response.statusCode}  sucessssssssssssssssssssssssssssssadmin");
     }
     else {
       debugPrint("faildddddddddddddddddddddddddddddddddd");

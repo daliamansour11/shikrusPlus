@@ -80,12 +80,16 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   TextEditingController noteController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
   String project = ' ';
-
+  int idpro = 0;
 
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3));
+    WidgetsBinding.instance.addPersistentFrameCallback((_) async {
+      Future.delayed(Duration(seconds: 1));
+
+      ref.read(adminprojectProvider(idpro));
+    });
   }
 
   @override
@@ -102,7 +106,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       android: androidNotificationDetails,
     );
     final projects = ref.read(proProvider);
-    int idpro = 0;
+
    final employees =ref.watch(adminprojectProvider(idpro));
     Size size = MediaQuery.of(context).size;
     List<String> _selectedItems = [];
@@ -408,9 +412,83 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: size.width * 0.02,
+                        height: size.width * 0.001,
                       ),
+                      RefreshIndicator(
+                        backgroundColor: context.appTheme.bottomAppBarColor,
+                        onRefresh: () async {
+                          ref.refresh(adminprojectProvider(idpro));
+                          return Future.delayed(Duration(milliseconds: 300),
 
+                                  () => ref.read(adminprojectProvider(idpro)));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ref.watch(adminprojectProvider(idpro)).when(
+                                  data:(dataa)=> ElevatedButton(
+                                    style: ButtonStyle(backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color?>(
+                                            (Set<MaterialState> states) {
+                                              return Color(0xFF005373); //<-- SEE HERE
+                                        },
+                                   // Color(0xFF005373)
+                                    ),),
+                                    onPressed:() {
+                                      setState(()async {
+
+                                        final List<String>? results = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return ListView.builder(
+                                              itemCount: 1,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                List<Projects>projects=dataa?.data.where((element) => element.id==idpro).toList()??[];
+                                                String nameemployee= projects[0].employeeProjects[index].name;
+                                                print("${nameemployee}employeee");
+                                                List<String>names=[];
+                                                names.add(nameemployee);
+                                                print("${idpro}nammm");
+
+                                                return MultiSelect(items:names);
+                                              },);
+                                          },
+                                        );
+
+                                        // Update UI
+                                        if (results != null) {
+                                          setState(() {
+                                            _selectedItems = results;
+                                            print("${_selectedItems}itemm");
+                                          });
+                                        }
+                                      });
+                                    },
+                                    child: const Text('Select Employees'),
+
+                                  ),
+                                  error: (err,_)=>Text("${err.toString()}"),
+                                  loading: ()=>Center(child: CircularProgressIndicator())
+                              ),
+                              const Divider(
+                                height: 1,
+                              ),
+                              Wrap(
+                                children: _selectedItems
+                                    .map((e) => Chip(
+                                  label: Text(e,style: TextStyle(color: Colors.black),),
+                                ))
+                                    .toList(),
+                              )
+                            ],
+                          ),),
+                      ),
+                      SizedBox(
+                        height: size.width * 0.001,
+                      ),
 
                       Container(
                         alignment: Alignment.topLeft,
@@ -816,76 +894,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                         ),
                       ),
 
-                      // RefreshIndicator(
-                      //   backgroundColor: context.appTheme.bottomAppBarColor,
-                      //   onRefresh: () async {
-                      //     ref.refresh(adminprojectProvider(idpro));
-                      //     return Future.delayed(Duration(milliseconds: 300),
-                      //             () => ref.read(adminprojectProvider(idpro).future));
-                      //   },
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(20),
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       mainAxisAlignment: MainAxisAlignment.start,
-                      //       children: [
-                      //     employees.when(
-                      //           data:(dataa)=> ElevatedButton(
-                      //             onPressed:() {
-                      //               setState(()async {
-                      //                 final List<String> items = [
-                      //                   'Flutter',
-                      //                   'Node.js',
-                      //                   'React Native',
-                      //                   'Java',
-                      //                   'Docker',
-                      //                   'MySQL'
-                      //                 ];
-                      //
-                      //                 final List<String>? results = await showDialog(
-                      //                   context: context,
-                      //                   builder: (BuildContext context) {
-                      //                     return ListView.builder(
-                      //                       itemCount: 1,
-                      //                       itemBuilder: (BuildContext context, int index) {
-                      //                         List<Projects>projects=dataa?.data.where((element) => element.id==idpro).toList()??[];
-                      //                               String nameemployee= projects[index].employeeProjects[index].name;
-                      //                               List<String>names=[];
-                      //                               names.add(nameemployee);
-                      //                               print("${names}nammm");
-                      //
-                      //                       return MultiSelect(items:items);
-                      //                     },);
-                      //                   },
-                      //                 );
-                      //
-                      //                 // Update UI
-                      //                 if (results != null) {
-                      //                   setState(() {
-                      //                     _selectedItems = results;
-                      //                     print("${_selectedItems}itemm");
-                      //                   });
-                      //                 }
-                      //               });
-                      //             },
-                      //             child: const Text('Select Employees'),
-                      //           ),
-                      //       error: (err,_)=>Text("${err.toString()}"),
-                      //       loading: ()=>Center(child: CircularProgressIndicator())
-                      //         ),
-                      //         const Divider(
-                      //           height: 10,
-                      //         ),
-                      //         Wrap(
-                      //           children: _selectedItems
-                      //               .map((e) => Chip(
-                      //             label: Text(e,style: TextStyle(color: Colors.black),),
-                      //           ))
-                      //               .toList(),
-                      //         )
-                      //       ],
-                      //     ),),
-                      // ),
+
                     ],
                   ),
                 ),

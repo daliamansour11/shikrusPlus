@@ -11,7 +11,7 @@ class Admin_Projects_Repo {
 
   Future<AdminProjectModel> getadminproject(int project_id) async {
     var response0 =  await dioClient.getProjectEmployees(project_id);
-    debugPrint("${response0}respok");
+    debugPrint("${response0.msg}respokadmin");
     return response0;
   }
 }

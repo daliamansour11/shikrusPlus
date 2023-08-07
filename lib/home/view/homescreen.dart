@@ -174,7 +174,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final double itemWidth = size.width / 2;
 
     final projects = ref.watch(proProvider);
-    final adminprjects = ref.watch(AdminprojectsProvider);
+   // final adminprjects = ref.watch(AdminprojectsProvider);
     final statitic = ref.watch(statisticProvider);
     final statiticadmin = ref.watch(statisticadminProvider);
 

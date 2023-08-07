@@ -1,18 +1,18 @@
 
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:date_time_line/date_time_line.dart';
 import 'package:taskmanger/clender/Provider/AllMainTaskProvider.dart';
 import 'package:taskmanger/core/utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/Color.dart';
 import '../../popMenuItem/PopMenuItems.dart';
 import '../../popMenuItem/TaskMenuItems.dart';
 import '../Provider/UpdatestatusProvider.dart';
 import 'SubTasksScreen.dart';
-
 class Calendarpage extends ConsumerStatefulWidget {
   @override
   ConsumerState<Calendarpage> createState() => _CalendarpageState();
@@ -54,7 +54,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
           title: Text(
             "Calendar",
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 25.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -67,7 +67,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
           child: Column(children: [
             Expanded(
               child: Container(
-                height: 100,
+                height: 100.h,
                 decoration: BoxDecoration(),
                 child: DateTimeLine(
                   width: MediaQuery.of(context).size.width,
@@ -84,17 +84,17 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   },
                 ),),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10.h,),
             Padding(
-              padding: const EdgeInsets.only(left: 5.0,right: 180),
-              child: Text("Daily tasks",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
+              padding: const EdgeInsets.only(left: 5,right: 180),
+              child: Text("Daily tasks",style: TextStyle(fontSize: 25.sp,fontWeight: FontWeight.bold),),
             ),
             SizedBox(
-              height: 10,
+              height: 10.h,
             ),
 
             Container(
-                height: 380,
+                height:380.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -154,50 +154,50 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   var status =empTask.status;
                   return  Row(
                     children: <Widget>[
-                      SizedBox(width: 10,),
+                      SizedBox(width: 10.w,),
                       Expanded(
                         flex: 1,
                         child: Column(
                           children: [
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10.h,),
                             Text("${empTask.timeFrom}", style:
-                            TextStyle(fontSize: 10,
+                            TextStyle(fontSize: 10.sp,
                               fontWeight: FontWeight.w400,),),
-                            SizedBox(height: 30,),
+                            SizedBox(height: 30.h,),
                             Text("${empTask.timeTo}",
-                              style: TextStyle(fontSize: 10,
+                              style: TextStyle(fontSize: 10.sp,
                                 fontWeight: FontWeight.w400,),),
                           ],
                         ),
                       ),
-                      SizedBox(width: 5,),
+                      SizedBox(width: 5.w,),
                       Column(
                         children: [
                           Container(
-                            width: 4,
-                            height: 50,
+                            width: 4.w,
+                            height: 50.h,
                             color: Colors.purple,
                             //  index ==0 ?Colors.purple :Colors.black,
                           ),
-                          SizedBox(height: 4,),
+                          SizedBox(height: 4.h,),
                           Container(
                             margin: EdgeInsets.only(
-                              left: 5, right: 5,),
+                              left: 5.w, right: 5.w,),
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: Colors.purple,
-                                  width: 4),
+                                  width: 4.w),
                               color: index == 0 ? Colors
                                   .purple : Colors.white,
                               borderRadius: BorderRadius
                                   .circular(50),
                             ),
                           ),
-                          SizedBox(height: 4,),
+                          SizedBox(height: 4.h,),
                           Container(
-                              width: 4,
-                              height: 50,
+                              width: 4.w,
+                              height: 50.h,
                               //  color:index == emptask.length-1 ?Colors.purple :Colors.black,
                               color: Colors.purple
                             // index ==1?Colors.purple :Colors.black,
@@ -224,20 +224,20 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                               child: Container(
                                 // width: 90,
                                   margin: EdgeInsets.only(
-                                      left: 8, top: 5),
+                                      left: 8.w, top: 5.h),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      color  : onStatusChang(status!)
+                                      color  : onStatusChang(status)
                                   ),
-                                  height: 100,
-                                  width: 100,
+                                  height: 100.h,
+                                  width: 100.w,
                                   child:ListTile(
                                     title: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text("${empTask.name}",style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20),),
+                                              fontSize: 20.sp),),
                                           PopupMenuButton<PopMenuItems>(
                                               shape: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(10)
@@ -283,7 +283,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                           child: Text(
                                             "${empTask.status}",
                                             style:
-                                            TextStyle(fontSize: 12,
+                                            TextStyle(fontSize: 12.sp,
                                                 fontWeight: FontWeight
                                                     .w500,
                                                 color: Colors
@@ -304,7 +304,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                                     backgroundImage: AssetImage(
                                                       "assets/personn.jpg",
                                                     ),
-                                                    radius: 10,
+                                                    radius: 10.sp,
                                                     backgroundColor: Colors
                                                         .white60),
                                               ),
@@ -316,7 +316,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                                     backgroundImage: AssetImage(
                                                       "assets/ppr.jpg",
                                                     ),
-                                                    radius: 10,
+                                                    radius: 10.sp,
                                                     backgroundColor: Colors
                                                         .white60),
                                               ),
@@ -328,7 +328,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                                     backgroundImage: AssetImage(
                                                       "assets/ppr.jpg",
                                                     ),
-                                                    radius: 10,
+                                                    radius: 10.sp,
                                                     backgroundColor: Colors
                                                         .white60),
                                               ),
@@ -341,7 +341,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                                                 child: Icon(Icons
                                                     .access_time_filled,
                                                   color: Colors.white,
-                                                  size: 12,
+                                                  size: 12.sp,
                                                 ),
                                               ),
                                               Padding(

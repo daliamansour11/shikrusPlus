@@ -1,26 +1,13 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:taskmanger/core/NoDataPlaceHolder.dart';
+
 import 'package:taskmanger/core/utils.dart';
-import 'package:taskmanger/reports/view/projects_reports_screen.dart';
 import 'package:taskmanger/reports/view/ReportsDetailsScreen.dart';
 
 import '../provider/ReportsProvider.dart';

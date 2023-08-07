@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taskmanger/core/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:taskmanger/screens/splashscreen.dart';
-import 'FirebaseApi.dart';
 import 'Notification/Notification_helper.dart';
 import 'core/Constant.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';

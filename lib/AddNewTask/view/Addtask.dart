@@ -11,6 +11,7 @@ import 'package:taskmanger/home/model/Projectmodel.dart';
 import 'package:taskmanger/home/view/homescreen.dart';
 import '../../Admin_projects/provider/Admin_Projectsprovider.dart';
 import '../../Notification/Notification_helper.dart';
+import '../../core/SharedPreferenceInfo.dart';
 import '../../home/provider/HomeProvider.dart';
 import '../../profile/profile.dart';
 import '../../screens/bottomnavigation.dart';
@@ -81,10 +82,19 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   TextEditingController subjectController = TextEditingController();
   String project = ' ';
   int idpro = 0;
-
+  String type="";
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
 
   @override
   void initState() {
+    gettingUserType();
     WidgetsBinding.instance.addPersistentFrameCallback((_) async {
       Future.delayed(Duration(seconds: 1));
 
@@ -95,8 +105,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
 
-    AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
+    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
       'dbfood', 'dbfood', importance: Importance.high,
       priority: Priority.high,
       playSound: true,
@@ -106,11 +115,9 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       android: androidNotificationDetails,
     );
     final projects = ref.read(proProvider);
-
    final employees =ref.watch(adminprojectProvider(idpro));
     Size size = MediaQuery.of(context).size;
     List<String> _selectedItems = [];
-
 
     return Scaffold(
         backgroundColor: Colors.grey[300],
@@ -419,7 +426,6 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                         onRefresh: () async {
                           ref.refresh(adminprojectProvider(idpro));
                           return Future.delayed(Duration(milliseconds: 300),
-
                                   () => ref.read(adminprojectProvider(idpro)));
                         },
                         child: Padding(
@@ -433,13 +439,12 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                     style: ButtonStyle(backgroundColor:
                                     MaterialStateProperty.resolveWith<Color?>(
                                             (Set<MaterialState> states) {
-                                              return Color(0xFF005373); //<-- SEE HERE
+                                              return Color(0xFF005373);
                                         },
-                                   // Color(0xFF005373)
-                                    ),),
+                                    ),
+                                    ),
                                     onPressed:() {
                                       setState(()async {
-
                                         final List<String>? results = await showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -452,13 +457,11 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                                 List<String>names=[];
                                                 names.add(nameemployee);
                                                 print("${idpro}nammm");
-
                                                 return MultiSelect(items:names);
                                               },);
                                           },
                                         );
 
-                                        // Update UI
                                         if (results != null) {
                                           setState(() {
                                             _selectedItems = results;
@@ -489,7 +492,6 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                       SizedBox(
                         height: size.width * 0.001,
                       ),
-
                       Container(
                         alignment: Alignment.topLeft,
                         margin: EdgeInsets.only(left: 12, bottom: 2),
@@ -799,7 +801,6 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                           ],
                         ),
                       ),
-
                       SizedBox(height: 30,),
                       Container(
                         margin: EdgeInsets.only(
@@ -841,48 +842,80 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                       "${mainNameController.text}",
                                       notificationDetails,
                                       payload: "");
+                                       if(type=="admin"){
+                                         var response = await ref
+                                             .read(NewMainTaskAdminProvider)
+                                             .AddNewMainAdminTask(
+                                             mainNameController.text,
+                                             subjectController.text,
+                                             noteController.text,
+                                             startDateController.text,
+                                             endDateController.text,
+                                             startTimeController.text,
+                                             endTimeController.text,
+                                             "main",
+                                             idpro,22);
+                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                                         print("${response.status}ressssss");
+                                         if (response?.status == true) {
+                                           mainNameController.clear();
+                                           startDateController.clear();
+                                           endDateController.clear();
+                                           startTimeController.clear();
+                                           endTimeController.clear();
+                                           _formKey.currentState!.reset();
+                                         }
+                                         print("${response?.status} -${idpro}statusssss");
+                                         Navigator.push(
+                                             context,
+                                             MaterialPageRoute(
+                                                 builder: (context) => Bottomnavigation()));
+                                       }
+                                       else{
 
-                              var response = await ref
-                                  .read(NewMainTaskProvider)
-                                  .AddNewMainTask(
-                                      mainNameController.text,
-                                      subjectController.text,
-                                      noteController.text,
-                                      startDateController.text,
-                                      endDateController.text,
-                                      startTimeController.text,
-                                      endTimeController.text,
-                                      "main",
-                                      idpro);
-                              Navigator.pushReplacement(
+                                         var response = await ref
+                                             .read(NewMainTaskProvider)
+                                             .AddNewMainTask(
+                                             mainNameController.text,
+                                             subjectController.text,
+                                             noteController.text,
+                                             startDateController.text,
+                                             endDateController.text,
+                                             startTimeController.text,
+                                             endTimeController.text,
+                                             "main",
+                                             idpro);
+                                         Navigator.pushReplacement(
 
-                                  context, MaterialPageRoute(builder: (
-                                  _) =>
-                                  HomeScreen()));
-                              print("${response}ressssss");
-                              if (response?.status == true) {
-                                mainNameController.clear();
-                                startDateController.clear();
-                                endDateController.clear();
-                                startTimeController.clear();
-                                endTimeController.clear();
-                                _formKey.currentState!.reset();
-                              }
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: Text(
-                              //         "${response?.status == true}"),
-                              //     duration: const Duration(seconds: 4),
-                              //     backgroundColor: (response?.status == true)
-                              //         ? Colors.green
-                              //         : Colors.red,
-                              //   ),
-                              // );
-                              print("${response?.status} -${idpro}statusssss");
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Bottomnavigation()));
+                                             context, MaterialPageRoute(builder: (
+                                             _) =>
+                                             HomeScreen()));
+                                         print("${response}ressssss");
+                                         if (response?.status == true) {
+                                           mainNameController.clear();
+                                           startDateController.clear();
+                                           endDateController.clear();
+                                           startTimeController.clear();
+                                           endTimeController.clear();
+                                           _formKey.currentState!.reset();
+                                         }
+                                         // ScaffoldMessenger.of(context).showSnackBar(
+                                         //   SnackBar(
+                                         //     content: Text(
+                                         //         "${response?.status == true}"),
+                                         //     duration: const Duration(seconds: 4),
+                                         //     backgroundColor: (response?.status == true)
+                                         //         ? Colors.green
+                                         //         : Colors.red,
+                                         //   ),
+                                         // );
+                                         print("${response?.status} -${idpro}statusssss");
+                                         Navigator.push(
+                                             context,
+                                             MaterialPageRoute(
+                                                 builder: (context) => Bottomnavigation()));
+                                       }
+
                             }
                           },
                           child: TextFieldTitleWidget(
@@ -893,12 +926,9 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                           ),
                         ),
                       ),
-
-
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
@@ -974,17 +1004,15 @@ class _MultiSelectState extends State<MultiSelect> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select Topics'),
+      title: const Text('Select Employee'),
       content: SingleChildScrollView(
-        child: ListBody(
-          children: widget.items
-              .map((item) => CheckboxListTile(
-            value: _selectedItems.contains(item),
+        child: ListBody(children: widget.items.map((item) =>
+              CheckboxListTile(
+                value: _selectedItems.contains(item),
             title: Text(item),
             controlAffinity: ListTileControlAffinity.leading,
             onChanged: (isChecked) => _itemChange(item, isChecked!),
-          ))
-              .toList(),
+          )).toList(),
         ),
       ),
       actions: [

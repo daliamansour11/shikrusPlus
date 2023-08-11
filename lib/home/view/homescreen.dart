@@ -144,9 +144,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .doc("users")
         .set({'token': token});
   }
-
+int idpro=0;
   @override
   void initState() {
+    WidgetsBinding.instance.addPersistentFrameCallback((_) async {
+      Future.delayed(Duration(seconds: 1));
+
+      ref.read(adminprojectProvider(idpro));
+    });
     getToken();
     gettingUserType();
 
@@ -397,7 +402,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   //   ),
                   // ),
                   loading: () => Center(child: CircularProgressIndicator())),
-            ): Container(
+            ):
+            Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Color(0xFFDDE3E5)),

@@ -84,17 +84,18 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   },
                 ),),
             ),
-            SizedBox(height: 10.h,),
+            SizedBox(height: 20.h,),
             Padding(
               padding: const EdgeInsets.only(left: 5,right: 180),
               child: Text("Daily tasks",style: TextStyle(fontSize: 25.sp,fontWeight: FontWeight.bold),),
             ),
+
             SizedBox(
-              height: 10.h,
+              height: 8.h,
             ),
 
             Container(
-                height:380.h,
+                height:MediaQuery.of(context).size.height/2,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(

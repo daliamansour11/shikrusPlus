@@ -438,7 +438,51 @@ class DioClient {
   }
 
 
+  ///////post mainTask///////////////////////////////////
+  Future  AddNewMainAdminTask(String name, String subject, String note,
+      String start_date, String end_date, String time_from, String time_to,
+      String type,int project_id,int employee_id,) async {
+    final data = FormData.fromMap({
+      "name": name,
+      "subject": subject,
+      'notes': note,
+      "starting_date": start_date,
+      'expected_expiry_date': end_date,
+      'time_from': time_from,
+      'time_to': time_to,
+      'type': type,
+      'employee_id':employee_id,
+      "project_id":project_id
 
+    });
+    try {
+      SharedPreferences shared = await SharedPreferences.getInstance();
+      final String? token = shared.getString(
+          '${SharedPreferencesInfo.userTokenKey}');
+      var response = await _dio.post(
+          _baseUrl + 'admin/tasks',
+          data: data,
+          options: Options(
+            headers: {
+              "Content-Type": ACCEPT,
+              "lang": 'ar',
+              'Authorization': 'Bearer $token'},));
+      print('task Info: ${response.statusCode}');
+      print('task Info: ${response.data.toString()}');
+    } on DioError catch (e) {
+      if (e.response != null) {
+        print('Dio error!');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('HEADERS: ${e.response?.headers}');
+
+      } else {
+        // Error due to setting up or sending the request
+        print('Error sending request!');
+        print(e.message);
+      }
+    }
+  }
 
 
 

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -73,6 +74,7 @@ class _MessageCardState extends State<MessageCard> {
                 margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Stack(
                   children: [
+                    SizedBox(height:3.h),
                     widget.messages.type == Type.text
                         ? Padding(
                       padding: const EdgeInsets.only(
@@ -82,7 +84,7 @@ class _MessageCardState extends State<MessageCard> {
                         bottom: 20,),
                       child: Text(
                         widget.messages.msg,
-                        style: GoogleFonts.balooBhai2(fontSize: 20),
+                        style: GoogleFonts.balooBhai2(fontSize: 18.sp),
                       ),
                     )
                     //
@@ -101,19 +103,14 @@ class _MessageCardState extends State<MessageCard> {
                             Icon(Icons.image),
                       ),
                     ),
+                    SizedBox(height: 6.h,),
                     Positioned(
                       bottom: 4,
                       right: 4,
                       child: Row(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-
-                                top: 10,
-                                left: .08),
-                            child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
-                              style: TextStyle( fontSize:13,color: Colors.black54),
-                            ),
+                          Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
+                            style: TextStyle( fontSize:8.sp,color: Colors.black54),
                           )
                           // SizedBox(
                           //   width: 5,
@@ -143,7 +140,7 @@ class _MessageCardState extends State<MessageCard> {
                 margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Stack(
                   children: [
-                    SizedBox(height:3),
+                    SizedBox(height:3.h),
                     widget.messages.type == Type.text
                         ? Padding(
                           padding: const EdgeInsets.only(
@@ -154,7 +151,7 @@ class _MessageCardState extends State<MessageCard> {
                           ),
                           child: Text(
                       widget.messages.msg,
-                      style: GoogleFonts.balooBhai2(fontSize: 20),
+                      style: GoogleFonts.balooBhai2(fontSize: 18.sp),
                     ),
                         )
                         : Container(
@@ -179,27 +176,22 @@ class _MessageCardState extends State<MessageCard> {
                       ),
                     ),
                         ),
+                   SizedBox(height: 3.h,),
                     Positioned(
                       bottom: 4,
                       right: 4,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
 
-                                top: 10,
-                                left: .08),
-                            child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
-                              style: TextStyle( fontSize:13,color: Colors.black54),
-                            ),
-                          )
-                          // SizedBox(
-                          //   width: 5,
-                          // ),
-                          // Icon(
-                          //   Icons.done_all,
-                          //   size: 20,
-                          // ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 13.h,),
+                          Row(
+                            children: [
+                              Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
+                                style: TextStyle( fontSize:8.sp,color: Colors.black54),
+                              )
+
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -249,7 +241,7 @@ class _MessageCardState extends State<MessageCard> {
                   widget.messages.type == Type.text
                       ? Text(
                     widget.messages.msg,
-                    style: GoogleFonts.balooBhai2(fontSize: 20),
+                    style: GoogleFonts.balooBhai2(fontSize: 18.sp),
                   )
                   //
                       : ClipRRect(
@@ -275,10 +267,10 @@ class _MessageCardState extends State<MessageCard> {
                         Padding(
                           padding: EdgeInsets.only(
 
-                              top: 10,
+                              top: 13,
                               left: .08),
                           child: Text(MyDate.getFormattedtime(context: context, time: widget.messages.send),
-                            style: TextStyle( fontSize:13,color: Colors.black54),
+                            style: TextStyle( fontSize:8.sp,color: Colors.black54),
                           ),
                         )
                         // SizedBox(
@@ -546,7 +538,7 @@ class _MessageCardState extends State<MessageCard> {
                     },
                     child: const Text(
                       'Cancel',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
                     )),
 
                 //update button
@@ -558,7 +550,7 @@ class _MessageCardState extends State<MessageCard> {
                     },
                     child: const Text(
                       'Update',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
                     ))
               ],
             ));
@@ -591,7 +583,7 @@ class _OptionItem extends StatelessWidget {
                 child: Text(
               '    $name',
               style: TextStyle(
-                  fontSize: 16, letterSpacing: .5, color: Colors.black87),
+                  fontSize: 15.sp, letterSpacing: .5, color: Colors.black87),
             )),
           ],
         ),

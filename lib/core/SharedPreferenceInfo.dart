@@ -7,6 +7,8 @@ class SharedPreferencesInfo{
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userIdKey = "USERIDKEY";
   static String TASKIdKey = "TASKIdKey";
+  static String userImgKey = "USERIMGKEY";
+
   static String userTypeKey = "USERTYPEKEY";
   static String userTokenKey = "USERTOKENKEY";
   static String deviceTokenKey = "DEVICETOKENKEY";
@@ -38,7 +40,10 @@ class SharedPreferencesInfo{
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(userNameKey);
   }
-
+  static Future<String?> getUserimg() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(userImgKey);
+  }
  static Future<int?>getSP() async {
     int index= 0;
     final prefs = await SharedPreferences.getInstance();
@@ -74,6 +79,11 @@ class SharedPreferencesInfo{
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setBool(userLoggedInKey, isUserLoggedIn);
   }
+  static  saveUserLoggedInimg(String userimg) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userImgKey, userimg);
+  }
+
 
   static saveUserIdSF(int id) async {
     SharedPreferences sf = await SharedPreferences.getInstance();

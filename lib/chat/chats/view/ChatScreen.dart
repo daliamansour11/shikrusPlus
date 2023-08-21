@@ -179,7 +179,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               //Apis.getAllMessages(widget.user),
                               FirebaseFirestore.instance
                                   .collection(
-                                      'chat/${Apis.getsenduserConversionId(idt ?? 0, widget.user.id.toString())}/messages')
+                                  'chat/${Apis.getsenduserConversionId(idt ?? 0, widget.user.id.toString())}/messages')
                                   .orderBy('send', descending: true)
                                   .snapshots(),
                           builder: (context, AsyncSnapshot snapshot) {

@@ -7,12 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:taskmanger/Admin_projects/model/Admin_ProjectModel.dart';
 import 'package:taskmanger/core/utils.dart';
+import 'package:taskmanger/home/model/ProjectInfoModel.dart';
 import 'package:taskmanger/home/model/Projectmodel.dart';
 import 'package:taskmanger/home/view/homescreen.dart';
 import '../../Admin_projects/provider/Admin_Projectsprovider.dart';
 import '../../Notification/Notification_helper.dart';
 import '../../core/SharedPreferenceInfo.dart';
 import '../../home/provider/HomeProvider.dart';
+import '../../home/provider/ProjectInfoProvider.dart';
 import '../../profile/profile.dart';
 import '../../screens/bottomnavigation.dart';
 import '../../widgets/TextFieldWidget.dart';
@@ -58,6 +60,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       });
     }
   }
+
   var _formKey = GlobalKey<FormState>();
   var isLoading = false;
   bool showSpinner = false;
@@ -82,7 +85,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   TextEditingController subjectController = TextEditingController();
   String project = ' ';
   int idpro = 0;
-  String type="";
+  String type = "";
+
   gettingUserType() async {
     await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
       setState(() {
@@ -95,17 +99,17 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
   @override
   void initState() {
     gettingUserType();
-    WidgetsBinding.instance.addPersistentFrameCallback((_) async {
-      Future.delayed(Duration(seconds: 1));
-
-      ref.read(adminprojectProvider(idpro));
-    });
+    // WidgetsBinding.instance.addPersistentFrameCallback((_) async {
+    //   Future.delayed(Duration(seconds: 1));
+    //
+    //   ref.read(adminprojectProvider(idpro));
+    // });
   }
-
+  String? proj = "";
   @override
   Widget build(BuildContext context) {
-
-    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
       'dbfood', 'dbfood', importance: Importance.high,
       priority: Priority.high,
       playSound: true,
@@ -115,20 +119,20 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
       android: androidNotificationDetails,
     );
     final projects = ref.read(proProvider);
-   final employees =ref.watch(adminprojectProvider(idpro));
+    //final employees =ref.watch(adminprojectProvider(idpro));
     Size size = MediaQuery.of(context).size;
     List<String> _selectedItems = [];
 
     return Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-            backgroundColor: Color(0xFF005373),
-            title: TextFieldHeaderWidget(
-              title: "AddNewTask",
-              colors: Colors.white,
-            ),
-            centerTitle: true,
-            automaticallyImplyLeading: true,
+          backgroundColor: Color(0xFF005373),
+          title: TextFieldHeaderWidget(
+            title: "AddNewTask",
+            colors: Colors.white,
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: true,
         ),
         body: Container(
           height: double.infinity,
@@ -145,7 +149,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                     children: <Widget>[
                       Container(
                         alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(left: 12.w, bottom: 2.h, top: 10.h),
+                        margin:
+                            EdgeInsets.only(left: 12.w, bottom: 2.h, top: 10.h),
                         child: TextFieldTitleWidget(
                           title: "Name",
                           size: 16.sp,
@@ -174,14 +179,16 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                 color: Colors.grey,
                                 width: 1,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color(0xFF005373),
                                 width: 2,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             // labelText: "Title", //babel text
                             hintText: " title ",
@@ -226,14 +233,16 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                 color: Colors.grey,
                                 width: 1,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Color(0xFF005373),
                                 width: 2,
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             // labelText: "Title", //babel text
                             hintText: " subject ",
@@ -277,14 +286,16 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                   color: Colors.grey,
                                   width: 1,
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xFF005373),
                                   width: 2,
                                 ),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                               //labelText: "Note", //babel text
                               hintText: "Enter your Note",
@@ -293,201 +304,241 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                               //prefix iocn
                               hintStyle: TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w400), //hint text style
+                                  fontWeight:
+                                      FontWeight.w400), //hint text style
                               //    labelStyle: TextStyle(fontSize: 13, color: Colors.white), //label style
                             ),
                           )),
-                      Container(
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
-                        child: TextFieldTitleWidget(
-                          title: "Project Name",
-                          size: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 12.0, top: 2, right: 8),
-                        child: projects.when(
-                            data: (dataa) => ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: 1,
-                                itemBuilder: (BuildContext context, int index) {
-                                  List<String>emptyy=[];
-                                  if(dataa.data.isEmpty){
-                                    return SizedBox(
-                                      width: 200,
-                                      child: DropdownButtonFormField<String>(
-                                          decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  width: 0,
-                                                  color: Colors.grey,
-                                                ),
-                                                borderRadius:
-                                                BorderRadius.circular(10)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: Color(0xFF005373),
-                                                ),
-                                                borderRadius:
-                                                BorderRadius.circular(10)),
-                                            errorBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: Color(0xFF005373),
-                                                ),
-                                                borderRadius:
-                                                BorderRadius.circular(10)),
-                                          ),
-                                          value: "" ?? "",
-                                          items:
-                                              emptyy.map((item) => DropdownMenuItem(
-                                              value: item,
-                                              child: Text(
-                                                item.toString(),
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              )))
-                                              .toList(),
-                                          onChanged: (item) {
+                      // Container(
+                      //   alignment: Alignment.topLeft,
+                      //   margin: EdgeInsets.only(left: 12, top: 2, bottom: 1),
+                      //   child: TextFieldTitleWidget(
+                      //     title: "Project Name",
+                      //     size: 16.sp,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding:
+                      //       const EdgeInsets.only(left: 12.0, top: 2, right: 8),
+                      //   child: projects.when(
+                      //       data: (dataa) => ListView.builder(
+                      //           shrinkWrap: true,
+                      //           itemCount: dataa.data.length,
+                      //           itemBuilder: (BuildContext context, int index) {
+                      //             List<String> emptyy = [];
+                      //             if (dataa.data.isEmpty) {
+                      //               // return SizedBox(
+                      //               //   width: 200,
+                      //               //   child: DropdownButtonFormField<String>(
+                      //               //       decoration: InputDecoration(
+                      //               //         enabledBorder: OutlineInputBorder(
+                      //               //             borderSide: BorderSide(
+                      //               //               width: 0,
+                      //               //               color: Colors.grey,
+                      //               //             ),
+                      //               //             borderRadius:
+                      //               //             BorderRadius.circular(10)),
+                      //               //         focusedBorder: OutlineInputBorder(
+                      //               //             borderSide: BorderSide(
+                      //               //               width: 2,
+                      //               //               color: Color(0xFF005373),
+                      //               //             ),
+                      //               //             borderRadius:
+                      //               //             BorderRadius.circular(10)),
+                      //               //         errorBorder: OutlineInputBorder(
+                      //               //             borderSide: BorderSide(
+                      //               //               width: 2,
+                      //               //               color: Color(0xFF005373),
+                      //               //             ),
+                      //               //             borderRadius:
+                      //               //             BorderRadius.circular(10)),
+                      //               //       ),
+                      //               //       value: "" ?? "",
+                      //               //       items: emptyy.map((item) => DropdownMenuItem(
+                      //               //           value: item,
+                      //               //           child: Text(
+                      //               //             item.toString(),
+                      //               //             style: TextStyle(
+                      //               //                 fontWeight: FontWeight.bold),
+                      //               //           )))
+                      //               //           .toList(),
+                      //               //       onChanged: (item) {
+                      //               //
+                      //               //       }),
+                      //               // );
+                      //             }
+                      //
+                      //             List<String> pro_list_name = [];
+                      //
+                      //             String projectname =
+                      //                 dataa.data[index].name ?? "";
+                      //             pro_list_name.add(projectname);
+                      //             String? pro_name = "";
+                      //             List<Datum> projectmodel = dataa.data
+                      //                 .where((element) =>
+                      //                     element.name == projectname)
+                      //                 .toList();
+                      //             idpro = projectmodel[0].id ?? 0;
+                      //             String? proj = "";
+                      //             return SizedBox(
+                      //               width: 200,
+                      //               child: Row(
+                      //                 children: [
+                      //                   Text("${dataa.data[index].name ?? ""}"),
+                      //                   Radio(
+                      //                       value: dataa.data[index].name ?? "",
+                      //                       groupValue: proj,
+                      //                       activeColor: Colors.black,
+                      //                       onChanged: (val) {
+                      //                         setState(() {
+                      //                           proj = val;
+                      //                           print(proj);
+                      //                         });
+                      //                       }),
+                      //                 ],
+                      //               ),
+                      //               // child: DropdownButtonFormField<String>(
+                      //               //     decoration: InputDecoration(
+                      //               //       enabledBorder: OutlineInputBorder(
+                      //               //           borderSide: BorderSide(
+                      //               //             width: 0,
+                      //               //             color: Colors.grey,
+                      //               //           ),
+                      //               //           borderRadius:
+                      //               //               BorderRadius.circular(10)),
+                      //               //       focusedBorder: OutlineInputBorder(
+                      //               //           borderSide: BorderSide(
+                      //               //             width: 2,
+                      //               //             color: Color(0xFF005373),
+                      //               //           ),
+                      //               //           borderRadius:
+                      //               //               BorderRadius.circular(10)),
+                      //               //       errorBorder: OutlineInputBorder(
+                      //               //           borderSide: BorderSide(
+                      //               //             width: 2,
+                      //               //             color: Color(0xFF005373),
+                      //               //           ),
+                      //               //           borderRadius:
+                      //               //               BorderRadius.circular(10)),
+                      //               //     ),
+                      //               //     value: dataa.data[index].name ?? "",
+                      //               //     items: pro_list_name.map((item) => DropdownMenuItem(
+                      //               //             value: item,
+                      //               //             child: Text(
+                      //               //               item.toString(),
+                      //               //               style: TextStyle(
+                      //               //                   fontWeight: FontWeight.bold),
+                      //               //             )))
+                      //               //         .toList(),
+                      //               //     onChanged: (item) {
+                      //               //       setState(() {
+                      //               //         pro_name = item;
+                      //               //         print("itemmm$pro_name");
+                      //               //       });
+                      //               //     }),
+                      //             );
+                      //           }),
+                      //       error: (err, _) => Text(""),
+                      //       loading: () =>
+                      //           Center(child: CircularProgressIndicator())),
+                      // ),
 
-                                          }),
-                                    );
-                                  }
-
-                                  List<String> pro_list_name = [];
-
-                                  String projectname = dataa.data[index].name ?? "";
-                                  pro_list_name.add(projectname);
-                                  String? pro_name = "";
-                                  List<Datum> projectmodel = dataa.data
-                                      .where(
-                                          (element) => element.name == projectname)
-                                      .toList();
-                                  idpro = projectmodel[index].id??0;
-                                  return SizedBox(
-                                    width: 200,
-                                    child: DropdownButtonFormField<String>(
-                                        decoration: InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 0,
-                                                color: Colors.grey,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 2,
-                                                color: Color(0xFF005373),
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          errorBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 2,
-                                                color: Color(0xFF005373),
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        value: dataa.data[0].name ?? "",
-                                        items: pro_list_name
-                                            .map((item) => DropdownMenuItem(
-                                                value: item,
-                                                child: Text(
-                                                  item.toString(),
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold),
-                                                )))
-                                            .toList(),
-                                        onChanged: (item) {
-                                          setState(() {
-
-                                            pro_name = item;
-
-                                            print("itemmm$pro_name");
-                                          });
-                                        }),
-                                  );}
-                            ),
-                            error: (err, _) => Text(""),
-                            loading: () => Center(child: CircularProgressIndicator())
-                        ),
-                      ),
                       SizedBox(
                         height: size.width * 0.001,
                       ),
-                      RefreshIndicator(
-                        backgroundColor: context.appTheme.bottomAppBarColor,
-                        onRefresh: () async {
-                          ref.refresh(adminprojectProvider(idpro));
-                          return Future.delayed(Duration(milliseconds: 300),
-                                  () => ref.read(adminprojectProvider(idpro)));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ref.watch(adminprojectProvider(idpro)).when(
-                                  data:(dataa)=> ElevatedButton(
-                                    style: ButtonStyle(backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                            (Set<MaterialState> states) {
-                                              return Color(0xFF005373);
-                                        },
-                                    ),
-                                    ),
-                                    onPressed:() {
-                                      setState(()async {
-                                        final List<String>? results = await showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ListView.builder(
-                                              itemCount: 1,
-                                              itemBuilder: (BuildContext context, int index) {
-                                                List<Projects>projects=dataa?.data.where((element) => element.id==idpro).toList()??[];
-                                                String nameemployee= projects[0].employeeProjects[index].name;
-                                                print("${nameemployee}employeee");
-                                                List<String>names=[];
-                                                names.add(nameemployee);
-                                                print("${idpro}nammm");
-                                                return MultiSelect(items:names);
-                                              },);
-                                          },
-                                        );
-
-                                        if (results != null) {
-                                          setState(() {
-                                            _selectedItems = results;
-                                            print("${_selectedItems}itemm");
-                                          });
-                                        }
-                                      });
-                                    },
-                                    child: const Text('Select Employees'),
-
-                                  ),
-                                  error: (err,_)=>Text("${err.toString()}"),
-                                  loading: ()=>Center(child: CircularProgressIndicator())
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF005373),
+                                padding: EdgeInsets.all(15.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
                               ),
-                              const Divider(
-                                height: 1,
-                              ),
-                              Wrap(
-                                children: _selectedItems
-                                    .map((e) => Chip(
-                                  label: Text(e,style: TextStyle(color: Colors.black),),
-                                ))
-                                    .toList(),
-                              )
-                            ],
-                          ),),
+                              onPressed: () {
+                                setState(() {
+                                  opendialog(ref);
+                                });
+                              },
+                              child: Text("Select Project")),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                 ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF005373),
+                                        padding: EdgeInsets.all(15.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() async {
+                                          final List<String>? results =
+                                          await showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return ref.watch(ProjectinfoProvider(idpro)).when(
+                                                data: (dataa) => ListView.builder(
+                                                  itemCount: 1,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                      int index) {
+                                                    String nameemployee = dataa
+                                                        .data
+                                                        .employees[index]
+                                                        .name;
+                                                    print(
+                                                        "${nameemployee}employeee");
+                                                    List<String> names = [];
+                                                    names.add(nameemployee);
+                                                    print("${idpro}nammm");
+                                                    return MultiSelect(
+                                                        items: names);
+                                                  },
+                                                ),
+                                                  error: (err, _) => Text("${err.toString()}"),
+                                                  loading: () => Center(
+                                                      child: CircularProgressIndicator())
+                                              );
+                                            },
+                                          );
+
+                                          if (results != null) {
+                                            setState(() {
+                                              _selectedItems = results;
+                                              print("${_selectedItems}itemm");
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: const Text('Select Employees'),
+                                    ),
+
+                                const Divider(
+                                  height: 1,
+                                ),
+                                Wrap(
+                                  children: _selectedItems
+                                      .map((e) => Chip(
+                                    label: Text(
+                                      e,
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                  ))
+                                      .toList(),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: size.width * 0.001,
@@ -512,8 +563,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                 controller: startDateController,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey,
@@ -531,32 +582,35 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                         BorderRadius.all(Radius.circular(20)),
                                   ),
                                   hintStyle: TextStyle(color: Colors.black45),
-                                  errorStyle: TextStyle(color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   suffixIcon: Icon(Icons.event_note),
                                   labelText: 'startDate',
                                 ),
                                 onTap: () async {
-                                  DateTime? newSelectedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: _selectedDate != null
-                                          ? _selectedDate!
-                                          : DateTime.now(),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2040),
-                                      builder: (context, child) {
-                                        return Theme(
-                                          data: ThemeData.dark().copyWith(
-                                            colorScheme: ColorScheme.dark(
-                                              primary: Colors.deepPurple,
-                                              onPrimary: Colors.white,
-                                              surface: Colors.blueGrey,
-                                              onSurface: Colors.yellow,
-                                            ),
-                                            dialogBackgroundColor: Colors.blue[500],
-                                          ),
-                                          child: child!,
-                                        );
-                                      });
+                                  DateTime? newSelectedDate =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: _selectedDate != null
+                                              ? _selectedDate!
+                                              : DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2040),
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: ThemeData.dark().copyWith(
+                                                colorScheme: ColorScheme.dark(
+                                                  primary: Colors.deepPurple,
+                                                  onPrimary: Colors.white,
+                                                  surface: Colors.blueGrey,
+                                                  onSurface: Colors.yellow,
+                                                ),
+                                                dialogBackgroundColor:
+                                                    Colors.blue[500],
+                                              ),
+                                              child: child!,
+                                            );
+                                          });
                                   if (newSelectedDate != null) {
                                     _selectedDate = newSelectedDate;
                                     startDateController
@@ -564,8 +618,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                           .format(_selectedDate!)
                                       ..selection = TextSelection.fromPosition(
                                           TextPosition(
-                                              offset:
-                                                  startDateController.text.length,
+                                              offset: startDateController
+                                                  .text.length,
                                               affinity: TextAffinity.upstream));
                                   }
                                 },
@@ -589,8 +643,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                 controller: endDateController,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey,
@@ -608,32 +662,35 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                         BorderRadius.all(Radius.circular(20)),
                                   ),
                                   hintStyle: TextStyle(color: Colors.black45),
-                                  errorStyle: TextStyle(color: Colors.redAccent),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
                                   suffixIcon: Icon(Icons.event_note),
                                   labelText: 'endDate',
                                 ),
                                 onTap: () async {
-                                  DateTime? newSelectedDate = await showDatePicker(
-                                      context: context,
-                                      initialDate: _selectedDate != null
-                                          ? _selectedDate!
-                                          : DateTime.now(),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2040),
-                                      builder: (context, child) {
-                                        return Theme(
-                                          data: ThemeData.dark().copyWith(
-                                            colorScheme: ColorScheme.dark(
-                                              primary: Colors.deepPurple,
-                                              onPrimary: Colors.white,
-                                              surface: Colors.blueGrey,
-                                              onSurface: Colors.yellow,
-                                            ),
-                                            dialogBackgroundColor: Colors.blue[500],
-                                          ),
-                                          child: child!,
-                                        );
-                                      });
+                                  DateTime? newSelectedDate =
+                                      await showDatePicker(
+                                          context: context,
+                                          initialDate: _selectedDate != null
+                                              ? _selectedDate!
+                                              : DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2040),
+                                          builder: (context, child) {
+                                            return Theme(
+                                              data: ThemeData.dark().copyWith(
+                                                colorScheme: ColorScheme.dark(
+                                                  primary: Colors.deepPurple,
+                                                  onPrimary: Colors.white,
+                                                  surface: Colors.blueGrey,
+                                                  onSurface: Colors.yellow,
+                                                ),
+                                                dialogBackgroundColor:
+                                                    Colors.blue[500],
+                                              ),
+                                              child: child!,
+                                            );
+                                          });
                                   if (newSelectedDate != null) {
                                     _selectedDate = newSelectedDate;
                                     endDateController
@@ -641,7 +698,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                           .format(_selectedDate!)
                                       ..selection = TextSelection.fromPosition(
                                           TextPosition(
-                                              offset: endDateController.text.length,
+                                              offset:
+                                                  endDateController.text.length,
                                               affinity: TextAffinity.upstream));
                                     print(
                                         "daaaaaaaaaaaaaaaaa${endDateController.text.runtimeType}");
@@ -683,18 +741,19 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                           color: Colors.grey,
                                           width: 1,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(20)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Colors.blue,
                                           width: 2,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(20)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20)),
                                       ),
-                                      hintStyle: TextStyle(color: Colors.black45),
+                                      hintStyle:
+                                          TextStyle(color: Colors.black45),
                                       errorStyle:
                                           TextStyle(color: Colors.redAccent),
                                       suffixIcon: Icon(Icons.event_note),
@@ -706,12 +765,14 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                           return Theme(
                                             data: ThemeData.light().copyWith(
                                               colorScheme: ColorScheme.dark(
-                                                primary: const Color(0xffE5E0A1),
+                                                primary:
+                                                    const Color(0xffE5E0A1),
                                                 onPrimary: Colors.black,
                                                 surface: Colors.white,
                                                 onSurface: Colors.black,
                                               ),
-                                              dialogBackgroundColor: Colors.white,
+                                              dialogBackgroundColor:
+                                                  Colors.white,
                                             ),
                                             child: child!,
                                           );
@@ -751,18 +812,19 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                             color: Colors.grey,
                                             width: 1,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.all(Radius.circular(20)),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                             color: Colors.blue,
                                             width: 2,
                                           ),
-                                          borderRadius:
-                                              BorderRadius.all(Radius.circular(20)),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
                                         ),
-                                        hintStyle: TextStyle(color: Colors.black45),
+                                        hintStyle:
+                                            TextStyle(color: Colors.black45),
                                         errorStyle:
                                             TextStyle(color: Colors.redAccent),
                                         suffixIcon: Icon(Icons.event_note),
@@ -774,12 +836,14 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                             return Theme(
                                               data: ThemeData.light().copyWith(
                                                 colorScheme: ColorScheme.dark(
-                                                  primary: const Color(0xffE5E0A1),
+                                                  primary:
+                                                      const Color(0xffE5E0A1),
                                                   onPrimary: Colors.black,
                                                   surface: Colors.white,
                                                   onSurface: Colors.black,
                                                 ),
-                                                dialogBackgroundColor: Colors.white,
+                                                dialogBackgroundColor:
+                                                    Colors.white,
                                               ),
                                               child: child!,
                                             );
@@ -801,7 +865,11 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 30,),
+                      SizedBox(
+                        height: 30,
+                      ),
+
+
                       Container(
                         margin: EdgeInsets.only(
                             top: 15, left: 20, right: 20, bottom: 10),
@@ -838,84 +906,89 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                               print("project_id ${idpro}");
                               NotificationHelper.flutterLocalNotificationsPlugin
                                   .show(
-                                      0, "Add New Task",
+                                      0,
+                                      "Add New Task",
                                       "${mainNameController.text}",
                                       notificationDetails,
                                       payload: "");
-                                       if(type=="admin"){
-                                         var response = await ref
-                                             .read(NewMainTaskAdminProvider)
-                                             .AddNewMainAdminTask(
-                                             mainNameController.text,
-                                             subjectController.text,
-                                             noteController.text,
-                                             startDateController.text,
-                                             endDateController.text,
-                                             startTimeController.text,
-                                             endTimeController.text,
-                                             "main",
-                                             idpro,22);
-                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-                                         print("${response.status}ressssss");
-                                         if (response?.status == true) {
-                                           mainNameController.clear();
-                                           startDateController.clear();
-                                           endDateController.clear();
-                                           startTimeController.clear();
-                                           endTimeController.clear();
-                                           _formKey.currentState!.reset();
-                                         }
-                                         print("${response?.status} -${idpro}statusssss");
-                                         Navigator.push(
-                                             context,
-                                             MaterialPageRoute(
-                                                 builder: (context) => Bottomnavigation()));
-                                       }
-                                       else{
-
-                                         var response = await ref
-                                             .read(NewMainTaskProvider)
-                                             .AddNewMainTask(
-                                             mainNameController.text,
-                                             subjectController.text,
-                                             noteController.text,
-                                             startDateController.text,
-                                             endDateController.text,
-                                             startTimeController.text,
-                                             endTimeController.text,
-                                             "main",
-                                             idpro);
-                                         Navigator.pushReplacement(
-
-                                             context, MaterialPageRoute(builder: (
-                                             _) =>
-                                             HomeScreen()));
-                                         print("${response}ressssss");
-                                         if (response?.status == true) {
-                                           mainNameController.clear();
-                                           startDateController.clear();
-                                           endDateController.clear();
-                                           startTimeController.clear();
-                                           endTimeController.clear();
-                                           _formKey.currentState!.reset();
-                                         }
-                                         // ScaffoldMessenger.of(context).showSnackBar(
-                                         //   SnackBar(
-                                         //     content: Text(
-                                         //         "${response?.status == true}"),
-                                         //     duration: const Duration(seconds: 4),
-                                         //     backgroundColor: (response?.status == true)
-                                         //         ? Colors.green
-                                         //         : Colors.red,
-                                         //   ),
-                                         // );
-                                         print("${response?.status} -${idpro}statusssss");
-                                         Navigator.push(
-                                             context,
-                                             MaterialPageRoute(
-                                                 builder: (context) => Bottomnavigation()));
-                                       }
-
+                              if (type == "admin") {
+                                var response = await ref
+                                    .read(NewMainTaskAdminProvider)
+                                    .AddNewMainAdminTask(
+                                        mainNameController.text,
+                                        subjectController.text,
+                                        noteController.text,
+                                        startDateController.text,
+                                        endDateController.text,
+                                        startTimeController.text,
+                                        endTimeController.text,
+                                        "main",
+                                        idpro,
+                                        22);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => HomeScreen()));
+                                print("${response.status}ressssss");
+                                if (response?.status == true) {
+                                  mainNameController.clear();
+                                  startDateController.clear();
+                                  endDateController.clear();
+                                  startTimeController.clear();
+                                  endTimeController.clear();
+                                  _formKey.currentState!.reset();
+                                }
+                                print(
+                                    "${response?.status} -${idpro}statusssss");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Bottomnavigation()));
+                              } else {
+                                var response = await ref
+                                    .read(NewMainTaskProvider)
+                                    .AddNewMainTask(
+                                        mainNameController.text,
+                                        subjectController.text,
+                                        noteController.text,
+                                        startDateController.text,
+                                        endDateController.text,
+                                        startTimeController.text,
+                                        endTimeController.text,
+                                        "main",
+                                        idpro);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => HomeScreen()));
+                                print("${response}ressssss");
+                                if (response?.status == true) {
+                                  mainNameController.clear();
+                                  startDateController.clear();
+                                  endDateController.clear();
+                                  startTimeController.clear();
+                                  endTimeController.clear();
+                                  _formKey.currentState!.reset();
+                                }
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(
+                                //     content: Text(
+                                //         "${response?.status == true}"),
+                                //     duration: const Duration(seconds: 4),
+                                //     backgroundColor: (response?.status == true)
+                                //         ? Colors.green
+                                //         : Colors.red,
+                                //   ),
+                                // );
+                                print(
+                                    "${response?.status} -${idpro}statusssss");
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Bottomnavigation()));
+                              }
                             }
                           },
                           child: TextFieldTitleWidget(
@@ -934,6 +1007,101 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
           ),
         ));
   }
+
+  Future opendialog(WidgetRef ref) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Select Project"),
+            content: Container(
+              width: 80,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0, top: 2, right: 8),
+                child: ref.read(proProvider).when(
+                    data: (dataa) => ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: dataa.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          List<String> emptyy = [];
+
+                          List<String> pro_list_name = [];
+
+                          String projectname = dataa.data[index].name ?? "";
+                          pro_list_name.add(projectname);
+                          String? pro_name = "";
+                          List<Datum> projectmodel = dataa.data
+                              .where((element) => element.name == projectname)
+                              .toList();
+                           idpro = projectmodel[0].id??0;
+
+                          return SizedBox(
+                            width: 200,
+                            child: Row(
+                              children: [
+                                Radio(
+                                  value: projectname,
+                                  groupValue: proj,
+                                  activeColor: Colors.black,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      proj = val;
+                                      print(proj);
+                                    });
+                                  },
+                                ),
+                                Text(projectname),
+                              ],
+                            ),
+                            // child: DropdownButtonFormField<String>(
+                            //     decoration: InputDecoration(
+                            //       enabledBorder: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //             width: 0,
+                            //             color: Colors.grey,
+                            //           ),
+                            //           borderRadius:
+                            //               BorderRadius.circular(10)),
+                            //       focusedBorder: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //             width: 2,
+                            //             color: Color(0xFF005373),
+                            //           ),
+                            //           borderRadius:
+                            //               BorderRadius.circular(10)),
+                            //       errorBorder: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //             width: 2,
+                            //             color: Color(0xFF005373),
+                            //           ),
+                            //           borderRadius:
+                            //               BorderRadius.circular(10)),
+                            //     ),
+                            //     value: dataa.data[index].name ?? "",
+                            //     items: pro_list_name.map((item) => DropdownMenuItem(
+                            //             value: item,
+                            //             child: Text(
+                            //               item.toString(),
+                            //               style: TextStyle(
+                            //                   fontWeight: FontWeight.bold),
+                            //             )))
+                            //         .toList(),
+                            //     onChanged: (item) {
+                            //       setState(() {
+                            //         pro_name = item;
+                            //         print("itemmm$pro_name");
+                            //       });
+                            //     }),
+                          );
+                        }),
+                    error: (err, _) => Text(""),
+                    loading: () => Center(child: CircularProgressIndicator())),
+              ),
+            ),
+            actions: [TextButton(onPressed: () {
+              setState(() {
+                Navigator.pop(context);
+              });
+            }, child: Text("Submit"))],
+          ));
 
   _selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
@@ -968,8 +1136,10 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
     // print(newSelectedDate);
   }
 }
+
 class MultiSelect extends StatefulWidget {
   final List<String> items;
+
   const MultiSelect({Key? key, required this.items}) : super(key: key);
 
   @override
@@ -1003,31 +1173,34 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Select Employee'),
-      content: SingleChildScrollView(
-        child: ListBody(children: widget.items.map((item) =>
-              CheckboxListTile(
-                value: _selectedItems.contains(item),
-            title: Text(item),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (isChecked) => _itemChange(item, isChecked!),
-          )).toList(),
+    return Container(
+      width: 100,
+      child: AlertDialog(
+
+        title: const Text('Select Employee'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: widget.items
+                .map((item) => CheckboxListTile(
+                      value: _selectedItems.contains(item),
+                      title: Text(item),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (isChecked) => _itemChange(item, isChecked!),
+                    ))
+                .toList(),
+          ),
         ),
+        actions: [
+          TextButton(
+            onPressed: _cancel,
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: _submit,
+            child: const Text('Submit'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: _cancel,
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: _submit,
-          child: const Text('Submit'),
-        ),
-      ],
     );
   }
 }
-
-
-

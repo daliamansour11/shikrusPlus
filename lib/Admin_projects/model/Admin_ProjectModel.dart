@@ -3,11 +3,6 @@
 //     final adminProjectModel = adminProjectModelFromJson(jsonString);
 
 import 'dart:convert';
-
-AdminProjectModel adminProjectModelFromJson(String str) => AdminProjectModel.fromJson(json.decode(str));
-
-String adminProjectModelToJson(AdminProjectModel data) => json.encode(data.toJson());
-
 class AdminProjectModel {
   bool status;
   String errNum;
@@ -62,7 +57,7 @@ class Projects {
     required this.status,
     required this.startingDate,
     required this.expectedExpiryDate,
-    this.actualEndDate,
+    required this.actualEndDate,
     required this.specializationId,
     required this.clientId,
     required this.adminId,
@@ -132,14 +127,14 @@ class EmployeeProject {
     required this.email,
     required this.phone,
     required this.image,
-    this.emailVerifiedAt,
+    required this.emailVerifiedAt,
     required this.password,
     required this.type,
     required this.status,
     required this.adminId,
     required this.specializationId,
     required this.fcmToken,
-    this.rememberToken,
+    required this.rememberToken,
     required this.createdAt,
     required this.updatedAt,
     required this.pivot,

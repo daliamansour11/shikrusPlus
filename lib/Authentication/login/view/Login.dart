@@ -369,7 +369,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                                   SharedPreferencesInfo
                                                       .saveUserLoggedInStatus(
                                                       response.status ?? false);
-
+                                                  SharedPreferencesInfo.saveUserLoggedInimg(response.data?.personalInformation.image??"");
                                                   SharedPreferencesInfo.saveUserTypeFromSF(response.data?.personalInformation.type??"");
                                                   SharedPreferencesInfo.saveUsernameFromSF(response.data?.personalInformation.name??"");
                                                   SharedPreferencesInfo.saveUserTokenSF(response.data?.token?? "");

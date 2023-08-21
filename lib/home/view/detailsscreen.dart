@@ -6,6 +6,7 @@ import 'package:readmore/readmore.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
 
+import '../../core/SharedPreferenceInfo.dart';
 import '../provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
 import '../../clender/model/TasksModel.dart';
@@ -14,6 +15,7 @@ import '../../core/Color.dart';
 import '../../core/Constants.dart';
 import '../../popMenuItem/PopMenuItems.dart';
 import '../../popMenuItem/TaskMenuItems.dart';
+import '../provider/ProjectInfoProvider.dart';
 
 class Detailsscreen extends ConsumerStatefulWidget {
   String name;
@@ -39,7 +41,6 @@ class Detailsscreen extends ConsumerStatefulWidget {
 }
 
 class _DetailsscreenState extends ConsumerState<Detailsscreen> {
-
   onStatusChang(String status) {
     if (status == "done") {
       return Itemcolors[0];
@@ -50,6 +51,20 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
     } else if (status == "hold") {
       return Itemcolors[1];
     }
+  }
+  String type = "";
+  gettingUserType() async {
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
+  @override
+  void initState() {
+    gettingUserType();
+    super.initState();
   }
 
   @override
@@ -98,44 +113,75 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                       SizedBox(
                         height: 10.h,
                       ),
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: AssetImage(
-                              "assets/personn.jpg",
-                            ),
-                            radius: 10.sp,
-                            backgroundColor: Colors.white60,
+                      ref.watch(ProjectinfoProvider(widget.project_id)).when(
+                          data: (dataa)=>Column(
+                            children: [
+                              // Expanded(child : ListView.builder(shrinkWrap: true,itemBuilder: (context,index){return Text("jihuih");},itemCount: 2,)),
+                              CircleAvatar(child: Image.network(dataa.data.employees[0].image),),
+                            ],
                           ),
-                          CircleAvatar(
-                              backgroundImage: AssetImage(
-                                "assets/ppr.jpg",
-                              ),
-                              radius: 10.sp,
-                              backgroundColor: Colors.white60),
-                          CircleAvatar(
-                              backgroundImage: AssetImage(
-                                "assets/personn.jpg",
-                              ),
-                              radius: 10.sp,
-                              backgroundColor: Colors.white60),
-                          CircleAvatar(
-                              backgroundImage: AssetImage(
-                                "assets/ppr.jpg",
-                              ),
-                              radius: 10.sp,
-                              backgroundColor: Colors.white60),
-                          CircleAvatar(
-                            backgroundColor: Colors.indigo[3],
-                            child: TextFieldTitle2Widget(
-                              title: "+3",
-                              colors: Colors.white,
-                              fontWeight: FontWeight.normal,
-                              size: 10.sp,
-                            ),
-                          ),
-                        ],
-                      ),
+                          // Expanded(
+                          //   child: ListView.builder(
+                          //       shrinkWrap: true,
+                          //                  //  physics: ClampingScrollPhysics(),
+                          //                     scrollDirection: Axis.horizontal,
+                          //                     itemCount: 2,
+                          //                     itemBuilder: (BuildContext context, int indexadmin) {
+                          //                       return Text("${dataa.data.employees[indexadmin].image}");
+                          //                         // CircleAvatar(
+                          //                         //   backgroundImage:
+                          //                         //       AssetImage(
+                          //                         //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
+                          //                         //   ),
+                          //                         //   radius:
+                          //                         //       12,
+                          //                         //   backgroundColor:
+                          //                         //       Colors.white60);
+                          //                     }),
+                          // ),
+                          error: (err, _) { return  Center(child: Text("${err}"));
+                          // print("${err}errrr");
+                          },
+
+                          loading: () => Center(child: CircularProgressIndicator())),
+                      // Row(
+                      //   children: [
+                      //     CircleAvatar(
+                      //       backgroundImage: AssetImage(
+                      //         "assets/personn.jpg",
+                      //       ),
+                      //       radius: 10.sp,
+                      //       backgroundColor: Colors.white60,
+                      //     ),
+                      //     CircleAvatar(
+                      //         backgroundImage: AssetImage(
+                      //           "assets/ppr.jpg",
+                      //         ),
+                      //         radius: 10.sp,
+                      //         backgroundColor: Colors.white60),
+                      //     CircleAvatar(
+                      //         backgroundImage: AssetImage(
+                      //           "assets/personn.jpg",
+                      //         ),
+                      //         radius: 10.sp,
+                      //         backgroundColor: Colors.white60),
+                      //     CircleAvatar(
+                      //         backgroundImage: AssetImage(
+                      //           "assets/ppr.jpg",
+                      //         ),
+                      //         radius: 10.sp,
+                      //         backgroundColor: Colors.white60),
+                      //     CircleAvatar(
+                      //       backgroundColor: Colors.indigo[3],
+                      //       child: TextFieldTitle2Widget(
+                      //         title: "+3",
+                      //         colors: Colors.white,
+                      //         fontWeight: FontWeight.normal,
+                      //         size: 10.sp,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                   Column(
@@ -208,8 +254,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Container(
-                        height: 80.h,
-                        width: 130.w,
+                        height: 100.h,
+                        width: 140.w,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -233,7 +279,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                                           padding:
                                               const EdgeInsets.only(left: 8.0),
                                           child: TextFieldTitleWidget(
-                                            title: "Due Date",
+                                            title: "Start Date",
                                             fontWeight: FontWeight.bold,
                                             colors: Colors.grey,
                                           ),
@@ -280,8 +326,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Container(
-                        height: 80.h,
-                        width: 130.w,
+                        height: 100.h,
+                        width: 140.w,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -305,7 +351,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                                           padding:
                                               const EdgeInsets.only(left: 8.0),
                                           child: TextFieldTitleWidget(
-                                            title: "Due Date",
+                                            title: "End Date",
                                             fontWeight: FontWeight.bold,
                                             colors: Colors.grey,
                                           ),
@@ -355,7 +401,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
               SizedBox(
                 height: 10.h,
               ),
-              Expanded(
+             type !="client"? Expanded(
                 flex: 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -368,8 +414,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                     ),
                   ],
                 ),
-              ),
-            Expanded(
+              ):Text(""),
+              type !="client"?  Expanded(
               flex: 15,
               child: RefreshIndicator(
                 backgroundColor: context.appTheme.bottomAppBarColor,
@@ -377,11 +423,25 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                   ref.refresh(MainTasksProvider(widget.project_id));
                   return Future.delayed(Duration(milliseconds: 300) , () =>   ref.read(MainTasksProvider(widget.project_id).future));
                 },
-                child:
-                Container(
+                child: Container(
                     child:
                    tasks.when(
-                      data: (data) => ListView.builder(
+                      data: (data) =>data.data.where((element) =>element.projectId==widget.project_id.toString()).toList().isEmpty?Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                              SizedBox(height: 5.h,),
+                              Text(
+                                "No Tasks Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                            ],
+                          ),
+                        ],
+                      ) : ListView.builder(
                       
                           shrinkWrap: true,
                             itemCount: data.data.where((element) =>element.projectId==widget.project_id.toString()).toList().length,
@@ -415,7 +475,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20),
                                           color: onStatusChang(status!)),
-                                      height: 90.h,
+                                      height: MediaQuery.of(context).size.height/6,
                                       width: 90.w,
                                       child: ListTile(
                                         title: Row(
@@ -613,7 +673,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                           )),
                 )
               ),
-            )
+            ):Text(""),
 
             ],
           ),

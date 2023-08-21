@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/home/provider/HomeProvider.dart';
+import '../../home/provider/ProjectInfoProvider.dart';
 import '../../popMenuItem/PopMenuItems.dart';
 import '../../widgets/TextFieldWidget.dart';
 import 'Reports.dart';
@@ -44,6 +45,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
+                      int projectid=data.data[index].id;
                       final usersData = data.data[index];
                       return InkWell(
                         onTap: () {
@@ -85,6 +87,7 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                                     ),],
                                 ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -107,65 +110,101 @@ class _ReportsPorjectState extends ConsumerState<ReportsPorject> {
                                               colors: Colors.grey,
                                             ),
                                           ),
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(
-                                                left: 39.0),
-                                            child: Row(
-                                              children: [
-                                                CircleAvatar(
-                                                    backgroundImage:
-                                                    AssetImage(
-                                                      "assets/personn.jpg",
-                                                    ),
-                                                    radius: 12,
-                                                    backgroundColor:
-                                                    Colors
-                                                        .white60),
-                                                CircleAvatar(
-                                                    backgroundImage:
-                                                    AssetImage(
-                                                      "assets/ppr.jpg",
-                                                    ),
-                                                    radius: 12,
-                                                    backgroundColor:
-                                                    Colors
-                                                        .white60),
-                                                CircleAvatar(
-                                                    backgroundImage:
-                                                    AssetImage(
-                                                      "assets/ppr.jpg",
-                                                    ),
-                                                    radius: 12,
-                                                    backgroundColor:
-                                                    Colors
-                                                        .white60),
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .only(
-                                                      left: 15.0),
-                                                  child: Icon(
-                                                    Icons
-                                                        .arrow_forward_ios,
-                                                    size: 20,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+
+                                          // Padding(
+                                          //   padding:
+                                          //   const EdgeInsets.only(
+                                          //       left: 39.0),
+                                          //   child: Row(
+                                          //     children: [
+                                          //       CircleAvatar(
+                                          //           backgroundImage:
+                                          //           AssetImage(
+                                          //             "assets/personn.jpg",
+                                          //           ),
+                                          //           radius: 12,
+                                          //           backgroundColor:
+                                          //           Colors
+                                          //               .white60),
+                                          //       CircleAvatar(
+                                          //           backgroundImage:
+                                          //           AssetImage(
+                                          //             "assets/ppr.jpg",
+                                          //           ),
+                                          //           radius: 12,
+                                          //           backgroundColor:
+                                          //           Colors
+                                          //               .white60),
+                                          //       CircleAvatar(
+                                          //           backgroundImage:
+                                          //           AssetImage(
+                                          //             "assets/ppr.jpg",
+                                          //           ),
+                                          //           radius: 12,
+                                          //           backgroundColor:
+                                          //           Colors
+                                          //               .white60),
+                                          //       Padding(
+                                          //         padding:
+                                          //         const EdgeInsets
+                                          //             .only(
+                                          //             left: 15.0),
+                                          //         child: Icon(
+                                          //           Icons
+                                          //               .arrow_forward_ios,
+                                          //           size: 20,
+                                          //         ),
+                                          //       )
+                                          //     ],
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 10.0,
+                                          right: 10,
+                                          top: 10),
+                                      child: Row(children: [
+                                        ref.watch(ProjectinfoProvider(projectid)).when(
+                                            data: (dataa)=>Column(
+                                              children: [
+                                                // Expanded(child : ListView.builder(shrinkWrap: true,itemBuilder: (context,index){return Text("jihuih");},itemCount: 2,)),
+                                                CircleAvatar(child: Image.network(dataa.data.employees[0].image),),
+                                              ],
+                                            ),
+                                            // Expanded(
+                                            //   child: ListView.builder(
+                                            //       shrinkWrap: true,
+                                            //                  //  physics: ClampingScrollPhysics(),
+                                            //                     scrollDirection: Axis.horizontal,
+                                            //                     itemCount: 2,
+                                            //                     itemBuilder: (BuildContext context, int indexadmin) {
+                                            //                       return Text("${dataa.data.employees[indexadmin].image}");
+                                            //                         // CircleAvatar(
+                                            //                         //   backgroundImage:
+                                            //                         //       AssetImage(
+                                            //                         //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
+                                            //                         //   ),
+                                            //                         //   radius:
+                                            //                         //       12,
+                                            //                         //   backgroundColor:
+                                            //                         //       Colors.white60);
+                                            //                     }),
+                                            // ),
+                                            error: (err, _) { return  Center(child: Text("${err}"));
+                                            print("${err}errrr");},
+
+                                            loading: () => Center(child: CircularProgressIndicator())),
+                                      ],),
                                     )
                                   ],
                                 ),
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.only(top: 5.0),
+                                  padding:const EdgeInsets.only(top: 5.0),
                                   child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [

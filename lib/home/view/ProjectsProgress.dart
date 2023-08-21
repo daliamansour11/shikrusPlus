@@ -48,8 +48,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
           appBar: AppBar(
               elevation: 0.0,
               backgroundColor:Color(0xFF005373),
-              title:
-              Container(
+              title: Container(
                 width :MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 12.0),
@@ -61,15 +60,12 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
 
               centerTitle: true,
 
-              // leading:
-
-
-
-              leading: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Bottomnavigation()));
-                },
-                  child: Icon(Icons.arrow_back)),
+              // // leading:
+              // leading: InkWell(
+              //   onTap: (){
+              //     Navigator.push(context, MaterialPageRoute(builder: (context)=>Bottomnavigation()));
+              //   },
+              //     child: Icon(Icons.arrow_back)),
               bottom: TabBar(
             labelPadding: EdgeInsets.only(right: 10),
                 //  padding: EdgeInsets.symmetric(horizontal: 10),
@@ -95,10 +91,28 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
              child: Padding(
                  padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                  child: statiticadmin.when(
-                     data: (data) => ListView.builder(
+                     data: (data) =>data.data[0].projects.isEmpty?
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       crossAxisAlignment: CrossAxisAlignment.center,
+                       children: [
+                         Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           crossAxisAlignment: CrossAxisAlignment.center,
+                           children: [
+                             CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                             SizedBox(height: 5.h,),
+                             Text(
+                               "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                           ],
+                         ),
+                       ],
+                     ):
+                     ListView.builder(
                        shrinkWrap: true,
                        scrollDirection: Axis.vertical,
                        itemBuilder: (context, index) {
+
                          List<Projectstatistis> todolist = data.data[0].projects;
                          return  InkWell(
                            onTap: () {
@@ -221,7 +235,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                  lineHeight: 8.0,
                                                  percent: 0.45,
                                                  progressColor:
-                                                 Colors.blue,
+                                                 Color(0xFF005373),
                                                  linearStrokeCap:
                                                  LinearStrokeCap
                                                      .round),
@@ -294,13 +308,30 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statitic.when(
-                        data: (data) => ListView.builder(
+                        data: (data) => data.data[0].tasks.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ): ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
                             List<Task> todolist = data.data[0].tasks;
                             return  InkWell(
                               onTap: () {
+
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -420,7 +451,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -495,7 +526,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statiticadmin.when(
-                        data: (data) =>data.data.isEmpty?Text(""): ListView.builder(
+                        data: (data) =>data.data[1].projects.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ):  ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -621,7 +668,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -692,7 +739,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statitic.when(
-                        data: (data) =>data.data.isEmpty?Text(""): ListView.builder(
+                        data: (data) =>data.data[1].tasks.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ):  ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -818,7 +881,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -889,7 +952,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12,bottom: 10),
                     child: statiticadmin.when(
-                        data: (data) =>data.data.isEmpty?Text(""): ListView.builder(
+                        data: (data) =>data.data[2].projects.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ):  ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -1015,7 +1094,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -1088,7 +1167,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                 child: Padding(
                     padding: const EdgeInsets.only(top: 15.0, left: 12, right: 12,bottom: 10),
                     child: statitic.when(
-                        data: (data) =>data.data.isEmpty?Text(""): ListView.builder(
+                        data: (data) =>data.data[2].tasks.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ):  ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -1214,7 +1309,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -1289,7 +1384,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statiticadmin.when(
-                        data: (data) => data.data.isEmpty?Text(""):ListView.builder(
+                        data: (data) => data.data[3].projects.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ): ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -1414,7 +1525,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),
@@ -1485,7 +1596,23 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                     padding:
                     const EdgeInsets.only(top: 15.0, left: 12, right: 12),
                     child: statitic.when(
-                        data: (data) => data.data.isEmpty?Text(""):ListView.builder(
+                        data: (data) => data.data[3].tasks.isEmpty?
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircleAvatar(radius:80.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                                SizedBox(height: 5.h,),
+                                Text(
+                                  "Start Now",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp),),
+                              ],
+                            ),
+                          ],
+                        ): ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -1610,7 +1737,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                                     lineHeight: 8.0,
                                                     percent: 0.45,
                                                     progressColor:
-                                                    Colors.blue,
+                                                    Color(0xFF005373),
                                                     linearStrokeCap:
                                                     LinearStrokeCap
                                                         .round),

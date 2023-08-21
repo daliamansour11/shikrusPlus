@@ -26,6 +26,7 @@ import '../chat/chats/model/UsersModel.dart';
 import '../clender/Provider/SubTaskProvider.dart';
 import '../clender/Repository/SubtTaskRepo.dart';
 import '../clender/model/AllMainTaskModel.dart';
+import '../home/model/ProjectInfoModel.dart';
 import '../home/model/statisticsadminmodel.dart';
 import '../reports/model/reportsresponse.dart';
 part'DioClient.g.dart';
@@ -356,6 +357,38 @@ class DioClient {
     print(reportlist);
     return reportmodel;
   }
+
+  /////////projectinfo.//////////////////////////
+  Future<ProjectinfoModel> getProjectInfo(int id) async {
+    List<ProjectinfoModel>projectinfolist = [];
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString(
+        '${SharedPreferencesInfo.userTokenKey}');
+    print("shhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh    ${token}");
+    var response = await Dio().get(
+        'https://management-system.webautobazaar.com/api/employee/project/${id}',
+        //         options: Options(
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "Bearer $token",
+          'Accept': 'application/json',
+          'lang': 'ar'
+        },
+        )
+    );
+    ProjectinfoModel projectinfoModel = ProjectinfoModel.fromJson(response.data);
+    projectinfolist.add(projectinfoModel);
+    if (response.statusCode == 200) {
+      debugPrint("${projectinfoModel}  sucessssssssssssssssssssssssssssss");
+    }
+    else {
+      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    }
+    print(projectinfoModel);
+    return projectinfoModel;
+  }
+
+  /////////////////////////////////////////////////
   upDateEmployeeTasksStatus(String status, int? id) async {
     final data = FormData.fromMap({
       "task_id": id,
@@ -558,6 +591,7 @@ class DioClient {
   }
 
   /////////////////////////////getProjects./////////////////////////////////////
+
   Future<Projectmodel> getAllProjects() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     final String? token = shared.getString(
@@ -585,13 +619,13 @@ class DioClient {
     return projectmodel;
   }
   ///////////////////////////getemployeeprojects////////////////////////////////
-  Future<AdminProjectModel> getProjectEmployees(int project_id) async {
-    SharedPreferences shared = await SharedPreferences.getInstance();
-    final String? token = shared.getString(
-        '${SharedPreferencesInfo.userTokenKey}');
 
-    var response = await Dio().get(
-        'https://management-system.webautobazaar.com/api/admin/project-employees/${project_id}',
+  Future<List<Projects>> getProjectEmployees(int project_id) async {
+List<Projects>projects=[];
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    final String? token = shared.getString('${SharedPreferencesInfo.userTokenKey}');
+
+    var response = await Dio().get('https://management-system.webautobazaar.com/api/admin/project-employees/9',
         options: Options(headers: {
           'Content-Type': 'application/json',
           "Authorization": "Bearer$token",
@@ -600,15 +634,35 @@ class DioClient {
         },
         )
     );
-    AdminProjectModel projectmodel = AdminProjectModel.fromJson(response.data);
-    if (response.statusCode == 200) {
+    AdminProjectModel adminProjectmodel = AdminProjectModel.fromJson(response.data);
+    adminProjectmodel.data;
+    if (response.statusCode == 200)
+    {
       debugPrint("${response.statusCode}  sucessssssssssssssssssssssssssssssadmin");
     }
-    else {
-      debugPrint("faildddddddddddddddddddddddddddddddddd");
+    else
+    {
+      debugPrint("failddddddddddddddddddddddddddddddddddadmin");
     }
     print(response.data);
-    return projectmodel;
+    return adminProjectmodel.data;
+  }
+
+
+  Future<AdminProjectModel> fetchAlbum() async {
+    final response = await http
+        .get(Uri.parse('https://management-system.webautobazaar.com/api/admin/project-employees/9'));
+try{
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return AdminProjectModel.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load data');
+    }}catch(e){print("${e}faildadmin");}
+    return AdminProjectModel.fromJson(jsonDecode(response.body));
   }
   ////////////////////////////upload DeviceToken//////////////
 
@@ -651,7 +705,7 @@ class DioClient {
     final data = FormData.fromMap({
         "report": report,
         "reason": reason,
-        'files': [
+        'image': [
           await MultipartFile.fromFile(file.path, filename: 'reportimg'),],
       });
       try {

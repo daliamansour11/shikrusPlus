@@ -101,7 +101,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/not.jpg",),backgroundColor: Colors.white,),
+                        CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/logoo.png",),backgroundColor: Colors.white,),
                         SizedBox(height: 10.h,),
                         Text(
                           "No Notifications Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),

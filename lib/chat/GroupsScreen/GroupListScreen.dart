@@ -38,14 +38,14 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
 
   String? userLogedInType="admin" ;
   String? type = ""  ;
-  String logedInUser = '';
+  String logedInUsername = '';
   int logedInUserId = 0;
   gettingUserData() async {
     await SharedPreferencesInfo.getUserNameFromSF().then((value) {
       setState(() {
-        logedInUser = value ?? "";
+        logedInUsername = value ?? "";
       });
-      print("nameeeeeeeeeeeeee22222222222 ${logedInUser}");
+      print("nameeeeeeeeeeeeee22222222222 ${logedInUsername}");
     });await SharedPreferencesInfo.getUserIdFromSF().then((senderId) {
       setState(() {
         logedInUserId = senderId ?? 0;
@@ -60,6 +60,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
   }
   UserData? user1;
   GroupMessageTile? message;
+  int idt=0;
+
   @override
   void initState() {
     gettingUserData();
@@ -107,8 +109,8 @@ class _GroupListScreenState extends ConsumerState<GroupListScreen> {
                   child: Center(
                       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: FirebaseFirestore.instance
-                            .collection('groups').orderBy('recentMessageTime',descending: true)
-                        // .where('member',arrayContains: '${FirebaseAuth.instance.currentUser?.uid}')
+                            .collection('groups').orderBy('recentMessage',descending: true)
+                        // .where('members',arrayContains: 'Dina')
                             .snapshots(),
                         builder: (_, snapshot) {
                           if (snapshot.hasError)

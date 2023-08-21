@@ -5,13 +5,13 @@ import '../model/Admin_ProjectModel.dart';
 import '../repo/Admin_Projectsrepo.dart';
 import '../view_model/Admin_Projects_view_model.dart';
 
-// final AdminprojectsProvider = ChangeNotifierProvider.autoDispose<AdminProjectNotifier>((
-//     ref) =>
-//     AdminProjectNotifier(ref)
-// );
+
+final AdminprojectsProvider = FutureProvider.autoDispose<AdminProjectModel>((
+    ref) { return  ref.read(adminprojectsrepo).getadminproject();}
+);
 
 
-final adminprojectProvider = FutureProvider.family<AdminProjectModel?,int>((ref, main_task_id) {
-  var admintask= ref.read(adminprojectsrepo).getadminproject(main_task_id);
-  return admintask;
-});
+// final adminprojectProvider = FutureProvider.family<AdminProjectModel?,int>((ref, projectid) {
+//   var admintask= ref.read(adminprojectsrepo).getadminproject(projectid);
+//   return admintask;
+// });

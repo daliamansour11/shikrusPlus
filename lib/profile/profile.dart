@@ -19,11 +19,17 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
   String userName = '';
   String userEmail = '';
   String logedInuseType = '';
-
+  String img="";
   gettingUserData() async {
     await SharedPreferencesInfo.getUserNameFromSF().then((value) {
       setState(() {
         userName = value ?? "";
+      });
+      print("nameeeeeeeeeeeeee22222222222 ${userName}");
+    });
+    await SharedPreferencesInfo.getUserimg().then((value) {
+      setState(() {
+        img = value ?? "";
       });
       print("nameeeeeeeeeeeeee22222222222 ${userName}");
     });
@@ -112,7 +118,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                                     child: Icon(
                                                       CupertinoIcons.person,
                                                       color: Colors.grey,),),
-                                              imageUrl: '',
+                                              imageUrl: img??"",
 
                                             ),
                                           ),
@@ -173,11 +179,29 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                                                 setState(() {
                                                 var res=  ref.read(logedoutProvider);
 
-                                                  // prefrences.remove(
-                                                  //     SharedPreferencesInfo
-                                                  //         .userTokenKey);
-                                                  // prefrences.clear();
-                                                  // Navigator.pop(context);
+                                                  prefrences.remove(
+                                                      SharedPreferencesInfo
+                                                          .userTokenKey);
+
+                                                //
+                                                // prefrences.remove(
+                                                //     SharedPreferencesInfo
+                                                //         .userImgKey);
+                                                // prefrences.remove(
+                                                //     SharedPreferencesInfo
+                                                //         .userEmailKey);
+                                                // prefrences.remove(
+                                                //     SharedPreferencesInfo
+                                                //         .userIdKey);
+                                                // prefrences.remove(
+                                                //     SharedPreferencesInfo
+                                                //        .userNameKey);
+                                                // prefrences.remove(
+                                                //     SharedPreferencesInfo
+                                                //         .deviceTokenKey);
+
+                                                  prefrences.clear();
+                                                  Navigator.pop(context);
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>

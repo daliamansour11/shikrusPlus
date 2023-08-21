@@ -8,6 +8,7 @@ import 'package:taskmanger/clender/model/TasksModel.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
 import '../../core/Constants.dart';
+import '../../core/SharedPreferenceInfo.dart';
 import '../../popMenuItem/PopMenuItems.dart';
 import '../../home/provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
@@ -43,9 +44,19 @@ class SubTasksScreen extends ConsumerStatefulWidget {
 
 class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
   bool hasData = false;
+  String type="";
+  gettingUserType() async {
+
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });}
   @override
   void initState() {
     super.initState();
+    gettingUserType();
     WidgetsBinding.instance.addPersistentFrameCallback((_) async {
       Future.delayed(Duration(seconds: 1));
 
@@ -70,25 +81,47 @@ class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
     final subTask = ref.watch(SubTaskProvider(widget.main_task_id));
     return Scaffold(
         backgroundColor: Colors.grey[00],
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddNewSubTask(
-                          project_id: widget.project_id,
-                          main_task_id: widget.main_task_id,
-                        )));
-            print("widget_iiiiiiiiiiiii ${widget.project_id}");
-            print("widget_mmmmmmiiiiiiiiiiiii ${widget.main_task_id}");
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Color(0xFF005373),
+        floatingActionButton:type=="client"?
+        Visibility(
+          visible: false,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddNewSubTask(
+                            project_id: widget.project_id,
+                            main_task_id: widget.main_task_id,
+                          )));
+              print("widget_iiiiiiiiiiiii ${widget.project_id}");
+              print("widget_mmmmmmiiiiiiiiiiiii ${widget.main_task_id}");
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Color(0xFF005373),
+          ),
+        ):
+        Visibility(
+          visible: true,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddNewSubTask(
+                        project_id: widget.project_id,
+                        main_task_id: widget.main_task_id,
+                      )));
+              print("widget_iiiiiiiiiiiii ${widget.project_id}");
+              print("widget_mmmmmmiiiiiiiiiiiii ${widget.main_task_id}");
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Color(0xFF005373),
+          ),
         ),
         appBar: AppBar(
           backgroundColor: Color(0xFF005373),
           title: TextFieldHeaderWidget(
-            title: "SubTasks",
+            title: "Task Details",
             colors: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -96,8 +129,9 @@ class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
           automaticallyImplyLeading: true,
         ),
         body: Container(
-            margin: EdgeInsets.only(bottom: 4, left: 10, right: 10, top: 5),
+           padding: EdgeInsets.only(bottom: 5, left: 15, right: 15, top: 5),
             width: double.infinity,
+            height: double.infinity ,
             decoration: BoxDecoration(
               color: Colors.grey[300],
             ),
@@ -427,7 +461,7 @@ class _SubTasksScreenState extends ConsumerState<SubTasksScreen> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/pro.jpg",),),
+                                        CircleAvatar(radius:50.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
                                         SizedBox(height: 5.h,),
                                         Text(
                                           "No SubTasks Found",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),

@@ -15,6 +15,7 @@ import 'package:taskmanger/home/provider/HomeProvider.dart';
 import 'package:taskmanger/home/view/ProjectsProgress.dart';
 import 'package:taskmanger/home/view/ProjectsScreen.dart';
 import 'package:taskmanger/main.dart';
+import '../../Admin_projects/model/Admin_ProjectModel.dart';
 import '../../Admin_projects/provider/Admin_Projectsprovider.dart';
 import '../../Notification/provider/NotificationProvider.dart';
 import '../../Notification/view/Notification_screen.dart';
@@ -23,6 +24,7 @@ import '../../profile/profile.dart';
 import '../../widgets/TextFieldWidget.dart';
 import '../model/statisticsmodel.dart';
 import '../provider/DeviceTokenProvider.dart';
+import '../provider/ProjectInfoProvider.dart';
 import 'detailsscreen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -32,15 +34,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
 
-  String type="";
-  gettingUserType() async {
-    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
-      setState(() {
-        type = value!;
-        print("nameeeeeeeeeeeeee$type");
-      });
-    });
-  }
+
 
   onStatusChang(String key) {
     if (key == "DONE") {
@@ -145,20 +139,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         .set({'token': token});
   }
 int idpro=0;
+String img="";
+  String type="";
+  gettingUserType() async {
+
+    await SharedPreferencesInfo.getUserTypeFromSF().then((value) {
+      setState(() {
+        type = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+    await SharedPreferencesInfo.getUserimg().then((value) {
+      setState(() {
+        img = value!;
+        print("nameeeeeeeeeeeeee$type");
+      });
+    });
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPersistentFrameCallback((_) async {
       Future.delayed(Duration(seconds: 1));
 
-      ref.read(adminprojectProvider(idpro));
+      ref.read(AdminprojectsProvider);
     });
     getToken();
     gettingUserType();
-
     postDeviceToken();
-    // Future.delayed(Duration(milliseconds: 40), () async {
-    //   postDeviceToken();
-    // });
   }
 
   postDeviceToken() async {
@@ -170,21 +178,15 @@ int idpro=0;
   }
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    List<GetStatisticsResponse>statistic = [];
-    /*24 is for notification bar on Android*/
+
+    var size = MediaQuery.of(context).size;
+
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-
     final projects = ref.watch(proProvider);
-   // final adminprjects = ref.watch(AdminprojectsProvider);
     final statitic = ref.watch(statisticProvider);
     final statiticadmin = ref.watch(statisticadminProvider);
-
     final notificationcount = ref.watch(not_countProvider);
-
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -247,10 +249,18 @@ int idpro=0;
                           MaterialPageRoute(
                               builder: (context) => Profilescreen()));
                     },
-                    child: ClipRRect(
+                    child:img ==""? ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: Image(
                         image: AssetImage("assets/personn.jpg"),
+                        width: 50,
+                        height: 130,
+                        fit: BoxFit.cover,
+                      ),
+                    ):ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image(
+                        image: NetworkImage(img),
                         width: 50,
                         height: 130,
                         fit: BoxFit.cover,
@@ -489,34 +499,7 @@ int idpro=0;
                   ),
                   error: (err, _) {  Center(child: Text("${err}"));
                     print("${err}errrr");},
-                  // Center(
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           TextFieldTitleWidget(
-                  //             title: "Oops!! \n"
-                  //                 "Connection Lost!",
-                  //             fontWeight: FontWeight.bold,
-                  //             size: 18.sp,
-                  //           ),
-                  //           SizedBox(width: 5.sp),
-                  //           CircleAvatar(
-                  //             backgroundImage: AssetImage(
-                  //               "assets/sad.jpg",
-                  //             ),
-                  //             radius: 18.sp,
-                  //             backgroundColor: Colors.grey,
-                  //             foregroundColor: Colors.grey,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+
                   loading: () => Center(child: CircularProgressIndicator())),
             ),
             SizedBox(
@@ -559,7 +542,7 @@ int idpro=0;
                 flex: 1,
                 child: projects.when(
                     data: (data) =>
-                        RefreshIndicator(
+                RefreshIndicator(
                           backgroundColor: context.appTheme.bottomAppBarColor,
                           onRefresh: () async {
                             ref.refresh(proProvider);
@@ -580,7 +563,8 @@ int idpro=0;
                               ),
 
                             ),
-                            child: data.data.isEmpty ? Row(
+                            child: data.data.isEmpty ?
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -599,12 +583,13 @@ int idpro=0;
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                final adminprojects = ref.watch(
-                                    adminprojectProvider(data.data[index].id));
 
+                                final adminprojects = ref.watch(
+                                    AdminprojectsProvider);
+                                   int projectid=data.data[index].id;
                                 final usersData = data.data[index];
                                 return data.data.isEmpty
-                                    ? Text("no prject",
+                                    ? Text("no project",
                                   style: TextStyle(color: Colors.black),)
                                     : InkWell(
                                   onTap: () {
@@ -668,7 +653,7 @@ int idpro=0;
                                                 top: 10),
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
+                                              crossAxisAlignment: CrossAxisAlignment.center,
                                               children: [
                                                 Row(
                                                   children: [
@@ -687,50 +672,36 @@ int idpro=0;
                                                     ),
                                                   ],
                                                 ),
+                                                ref.watch(ProjectinfoProvider(projectid)).when(
+                                                  data: (dataa)=>Column(
+                                                    children: [
+                                                      // Expanded(child : ListView.builder(shrinkWrap: true,itemBuilder: (context,index){return Text("jihuih");},itemCount: 2,)),
+                                                      CircleAvatar(child: Image.network(dataa.data.employees[0].image),),
+                                                    ],
+                                                  ),
+                                                      // Expanded(
+                                                      //   child: ListView.builder(
+                                                      //       shrinkWrap: true,
+                                                      //                  //  physics: ClampingScrollPhysics(),
+                                                      //                     scrollDirection: Axis.horizontal,
+                                                      //                     itemCount: 2,
+                                                      //                     itemBuilder: (BuildContext context, int indexadmin) {
+                                                      //                       return Text("${dataa.data.employees[indexadmin].image}");
+                                                      //                         // CircleAvatar(
+                                                      //                         //   backgroundImage:
+                                                      //                         //       AssetImage(
+                                                      //                         //     "${dataa?.data[index].employeeProjects[indexadmin].image}",
+                                                      //                         //   ),
+                                                      //                         //   radius:
+                                                      //                         //       12,
+                                                      //                         //   backgroundColor:
+                                                      //                         //       Colors.white60);
+                                                      //                     }),
+                                                      // ),
+                                                    error: (err, _) { return  Center(child: Text("${err}"));
+                                                    print("${err}errrr");},
 
-                                                Row(
-                                                  children: [
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                    CircleAvatar(
-                                                        backgroundImage:
-                                                        AssetImage(
-                                                          "assets/ppr.jpg",
-                                                        ),
-                                                        radius:
-                                                        12,
-                                                        backgroundColor:
-                                                        Colors.white60),
-                                                  ],
-                                                ),
-
-
-
+                                                    loading: () => Center(child: CircularProgressIndicator())),
                                                 // Padding(
                                                 //   padding:
                                                 //       const EdgeInsets.only(
@@ -743,7 +714,8 @@ int idpro=0;
                                                 //                 () => ref.read( adminprojectProvider(data.data[index].id)));
                                                 //       },
                                                 //     child: adminprojects.when(
-                                                //         data: (dataa) => ListView.builder(
+                                                //         data: (dataa) =>
+                                                //         ListView.builder(
                                                 //           shrinkWrap: true,
                                                 //             physics: ClampingScrollPhysics(),
                                                 //             scrollDirection: Axis.horizontal,
@@ -877,8 +849,7 @@ int idpro=0;
                           ),
                         ),
                     error: (err, _) => Text(""),
-                    loading: () => Center(child: CircularProgressIndicator()))),
-          ]),
+                    loading: () => Center(child: CircularProgressIndicator(),)))]),
         ));
   }
 

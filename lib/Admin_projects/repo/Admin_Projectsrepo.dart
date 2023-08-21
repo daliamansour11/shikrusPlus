@@ -9,9 +9,10 @@ class Admin_Projects_Repo {
   final DioClient dioClient;
   Admin_Projects_Repo(this.dioClient);
 
-  Future<AdminProjectModel> getadminproject(int project_id) async {
-    var response0 =  await dioClient.getProjectEmployees(project_id);
-    debugPrint("${response0.msg}respokadmin");
+  Future<AdminProjectModel> getadminproject() async {
+  var response0 =  await dioClient.fetchAlbum();
+  // await dioClient.getProjectEmployees(project_id);
+    debugPrint("${response0}respokadmin");
     return response0;
   }
 }

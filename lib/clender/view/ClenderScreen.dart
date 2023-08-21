@@ -1,4 +1,4 @@
-
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,7 +65,9 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
           padding: const EdgeInsets.only(
               top: 10, bottom: 15, right: 3, left: 10),
           child: Column(children: [
+            
             Expanded(
+              flex: 5,
               child: Container(
                 height: 100.h,
                 decoration: BoxDecoration(),
@@ -84,29 +86,35 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                   },
                 ),),
             ),
-            SizedBox(height: 20.h,),
-            Padding(
-              padding: const EdgeInsets.only(left: 5,right: 180),
-              child: Text("Daily tasks",style: TextStyle(fontSize: 25.sp,fontWeight: FontWeight.bold),),
+            SizedBox(height: 13.h,),
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Daily tasks",style: TextStyle(fontSize: 20.sp,fontWeight: FontWeight.bold),),
+                ],
+              ),
             ),
 
             SizedBox(
               height: 8.h,
             ),
 
-            Container(
-                height:MediaQuery.of(context).size.height/2,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
-                  color: Colors.grey[300],
-                ),
-
-                child:_listEmployeeTask(context)
+            Expanded(
+              flex: 12,
+              child: Container(
+                  height:MediaQuery.of(context).size.height/2,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        topLeft: Radius.circular(20)),
+                    color: Colors.grey[300],
+                  ),
+                  child:_listEmployeeTask(context)
+              ),
             )
-
           ]),
         ));
   }
@@ -132,14 +140,30 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
           return Future.delayed(Duration(milliseconds: 300) , () =>   ref.read(AllMainTasksProvider.future));
         },
 
-        child:
-        Container(
+        child: Container(
           child: userTask.when(data: (data) =>
-          data.data.length==0?Container(
-            child: Image.network('https://www.tawuniya.com/product/static/media/policy-success%20copy'
-                '.33bdcbf4e0b3bd58972a06016ab561af.svg'),
-            // fit: BoxFit.cover,
+          data.data.isEmpty?
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(radius:40.sp,backgroundImage: AssetImage("assets/placeholder.png",),),
+                  SizedBox(height: 5.h,),
+                  Text(
+                    "No Tasks",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
+                ],
+              ),
+            ],
           )
+          // Center(
+          //
+          //   child: SvgPicture.asset('assets/svgimg.svg'),
+          //   // fit: BoxFit.cover,
+          // )
               : ListView.builder(
               itemCount: data.data.length,
               itemBuilder: (context, index) {
@@ -177,7 +201,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                           Container(
                             width: 4.w,
                             height: 50.h,
-                            color: Colors.purple,
+                            color:Color(0xFF005373) ,
                             //  index ==0 ?Colors.purple :Colors.black,
                           ),
                           SizedBox(height: 4.h,),
@@ -187,10 +211,9 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Colors.purple,
+                                  color: Color(0xFF005373),
                                   width: 4.w),
-                              color: index == 0 ? Colors
-                                  .purple : Colors.white,
+                              color: index == 0 ?  Color(0xFF005373): Colors.white,
                               borderRadius: BorderRadius
                                   .circular(50),
                             ),
@@ -200,7 +223,7 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                               width: 4.w,
                               height: 50.h,
                               //  color:index == emptask.length-1 ?Colors.purple :Colors.black,
-                              color: Colors.purple
+                              color:Color(0xFF005373)
                             // index ==1?Colors.purple :Colors.black,
                           ),
                         ],
@@ -225,13 +248,13 @@ class _CalendarpageState extends ConsumerState<Calendarpage> {
                               child: Container(
                                 // width: 90,
                                   margin: EdgeInsets.only(
-                                      left: 8.w, top: 5.h),
+                                      left: 3.w, top: 5.h,right: 8.w),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color  : onStatusChang(status)
                                   ),
-                                  height: 100.h,
-                                  width: 100.w,
+                                  height: MediaQuery.of(context).size.height/7,
+                                  width: MediaQuery.of(context).size.width/3,
                                   child:ListTile(
                                     title: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

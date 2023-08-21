@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/reports/view/ReportsDetailsScreen.dart';
 
+import '../../home/provider/ProjectInfoProvider.dart';
 import '../provider/ReportsProvider.dart';
 import 'AddNewReports.dart';
 
@@ -57,7 +58,7 @@ class _ReportsState extends ConsumerState<Reports> {
         ),
         appBar: AppBar(
           backgroundColor: Color(0xFF005373),
-          title: Text("Report",
+          title: Text("Reports",
               style: TextStyle(
                 fontSize: 20.sp,
               )),
@@ -76,53 +77,40 @@ class _ReportsState extends ConsumerState<Reports> {
           child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              child: reports.when(
+              child: ref.watch(ProjectinfoProvider(widget.id)).when(
                   data: (data) => ListView.separated(
                       itemBuilder: (context, index) {
-                      double rate=  double.parse(data.data[index].rate??"${0.0}")/100.0;
-                        String finalD = '';
-                        double percentage;
-                        var progress = data.data[index].rate;
-                        checkNullProgress(String value) {
-                          if (progress != null && progress != "") {
-                            double rate = double.parse('${progress}');
-                            percentage = rate / 100;
-                            print("percentageeeeeeeeeeeeee$percentage");
-                          } else {
-                            print("Null value");
-                          }
-                        }
-                        //  Here you get your percentage and the assign it to the percentage
-
-                        // finalD = (percentage*100).toString();
-                        //
-                        // checkNullProgress(percentage);
+                        double rate=0.0;
+                        if(data.data.reports[index].rate !=null){
+                         rate =double.parse(data.data.reports[index].rate??"")??0.0;
+                        }else{rate=0.0;}
 
                         // rate =  ("${rate!/100}")!;
+                        rate=rate/100;
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ReportsDetailsScreen(
-                                          report: '${data.data[index].report}',
-                                          reason: '${data.data[index].reason}',
-                                          rate: '${data.data[index].rate}',
-                                          image: '${data.data[index].image}',
+                                          report: '${data.data.reports[index].report}',
+                                          reason: '${data.data.reports[index].reason}',
+                                          rate: '${data.data.reports[index].rate}',
+                                          image: '${data.data.reports[index].image}',
                                           project_id:
-                                              '${data.data[index].projectId}',
-                                          user_id: '${data.data[index].userId}',
+                                              '${data.data.reports[index].projectId}',
+                                          user_id: '${data.data.reports[index].userId}',
                                           created_At:
-                                              data.data[index].createdAt,
-                                          updated_At: data.data[index].updatedAt,
+                                              data.data.reports[index].createdAt,
+                                          updated_At: data.data.reports[index].updatedAt,
                                           project_name:
-                                              '${data.data[index].project.nameEn}',
+                                              '${data.data.nameEn}',
                                         )));
                           },
                           child: Container(
                             margin: EdgeInsets.only(
                                 bottom: 7.h, top: 5.h, left: 7.w, right: 7.w),
-                            height: 110.h,
+                            height: MediaQuery.of(context).size.height/6,
                             width: 100.w,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -135,76 +123,89 @@ class _ReportsState extends ConsumerState<Reports> {
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10.0),
-                                            child: Text(
-                                              "${data.data[index].report}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16.sp),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 15.h,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10.0),
-                                            child: Text(
-                                              "${data.data[index].reason}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 13.sp),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10.h,
-                                      ),
-
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 4.0),
+                                       children: [
+                                      Expanded(
+                                        flex: 2,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              children: [
-
-                                                RatingBar.builder(
-                                                  itemSize: 30,
-                                                  // itemPadding:
-                                                  //     EdgeInsets.all(20),
-                                                  minRating: rate,
-                                                  itemBuilder: (context, _) {
-                                                    return Icon(
-                                                      Icons.star,
-                                                      color: Color(0xFF005373),
-                                                    );
-                                                  },
-                                                  onRatingUpdate: (double value) {
-                                                    setState(() {
-                                                      rate = value;
-                                                    });
-                                                  },
-                                                )
-                                              ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(left: 10.0),
+                                              child: Text(
+                                                "${data.data.reports[index].report}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16.sp),
+                                              ),
                                             ),
                                           ],
                                         ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(left: 10.0),
+                                              child: Text(
+                                                "${data.data.reports[index].reason}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.normal,
+                                                    fontSize: 13.sp),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 6.h,
+                                      ),
+
+                                      Expanded(
+                                        flex: 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 4.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                children: [
+
+
+                                                  RatingBar.builder(
+                                                    itemSize: 30,
+                                                    // itemPadding:
+                                                    //     EdgeInsets.all(20),
+                                                    minRating: rate,
+                                                    itemBuilder: (context, _) {
+                                                      return Icon(
+                                                        Icons.star,
+                                                        color: Color(0xFF005373),
+                                                      );
+                                                    },
+                                                    onRatingUpdate: (double value) {
+                                                      setState(() {
+                                                        rate = value;
+                                                      });
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5.h,
                                       ),
                                     ],
                                   ),
@@ -212,14 +213,14 @@ class _ReportsState extends ConsumerState<Reports> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                    CircleAvatar(backgroundImage: AssetImage("assets/reporr.png",),radius: 25.sp,)
+                                      data.data.reports[index].image !=null?CircleAvatar(backgroundImage: NetworkImage(data.data.reports[index].image),):  CircleAvatar(backgroundImage: AssetImage("assets/reporr.png",),radius: 25.sp,)
                                   ],)
                                 ],
                               ),
                             ),
                           ),
-                        );
-                      },
+                        );},
+                      //},
                       separatorBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -229,7 +230,7 @@ class _ReportsState extends ConsumerState<Reports> {
                           ),
                         );
                       },
-                      itemCount: data.data.length),
+                      itemCount: data.data.reports.length),
                   error: (err, _) => Text(
                         "$err",
                         style: TextStyle(color: Colors.red),

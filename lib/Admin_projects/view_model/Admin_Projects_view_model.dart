@@ -15,7 +15,7 @@ class AdminProjectNotifier extends ChangeNotifier{
 
 
   Future<AdminProjectModel>proo(int project_id)async{
-    var AdminProjectRepo=await ref.read(adminprojectsrepo).getadminproject(project_id);
+    var AdminProjectRepo=await ref.read(adminprojectsrepo).getadminproject();
     debugPrint("repooooooooooooooooooproviderrradmin");
     return AdminProjectRepo;
   }

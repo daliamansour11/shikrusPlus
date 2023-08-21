@@ -66,7 +66,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
     gettingUserType();
     super.initState();
   }
-
+  RegExp exp = RegExp(r"<[^>]*>",multiLine: true,caseSensitive: true);
   @override
   Widget build(BuildContext context) {
     final userTask = ref.watch(MainTasksProvider(widget.project_id));
@@ -108,7 +108,7 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
                         height: 5.h,
                       ),
                       TextFieldTitle2Widget(
-                        title: widget.subject,
+                        title: widget.subject.replaceAll(exp,  ' '),
                       ),
                       SizedBox(
                         height: 10.h,

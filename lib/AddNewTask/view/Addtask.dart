@@ -1038,7 +1038,7 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                             child: Row(
                               children: [
                                 Radio(
-                                  value: projectname,
+                                  value: dataa.data[index].name ?? "",
                                   groupValue: proj,
                                   activeColor: Colors.black,
                                   onChanged: (val) {
@@ -1096,7 +1096,8 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                     loading: () => Center(child: CircularProgressIndicator())),
               ),
             ),
-            actions: [TextButton(onPressed: () {
+            actions: [
+              TextButton(onPressed: () {
               setState(() {
                 Navigator.pop(context);
               });
@@ -1176,7 +1177,6 @@ class _MultiSelectState extends State<MultiSelect> {
     return Container(
       width: 100,
       child: AlertDialog(
-
         title: const Text('Select Employee'),
         content: SingleChildScrollView(
           child: ListBody(

@@ -193,7 +193,7 @@ class _AddNewReportsScreenState extends ConsumerState<AddNewReportsScreen> {
                               width: double.infinity,
                               child: Image.file(
                                 File(image!.path),
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           )

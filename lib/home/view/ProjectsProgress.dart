@@ -119,7 +119,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                              Navigator.of(context).pushReplacement(
                                  MaterialPageRoute(
                                      builder: (context) =>
-                                         Detailsscreen(name: data.data[0].projects[index].nameEn, subject: data.data[0].projects[index].subject, notes: data.data[0].projects[index].notes, startDate: data.data[0].projects[index].startingDate, endDate: data.data[0].projects[index].expectedExpiryDate, status: '',)));
+                                         Detailsscreen(name: data.data[0].projects[index].nameEn, subject: data.data[0].projects[index].subject, notes: data.data[0].projects[index].notes, startDate: data.data[0].projects[index].startingDate, endDate: data.data[0].projects[index].expectedExpiryDate, status: '',project_id: data.data[0].projects[index].id,)));
                            },
                            child: Container(
                              margin: EdgeInsets.only(bottom: 14),
@@ -324,7 +324,8 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                               ],
                             ),
                           ],
-                        ): ListView.builder(
+                        ):
+                        ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
@@ -517,8 +518,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                             },
                             child: Text("$err",style: TextStyle(color: Colors.red),
                             )),
-                        loading: () =>
-                            Center(child: CircularProgressIndicator()))),
+                        loading: () => Center(child: CircularProgressIndicator()))),
               ),
               type=="admin"?
               Container(
@@ -552,7 +552,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[1].projects[index].nameEn, subject: data.data[1].projects[index].subject, notes: data.data[1].projects[index].notes, startDate: data.data[1].projects[index].startingDate, endDate: data.data[1].projects[index].expectedExpiryDate, status: '',)));
+                                            Detailsscreen(name: data.data[1].projects[index].nameEn, subject: data.data[1].projects[index].subject, notes: data.data[1].projects[index].notes, startDate: data.data[1].projects[index].startingDate, endDate: data.data[1].projects[index].expectedExpiryDate, status: '',project_id:data.data[1].projects[index].id ,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -978,7 +978,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: todolist[index].nameEn, subject: todolist[index].subject, notes: todolist[index].notes, startDate: todolist[index].startingDate ,endDate: todolist[index].expectedExpiryDate, status: '',)));
+                                            Detailsscreen(name: todolist[index].nameEn, subject: todolist[index].subject, notes: todolist[index].notes, startDate: todolist[index].startingDate ,endDate: todolist[index].expectedExpiryDate, status: '',project_id: todolist[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),
@@ -1410,7 +1410,7 @@ class _ProjectsProgressState extends ConsumerState<ProjectsProgress> {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            Detailsscreen(name: data.data[3].projects[index].nameEn, subject: data.data[3].projects[index].subject, notes: data.data[3].projects[index].notes, startDate: data.data[3].projects[index].startingDate, endDate: data.data[3].projects[index].expectedExpiryDate, status: '',)));
+                                            Detailsscreen(name: data.data[3].projects[index].nameEn, subject: data.data[3].projects[index].subject, notes: data.data[3].projects[index].notes, startDate: data.data[3].projects[index].startingDate, endDate: data.data[3].projects[index].expectedExpiryDate, status: '',project_id: data.data[3].projects[index].id,)));
                               },
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 14),

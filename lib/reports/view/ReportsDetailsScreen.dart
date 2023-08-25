@@ -281,7 +281,7 @@ class _ReportsDetailsScreenState extends ConsumerState<ReportsDetailsScreen> {
                             ? Image.asset("assets/reporr.png",fit: BoxFit.fill,)
                             : Image.network(
                           widget.image,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         ),
                       ))
                 ]),

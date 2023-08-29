@@ -92,7 +92,7 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                             .height / 6,
                         width: 100.w,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.grey,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(

@@ -5,7 +5,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:readmore/readmore.dart';
 import 'package:taskmanger/core/utils.dart';
 import 'package:taskmanger/widgets/TextFieldWidget.dart';
-
 import '../../core/SharedPreferenceInfo.dart';
 import '../provider/MainTaskProvider.dart';
 import '../../clender/Provider/UpdatestatusProvider.dart';
@@ -44,7 +43,8 @@ class _DetailsscreenState extends ConsumerState<Detailsscreen> {
   onStatusChang(String status) {
     if (status == "done") {
       return Itemcolors[0];
-    } else if (status == "on-going") {
+    }
+    else if (status == "on-going") {
       return Itemcolors[3];
     } else if (status == "to-do") {
       return Itemcolors[2];

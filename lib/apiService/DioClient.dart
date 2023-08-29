@@ -481,11 +481,15 @@ class DioClient {
       'notes': note,
       "starting_date": start_date,
       'expected_expiry_date': end_date,
+      'type': type,
+      'main_task_id':1,
+      'project_id':project_id,
+      'employee_id':employee_id,
       'time_from': time_from,
       'time_to': time_to,
-      'type': type,
-      'employee_id':employee_id,
-      "project_id":project_id
+
+
+
 
     });
     try {
